@@ -805,10 +805,10 @@ pre {
     </ul>
 
     <dl class="map">
-      <dt>THE STORE</dt><dd>Your real database. Oracle, Postgres, MySQL, Mongo.</dd>
-      <dt>THE FRIDGE</dt><dd>Redis.</dd>
-      <dt>DRIVING OVER</dt><dd>Cache-aside. Where everyone starts.</dd>
-      <dt>KEEPING IT STOCKED</dt><dd>Redis Data Integration.</dd>
+      <dt>THE STORE</dt><dd>Your real database</dd>
+      <dt>THE FRIDGE</dt><dd>Redis</dd>
+      <dt>DRIVING OVER</dt><dd>Cache-aside</dd>
+      <dt>KEEPING IT STOCKED</dt><dd>Redis Data Integration</dd>
     </dl>
 
     <div class="say">
@@ -875,7 +875,7 @@ pre {
           <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">The fridge only ever holds what you already thought to buy.</text>
         </svg>
       </div>
-      <p class="dag-cap">THE KITCHEN VERSION.</p>
+      <p class="dag-cap">THE KITCHEN VERSION</p>
     </div>
 
     <div class="dag">
@@ -916,7 +916,7 @@ pre {
           <text x="20" y="266" font-family="Inter, sans-serif" font-size="14" fill="#353535">Redis only ever holds what somebody already asked for.</text>
         </svg>
       </div>
-      <p class="dag-cap">THE SAME PICTURE IN DATABASE TERMS.</p>
+      <p class="dag-cap">THE SAME PICTURE IN DATABASE TERMS</p>
     </div>
 
     <div class="ba-head">
@@ -979,7 +979,7 @@ pre {
           <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">And because the fridge is full, you can plan a whole meal from it.</text>
         </svg>
       </div>
-      <p class="dag-cap">THE KITCHEN VERSION. THE DELIVERY SERVICE IS THE ONLY THING ADDED.</p>
+      <p class="dag-cap">THE KITCHEN VERSION, ONE STAGE ADDED</p>
     </div>
 
     <div class="dag">
@@ -1028,7 +1028,7 @@ pre {
           <text x="20" y="266" font-family="Inter, sans-serif" font-size="14" fill="#353535">Changes usually reach Redis within a few seconds of happening at the source.</text>
         </svg>
       </div>
-      <p class="dag-cap">THE SAME PICTURE IN DATABASE TERMS. ONE STAGE ADDED, ONE ROUND TRIP GONE.</p>
+      <p class="dag-cap">THE SAME PICTURE IN DATABASE TERMS, ONE ROUND TRIP GONE</p>
     </div>
   </section>
 
@@ -1044,7 +1044,7 @@ pre {
 2   not there, so ask the database and wait
 3   put a copy in Redis
 4   throw that copy away in <span class="bad">five minutes</span></pre>
-    <p class="dag-cap" style="margin-bottom:44px">STEP 4 IS A GUESS, AND NOBODY CAN MAKE IT CORRECTLY.</p>
+    <p class="dag-cap" style="margin-bottom:44px">STEP 4 IS A GUESS AND NOBODY CAN MAKE IT CORRECTLY</p>
 
     <div class="dag">
       <div class="dag-wrap">
@@ -1077,7 +1077,7 @@ pre {
           <text x="200" y="298" font-family="Space Mono, monospace" font-size="11" fill="#9a9a94" text-anchor="middle">t = 0</text>
         </svg>
       </div>
-      <p class="dag-cap">SHORTEN THE TIMER AND THE RED BAR SHRINKS, BUT NOW YOU ARE HITTING THE SOURCE CONSTANTLY AND THE CACHE STOPS HELPING.</p>
+      <p class="dag-cap">SHORTEN THE TIMER AND THE BAR SHRINKS, BUT NOW YOU HAMMER THE SOURCE AND THE CACHE STOPS HELPING</p>
     </div>
 
     <div class="dag">
@@ -1114,7 +1114,7 @@ pre {
           <text x="470" y="244" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#27843f">Searching this gives the real answer.</text>
         </svg>
       </div>
-      <p class="dag-cap">FRAUD SCORING AND PERSONALIZATION NEED ALL OF IT, NOT A GOOD HIT RATE. THIS IS THE PART A BIGGER CACHE CANNOT FIX.</p>
+      <p class="dag-cap">FRAUD SCORING NEEDS ALL OF IT, NOT A GOOD HIT RATE</p>
     </div>
   </section>
 
@@ -1182,7 +1182,7 @@ pre {
           </g>
         </svg>
       </div>
-      <p class="dag-cap">THE RDI DATABASE IS NOT THE ONE YOUR APP TALKS TO. IT HOLDS THE CHANGE STREAMS ON THE WAY THROUGH.</p>
+      <p class="dag-cap">THE RDI DATABASE IS NOT THE ONE YOUR APP TALKS TO</p>
     </div>
 
     <ul class="beats" style="margin-top:44px">
