@@ -15,6 +15,9 @@
   --surface: #fafaf9;
   --faint: #9a9a94;
 
+  /* Redis brand accent, hex unconfirmed, see INTERNAL-NOTES */
+  --redis-green: #7ad13a;
+
   --blue: #1f5b8f;
   --teal: #16807a;
   --green: #3f7c49;
@@ -707,6 +710,42 @@ pre {
   <marker id="ag" viewBox="0 0 10 7" refX="9.5" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
     <path d="M0 0 L10 3.5 L0 7 z" fill="#27843f"></path>
   </marker>
+  <marker id="arg" viewBox="0 0 10 7" refX="9.5" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 3.5 L0 7 z" fill="#7ad13a"></path>
+  </marker>
+
+  <symbol id="ico-store" viewBox="0 0 44 44">
+    <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M6 17 v24 h32 V17"></path>
+      <path d="M3 17 L9 6 h26 l6 11 Z"></path>
+      <path d="M14 6 L11 17 M24 6 L23 17 M33 6 L34 17"></path>
+      <path d="M17 41 v-12 h10 v12"></path>
+    </g>
+  </symbol>
+
+  <symbol id="ico-fridge" viewBox="0 0 44 44">
+    <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <rect x="11" y="3" width="22" height="38"></rect>
+      <path d="M11 16 h22"></path>
+      <path d="M29 8 v5 M29 20 v7"></path>
+    </g>
+  </symbol>
+
+  <symbol id="ico-person" viewBox="0 0 44 44">
+    <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <circle cx="22" cy="13" r="7"></circle>
+      <path d="M8 41 C8 27 36 27 36 41"></path>
+    </g>
+  </symbol>
+
+  <symbol id="ico-van" viewBox="0 0 44 44">
+    <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M3 13 h24 v18 H3 Z"></path>
+      <path d="M27 19 h8 l6 6 v6 H27"></path>
+      <circle cx="12" cy="34" r="3.5"></circle>
+      <circle cx="34" cy="34" r="3.5"></circle>
+    </g>
+  </symbol>
 </defs></svg>
 
 <div class="page">
@@ -720,7 +759,7 @@ pre {
 
   <div class="hero">
     <h1>Redis Data Integration</h1>
-    <p class="intro"><b>Short name <a href="https://redis.io/docs/latest/integrate/redis-data-integration/">RDI</a>.</b> Everyone keeps a copy of their data in Redis. The only argument is how the copy gets there.</p>
+    <p class="intro"><b>AKA <a href="https://redis.io/docs/latest/integrate/redis-data-integration/">RDI</a>.</b> Everyone keeps a copy of their data in Redis. The only argument is how the copy gets there.</p>
   </div>
 
   <div class="mobile-section-picker">
@@ -762,7 +801,7 @@ pre {
     <ul class="beats">
       <li><span><b>The store has everything, but it is not in your house.</b></span></li>
       <li><span><b>So you keep a copy at home.</b> That is the fridge. It is right there and it is fast.</span></li>
-      <li><span><b>The only question is how the fridge gets filled.</b> You drive over for each item as you need it, or the store keeps it stocked for you.</span></li>
+      <li><span><b>Keeping it full is your job, not the store's.</b> So the only question is how you do it. Drive over yourself every time you run out, or pay somebody to deliver before you notice.</span></li>
     </ul>
 
     <dl class="map">
@@ -774,7 +813,7 @@ pre {
 
     <div class="say">
       <span class="say-label">SAY IT LIKE THIS</span>
-      <p>The store has everything and takes time to reach. The fridge is fast, so you keep a copy at home. The only question is whether you drive over for each item or the store keeps your fridge full.</p>
+      <p>The store has everything, but it is not in your house. The fridge is fast, so you keep a copy at home. Keeping that copy full is on you, not the store. So the only question is whether you drive over every time you run out, or you have it delivered.</p>
     </div>
   </section>
 
@@ -796,41 +835,44 @@ pre {
 
     <div class="dag">
       <div class="dag-wrap">
-        <svg viewBox="0 0 880 280" style="min-width:700px" role="img" aria-label="Kitchen version, before. The grocery store, then your fridge, then you. The fridge is nearly empty, so whenever something is missing you drive all the way back to the store yourself.">
+        <svg viewBox="0 0 880 310" style="min-width:700px" role="img" aria-label="Kitchen version, before. A grocery store, your nearly empty fridge, and you. Whenever something is missing you drive all the way back to the store yourself.">
           <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
             <text x="110" y="18">GROCERY STORE</text>
             <text x="440" y="18">YOUR FRIDGE</text>
             <text x="770" y="18">YOU</text>
           </g>
-          <line x1="275" y1="28" x2="275" y2="212" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
-          <line x1="605" y1="28" x2="605" y2="212" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+          <line x1="275" y1="28" x2="275" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+          <line x1="605" y1="28" x2="605" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
 
-          <rect x="20" y="46" width="180" height="64" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
-          <text x="110" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Grocery store</text>
-          <text x="110" y="95" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">HAS EVERYTHING</text>
+          <rect x="20" y="36" width="180" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <use href="#ico-store" x="88" y="48" width="44" height="44"></use>
+          <text x="110" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Grocery store</text>
+          <text x="110" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">HAS EVERYTHING</text>
 
-          <rect x="350" y="46" width="180" height="64" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
-          <text x="440" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Fridge</text>
-          <text x="440" y="95" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">NEARLY EMPTY</text>
+          <rect x="350" y="36" width="180" height="104" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
+          <use href="#ico-fridge" x="418" y="48" width="44" height="44"></use>
+          <text x="440" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Fridge</text>
+          <text x="440" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">NEARLY EMPTY</text>
 
-          <rect x="680" y="46" width="180" height="64" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
-          <text x="770" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">You</text>
-          <text x="770" y="95" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">HUNGRY NOW</text>
+          <rect x="680" y="36" width="180" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <use href="#ico-person" x="748" y="48" width="44" height="44"></use>
+          <text x="770" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">You</text>
+          <text x="770" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">HUNGRY NOW</text>
 
-          <line x1="204" y1="78" x2="344" y2="78" stroke="#d92d20" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ar)"></line>
-          <line x1="534" y1="78" x2="674" y2="78" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></line>
+          <line x1="204" y1="88" x2="344" y2="88" stroke="#d92d20" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ar)"></line>
+          <line x1="534" y1="88" x2="674" y2="88" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></line>
 
           <g font-family="Space Mono, monospace" font-size="11" text-anchor="middle">
-            <text x="274" y="132" fill="#d92d20">ONLY WHAT YOU</text>
-            <text x="274" y="147" fill="#d92d20">CARRIED BACK</text>
-            <text x="604" y="132" fill="#171717">OPEN THE DOOR</text>
+            <text x="274" y="164" fill="#d92d20">ONLY WHAT YOU</text>
+            <text x="274" y="179" fill="#d92d20">CARRIED BACK</text>
+            <text x="604" y="164" fill="#171717">OPEN THE DOOR</text>
           </g>
 
-          <path d="M 770 114 L 770 184 L 110 184 L 110 116" fill="none" stroke="#d92d20" stroke-width="2.5" marker-end="url(#ar)"></path>
-          <text x="440" y="204" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">MISSING SOMETHING? DRIVE ALL THE WAY BACK. 20 MINUTES.</text>
+          <path d="M 770 144 L 770 214 L 110 214 L 110 146" fill="none" stroke="#d92d20" stroke-width="2.5" marker-end="url(#ar)"></path>
+          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">OUT OF MILK? DRIVE ALL THE WAY BACK YOURSELF. 20 MINUTES.</text>
 
-          <text x="20" y="244" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">You are the one doing the driving, and you do it over and over.</text>
-          <text x="20" y="266" font-family="Inter, sans-serif" font-size="14" fill="#353535">The fridge only ever holds what you already thought to buy.</text>
+          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">You do the driving, and you do it again every time something runs out.</text>
+          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">The fridge only ever holds what you already thought to buy.</text>
         </svg>
       </div>
       <p class="dag-cap">THE KITCHEN VERSION.</p>
@@ -885,52 +927,56 @@ pre {
 
     <div class="dag">
       <div class="dag-wrap">
-        <svg viewBox="0 0 880 280" style="min-width:760px" role="img" aria-label="Kitchen version, after. The grocery store, then a delivery service that keeps the fridge stocked, then your full fridge, then you. You never drive anywhere.">
+        <svg viewBox="0 0 880 310" style="min-width:760px" role="img" aria-label="Kitchen version, after. A grocery store, a delivery service that keeps the fridge stocked, your full fridge, and you. You never drive anywhere.">
           <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
             <text x="105" y="18">GROCERY STORE</text>
             <text x="330" y="18">DELIVERY SERVICE</text>
             <text x="555" y="18">YOUR FRIDGE</text>
             <text x="780" y="18">YOU</text>
           </g>
-          <line x1="217" y1="28" x2="217" y2="212" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
-          <line x1="442" y1="28" x2="442" y2="212" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
-          <line x1="667" y1="28" x2="667" y2="212" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+          <line x1="217" y1="28" x2="217" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+          <line x1="442" y1="28" x2="442" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+          <line x1="667" y1="28" x2="667" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
 
-          <rect x="20" y="46" width="170" height="64" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
-          <text x="105" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Grocery store</text>
-          <text x="105" y="95" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">HAS EVERYTHING</text>
+          <rect x="20" y="36" width="170" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <use href="#ico-store" x="83" y="48" width="44" height="44"></use>
+          <text x="105" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Grocery store</text>
+          <text x="105" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">HAS EVERYTHING</text>
 
-          <rect x="245" y="46" width="170" height="64" fill="#eef6ff" stroke="#2f6fcc" stroke-width="2"></rect>
-          <text x="330" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Delivery service</text>
-          <text x="330" y="95" font-family="Space Mono, monospace" font-size="10" fill="#2f6fcc" text-anchor="middle">RESTOCKS AS THINGS CHANGE</text>
+          <rect x="245" y="36" width="170" height="104" fill="#eef6ff" stroke="#2f6fcc" stroke-width="2"></rect>
+          <use href="#ico-van" x="308" y="48" width="44" height="44"></use>
+          <text x="330" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Delivery service</text>
+          <text x="330" y="130" font-family="Space Mono, monospace" font-size="10" fill="#2f6fcc" text-anchor="middle">YOU HIRED THEM</text>
 
-          <rect x="470" y="46" width="170" height="64" fill="#effaf1" stroke="#27843f" stroke-width="1.5"></rect>
-          <text x="555" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Fridge</text>
-          <text x="555" y="95" font-family="Space Mono, monospace" font-size="10" fill="#27843f" text-anchor="middle">ALWAYS FULL</text>
+          <rect x="470" y="36" width="170" height="104" fill="#effaf1" stroke="#27843f" stroke-width="1.5"></rect>
+          <use href="#ico-fridge" x="533" y="48" width="44" height="44"></use>
+          <text x="555" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Fridge</text>
+          <text x="555" y="130" font-family="Space Mono, monospace" font-size="10" fill="#27843f" text-anchor="middle">ALWAYS FULL</text>
 
-          <rect x="695" y="46" width="170" height="64" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
-          <text x="780" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">You</text>
-          <text x="780" y="95" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">STILL HUNGRY</text>
+          <rect x="695" y="36" width="170" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <use href="#ico-person" x="758" y="48" width="44" height="44"></use>
+          <text x="780" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">You</text>
+          <text x="780" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">STILL HUNGRY</text>
 
           <g stroke="#171717" stroke-width="1.5">
-            <line x1="194" y1="78" x2="239" y2="78" marker-end="url(#a)"></line>
-            <line x1="419" y1="78" x2="464" y2="78" marker-end="url(#a)"></line>
-            <line x1="644" y1="78" x2="689" y2="78" marker-end="url(#a)"></line>
+            <line x1="194" y1="88" x2="239" y2="88" marker-end="url(#a)"></line>
+            <line x1="419" y1="88" x2="464" y2="88" marker-end="url(#a)"></line>
+            <line x1="644" y1="88" x2="689" y2="88" marker-end="url(#a)"></line>
           </g>
 
           <g font-family="Space Mono, monospace" font-size="11" text-anchor="middle" fill="#171717">
-            <text x="217" y="132">WATCHES FOR</text>
-            <text x="217" y="147">ANYTHING NEW</text>
-            <text x="442" y="132">PUTS IT AWAY</text>
-            <text x="442" y="147">FOR YOU</text>
-            <text x="667" y="132">OPEN THE DOOR</text>
+            <text x="217" y="164">THEY WATCH FOR</text>
+            <text x="217" y="179">ANYTHING NEW</text>
+            <text x="442" y="164">THEY PUT IT</text>
+            <text x="442" y="179">AWAY FOR YOU</text>
+            <text x="667" y="164">OPEN THE DOOR</text>
           </g>
 
-          <text x="330" y="176" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#2f6fcc" text-anchor="middle">THIS IS RDI</text>
-          <text x="440" y="204" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f" text-anchor="middle">YOU NEVER DRIVE ANYWHERE. FIVE SECONDS TO DINNER.</text>
+          <text x="330" y="208" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#2f6fcc" text-anchor="middle">THIS IS RDI</text>
+          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f" text-anchor="middle">YOU NEVER DRIVE ANYWHERE. FIVE SECONDS TO DINNER.</text>
 
-          <text x="20" y="244" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Somebody else does the driving, before you even notice you need it.</text>
-          <text x="20" y="266" font-family="Inter, sans-serif" font-size="14" fill="#353535">And because the fridge is full, you can plan a whole meal from it.</text>
+          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Still your fridge, still your job. You just stopped doing the driving.</text>
+          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">And because the fridge is full, you can plan a whole meal from it.</text>
         </svg>
       </div>
       <p class="dag-cap">THE KITCHEN VERSION. THE DELIVERY SERVICE IS THE ONLY THING ADDED.</p>
@@ -964,11 +1010,9 @@ pre {
           <rect x="695" y="46" width="170" height="64" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
           <text x="780" y="83" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Application</text>
 
-          <g stroke="#171717" stroke-width="1.5">
-            <line x1="194" y1="78" x2="239" y2="78" marker-end="url(#a)"></line>
-            <line x1="419" y1="78" x2="464" y2="78" marker-end="url(#a)"></line>
-            <line x1="644" y1="78" x2="689" y2="78" marker-end="url(#a)"></line>
-          </g>
+          <line x1="194" y1="78" x2="239" y2="78" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></line>
+          <line x1="419" y1="78" x2="464" y2="78" stroke="#7ad13a" stroke-width="3" marker-end="url(#arg)"></line>
+          <line x1="644" y1="78" x2="689" y2="78" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></line>
 
           <g font-family="Space Mono, monospace" font-size="11" text-anchor="middle" fill="#171717">
             <text x="217" y="132">EVERY CHANGE,</text>
@@ -996,19 +1040,16 @@ pre {
 
     <p class="point">How long are you willing to hand out the wrong answer?</p>
 
-    <pre>value = redis.get(key)
-
-if value is None:
-    value = postgres.query(key)
-    redis.set(key, value, ex=<span class="bad">300</span>)
-
-return value</pre>
-    <p class="dag-cap" style="margin-bottom:44px">THAT 300 MEANS "THROW THIS AWAY IN FIVE MINUTES." IT IS A GUESS.</p>
+    <pre>1   look in Redis
+2   not there, so ask the database and wait
+3   put a copy in Redis
+4   throw that copy away in <span class="bad">five minutes</span></pre>
+    <p class="dag-cap" style="margin-bottom:44px">STEP 4 IS A GUESS, AND NOBODY CAN MAKE IT CORRECTLY.</p>
 
     <div class="dag">
       <div class="dag-wrap">
         <svg viewBox="0 0 860 300" style="min-width:640px" role="img" aria-label="Timeline comparison. With cache-aside, Redis serves the old value from the moment the row changes until the timer expires at 300 seconds. With RDI, Redis matches the source within a few seconds.">
-          <text x="20" y="20" font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" fill="#73736e">CACHE-ASIDE, ex=300</text>
+          <text x="20" y="20" font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" fill="#73736e">CACHE-ASIDE, FIVE MINUTE TIMER</text>
 
           <rect x="200" y="40" width="440" height="38" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
           <text x="420" y="65" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">REDIS IS HANDING OUT THE OLD VALUE</text>
@@ -1126,7 +1167,7 @@ return value</pre>
             <line x1="138" y1="120" x2="172" y2="120" marker-end="url(#a)"></line>
             <line x1="320" y1="120" x2="332" y2="120" marker-end="url(#a)"></line>
             <line x1="480" y1="120" x2="492" y2="120" marker-end="url(#a)"></line>
-            <line x1="662" y1="120" x2="686" y2="120" marker-end="url(#a)"></line>
+            <line x1="662" y1="120" x2="686" y2="120" stroke="#7ad13a" stroke-width="3" marker-end="url(#arg)"></line>
             <line x1="824" y1="120" x2="840" y2="120" marker-end="url(#a)"></line>
           </g>
 
