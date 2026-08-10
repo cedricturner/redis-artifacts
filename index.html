@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redis artifacts</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #fff;
+  --ink: #171717;
+  --text: #353535;
+  --muted: #73736e;
+  --rule: #d8d8d4;
+
+  --blue: #1f5b8f;
+  --teal: #16807a;
+  --green: #3f7c49;
+  --ochre: #a66b1f;
+  --orange: #b8512e;
+  --rose: #aa4b73;
+  --violet: #6e4b8b;
+
+  --body: Inter, "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: "Space Mono", "SFMono-Regular", Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { color: #fff; background: var(--ink); }
+a { color: inherit; }
+
+.page {
+  width: min(1040px, calc(100% - 56px));
+  margin: 0 auto;
+  padding: 68px 0 80px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .06em;
+}
+
+.hero { margin: 76px 0 104px; }
+
+h1 {
+  font-size: clamp(48px, 8vw, 88px);
+  font-weight: 500;
+  letter-spacing: -.065em;
+  line-height: .92;
+  max-width: 840px;
+  margin: 0 0 28px;
+  color: var(--ink);
+}
+
+.intro {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #4a4a4a;
+  max-width: 540px;
+  margin: 0;
+}
+
+.entries { border-top: 1px solid var(--rule); }
+
+.entry { --entry-ink: var(--blue); }
+.entry:nth-child(2) { --entry-ink: var(--teal); }
+.entry:nth-child(3) { --entry-ink: var(--green); }
+.entry:nth-child(4) { --entry-ink: var(--ochre); }
+.entry:nth-child(5) { --entry-ink: var(--orange); }
+.entry:nth-child(6) { --entry-ink: var(--rose); }
+.entry:nth-child(7) { --entry-ink: var(--violet); }
+
+.entry-link {
+  display: grid;
+  grid-template-columns: minmax(220px, .95fr) minmax(300px, 1.4fr) auto;
+  gap: 24px;
+  align-items: baseline;
+  padding: 25px 8px 27px 0;
+  border-bottom: 1px solid var(--rule);
+  text-decoration: none;
+}
+
+.entry-name {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  transition: color 120ms ease;
+}
+
+.entry-desc { font-size: 14px; }
+
+.entry-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
+.entry-link:hover .entry-name { color: var(--entry-ink); }
+.entry-link:focus-visible { outline: 1.5px solid var(--entry-ink); outline-offset: 5px; }
+
+.footer {
+  margin-top: 88px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.footer a { text-underline-offset: 4px; }
+.footer a:hover { color: var(--blue); }
+
+@media (max-width: 860px) {
+  .entry-link { grid-template-columns: 1fr; gap: 6px; }
+  .entry-meta { white-space: normal; }
+}
+
+@media (max-width: 720px) {
+  .page { width: min(100% - 36px, 1040px); padding: 42px 0 64px; }
+  h1 { font-size: clamp(46px, 15vw, 70px); }
+  .hero { margin: 48px 0 68px; }
+  .topbar, .footer { flex-direction: column; gap: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="topbar">
+    <span>Cedric Turner</span>
+    <span>Redis artifacts</span>
+  </div>
+
+  <div class="hero">
+    <h1>Redis artifacts</h1>
+    <p class="intro">Explainers for people who already know Redis as a cache and have not been given a reason to think of it as anything else. One page per idea, no slides required.</p>
+  </div>
+
+  <div class="entries">
+    <div class="entry">
+      <a class="entry-link" href="redis-data-integration/">
+        <span class="entry-name">Redis Data Integration</span>
+        <span class="entry-desc">Work in progress</span>
+        <span class="entry-meta">wip</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Redis Data Integration and adjacent things</span>
+    <span><a href="https://github.com/cedricturner/redis-artifacts">source on github</a></span>
+  </div>
+
+</div>
+</body>
+</html>

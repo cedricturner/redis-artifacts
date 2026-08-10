@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redis Data Integration</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #fff;
+  --ink: #171717;
+  --text: #353535;
+  --muted: #73736e;
+  --rule: #d8d8d4;
+  --surface: #fafaf9;
+  --faint: #9a9a94;
+
+  --blue: #1f5b8f;
+  --teal: #16807a;
+  --green: #3f7c49;
+  --ochre: #a66b1f;
+  --orange: #b8512e;
+  --rose: #aa4b73;
+  --violet: #6e4b8b;
+
+  --body: Inter, "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: "Space Mono", "SFMono-Regular", Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { color: #fff; background: var(--ink); }
+a { color: inherit; }
+
+.page {
+  width: min(1180px, calc(100% - 56px));
+  margin: 0 auto;
+  padding: 68px 0 80px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .06em;
+}
+
+.topbar a { text-decoration: none; }
+.topbar a:hover { color: var(--blue); }
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: #4a4a4a;
+  margin: 76px 0 20px;
+}
+
+.hero { margin-bottom: 76px; }
+
+h1 {
+  font-size: clamp(48px, 8vw, 88px);
+  font-weight: 500;
+  letter-spacing: -.065em;
+  line-height: .92;
+  max-width: 840px;
+  margin: 0 0 28px;
+  color: var(--ink);
+}
+
+.intro {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #4a4a4a;
+  max-width: 520px;
+  margin: 0;
+}
+
+.intro b { color: var(--ink); font-weight: 600; }
+
+.intro a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 3px;
+  transition: color 120ms ease, text-decoration-color 120ms ease;
+}
+
+.intro a:hover { color: var(--blue); text-decoration-color: var(--blue); }
+.intro a:focus-visible { outline: 1.5px solid var(--blue); outline-offset: 3px; }
+
+/* ---------- sticky section rail ---------- */
+
+.mobile-section-picker { display: none; }
+
+.scroll-layout {
+  display: grid;
+  grid-template-columns: minmax(164px, 190px) minmax(0, 1fr);
+  gap: clamp(36px, 5vw, 64px);
+  align-items: start;
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.nav-step {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  justify-items: start;
+  gap: 0;
+  padding: 11px 12px;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: var(--body);
+  font-size: 13px;
+  text-align: left;
+}
+
+.nav-step:hover { color: var(--ink); }
+
+.section-rail {
+  --rail-progress: 0%;
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100vh - 48px);
+  min-height: 560px;
+  margin: 0;
+  padding: 4px 0;
+  border: 0;
+  isolation: isolate;
+}
+
+.section-rail::before,
+.section-rail::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 20px;
+  left: 16px;
+  width: 2px;
+  border-radius: 60% 40% 55% 45%;
+  transform: rotate(-.25deg);
+}
+
+.section-rail::before {
+  bottom: 20px;
+  background: repeating-linear-gradient(to bottom, #d6d3d1 0 8px, #ebe8e3 8px 11px);
+}
+
+.section-rail::after {
+  height: calc((100% - 40px) * var(--rail-progress) / 100%);
+  background: repeating-linear-gradient(to bottom, var(--ink) 0 9px, #555 9px 11px);
+  transition: height .35s ease;
+}
+
+.section-rail .nav-step {
+  width: 100%;
+  position: relative;
+  padding: 5px 4px 5px 0;
+  text-align: left;
+  border: 0;
+  background: transparent;
+}
+
+.section-rail .step-num {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #aaa;
+  background: var(--paper);
+  border: 1.5px solid #c9c5be;
+  border-radius: 52% 48% 45% 55%;
+  transform: rotate(-2deg);
+}
+
+.section-rail .nav-step:nth-child(even) .step-num {
+  border-radius: 46% 54% 52% 48%;
+  transform: rotate(2deg);
+}
+
+.section-rail .nav-step.passed .step-num { color: var(--ink); border-color: var(--ink); }
+.section-rail .nav-step.active { color: var(--ink); background: transparent; }
+
+.section-rail .nav-step.active .step-num {
+  color: var(--paper);
+  background: var(--shape-color);
+  border-color: var(--shape-color);
+  transform: rotate(-4deg) scale(1.08);
+}
+
+.section-rail .nav-step[data-shape="circle"]   { --shape-color: #d95721; }
+.section-rail .nav-step[data-shape="square"]   { --shape-color: #2f6fcc; }
+.section-rail .nav-step[data-shape="diamond"]  { --shape-color: #b7790b; --shape-text: #171717; }
+.section-rail .nav-step[data-shape="triangle"] { --shape-color: #7c3fa0; }
+.section-rail .nav-step[data-shape="hexagon"]  { --shape-color: #27843f; }
+.section-rail .nav-step[data-shape="squircle"] { --shape-color: #b52f35; }
+
+.section-rail .nav-step.active .step-num { color: var(--shape-text, #fff); }
+
+.section-rail .nav-step[data-shape="circle"].active .step-num {
+  border-radius: 50%;
+  transform: rotate(-2deg) scale(1.08);
+}
+
+.section-rail .nav-step[data-shape="square"] .step-num {
+  border-radius: 12% 7% 14% 5%;
+  transform: rotate(3deg);
+}
+
+.section-rail .nav-step[data-shape="diamond"] .step-num {
+  border-radius: 7%;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.section-rail .nav-step[data-shape="triangle"] .step-num {
+  padding-top: 5px;
+  border: 0;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: #f3f1ed;
+  filter: drop-shadow(0 0 1px #777);
+}
+
+.section-rail .nav-step[data-shape="triangle"].active .step-num { background: var(--shape-color); }
+
+.section-rail .nav-step[data-shape="hexagon"] .step-num {
+  border: 0;
+  clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0 50%);
+  background: #f3f1ed;
+  filter: drop-shadow(0 0 1px #777);
+}
+
+.section-rail .nav-step[data-shape="hexagon"].active .step-num { background: var(--shape-color); }
+
+.section-rail .nav-step[data-shape="squircle"] .step-num {
+  border-radius: 44% 56% 48% 52% / 52% 43% 57% 48%;
+}
+
+.section-rail .nav-step:not(.active) .step-num {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: #666;
+  background: var(--paper);
+  border: 1.5px solid #aaa;
+  border-radius: 52% 48% 45% 55%;
+  clip-path: none;
+  filter: none;
+  transform: rotate(-2deg);
+}
+
+.section-rail .step-lbl {
+  padding: 3px 5px;
+  background: rgba(250, 250, 249, .92);
+  line-height: 1.3;
+}
+
+.section-rail .nav-step:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+.scroll-article { min-width: 0; }
+.panel { scroll-margin-top: 32px; }
+
+.panel + .panel {
+  margin-top: 96px;
+  padding-top: 72px;
+  border-top: 1px solid var(--rule);
+}
+
+/* ---------- section internals ---------- */
+
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 34px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.sec-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: #4a4a4a;
+  transition: color 120ms ease;
+}
+
+section:hover .sec-num { color: var(--sec-ink); }
+
+h2 { font-size: 14px; font-weight: 600; margin: 0; color: var(--ink); }
+
+.sec-note {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-align: right;
+}
+
+.panel { --sec-ink: var(--blue); }
+.panel:nth-of-type(2) { --sec-ink: var(--teal); }
+.panel:nth-of-type(3) { --sec-ink: var(--green); }
+.panel:nth-of-type(4) { --sec-ink: var(--ochre); }
+.panel:nth-of-type(5) { --sec-ink: var(--orange); }
+.panel:nth-of-type(6) { --sec-ink: var(--rose); }
+
+p { max-width: 640px; }
+
+.point {
+  font-size: 19px;
+  line-height: 1.45;
+  font-weight: 500;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  max-width: 600px;
+  margin: 0 0 32px;
+}
+
+/* ---------- diagrams ---------- */
+
+.dag-wrap {
+  overflow-x: auto;
+  padding: 20px 22px 22px;
+  background: var(--surface);
+  border: 1.5px solid var(--rule);
+  margin: 0;
+}
+
+.dag-wrap svg { display: block; width: 100%; height: auto; }
+
+.dag-cap {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .05em;
+  color: var(--faint);
+  margin: 12px 0 0;
+  max-width: 640px;
+}
+
+.dag + .dag { margin-top: 44px; }
+
+/* ---------- story beats ---------- */
+
+.beats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 620px;
+  counter-reset: b;
+}
+
+.beats li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 14px;
+  padding: 18px 0 20px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.beats li:first-child { border-top: 1px solid var(--rule); }
+
+.beats li::before {
+  counter-increment: b;
+  content: counter(b);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  padding-top: 2px;
+}
+
+.beats b { color: var(--ink); font-weight: 600; }
+
+/* ---------- mapping ---------- */
+
+.map {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  max-width: 640px;
+  margin: 38px 0 0;
+  border-top: 1px solid var(--rule);
+}
+
+.map dt {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .05em;
+  color: var(--muted);
+  padding: 12px 16px 13px 0;
+  border-bottom: 1px solid var(--rule);
+  line-height: 1.6;
+}
+
+.map dd {
+  margin: 0;
+  padding: 12px 0 13px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 14px;
+  color: var(--ink);
+}
+
+/* ---------- talk track ---------- */
+
+.say {
+  max-width: 600px;
+  margin-top: 38px;
+  padding-left: 20px;
+  border-left: 1px solid var(--ink);
+}
+
+.say-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .08em;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.say p { margin: 0; }
+
+/* ---------- code ---------- */
+
+pre {
+  margin: 0;
+  padding: 20px 22px;
+  background: var(--surface);
+  border: 1.5px solid var(--rule);
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: var(--text);
+  max-width: 560px;
+}
+
+.bad { color: #d92d20; font-weight: 700; }
+
+/* ---------- outcome list ---------- */
+
+.outs { list-style: none; margin: 0; padding: 0; max-width: 660px; }
+
+.outs li {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  padding: 18px 0 20px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.outs li:first-child { border-top: 1px solid var(--rule); }
+.outs b { color: var(--ink); font-weight: 600; }
+
+.lvl-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .08em;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  padding: 3px 7px 4px;
+  text-align: center;
+}
+
+.lvl-tag.b2 { border-color: #2f6fcc; color: #2f6fcc; }
+.lvl-tag.b3 { border-color: #27843f; color: #27843f; }
+
+/* ---------- source support ---------- */
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; max-width: 660px; }
+
+.chip {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1.5px solid var(--rule);
+  padding: 5px 9px 6px;
+}
+
+.chip.prev { border-color: #b7790b; color: #b7790b; }
+.chip.no { border-style: dashed; color: var(--muted); }
+
+.chip-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--muted);
+  margin: 30px 0 12px;
+}
+
+.chip-label:first-of-type { margin-top: 0; }
+
+/* ---------- draft ---------- */
+
+.draft {
+  max-width: 640px;
+  margin: 38px 0 0;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--ink);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.draft-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .08em;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.footer {
+  margin-top: 88px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.footer a { text-underline-offset: 4px; }
+.footer a:hover { color: var(--blue); }
+
+.sources {
+  max-width: 640px;
+  margin-top: 30px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 2;
+  color: var(--muted);
+}
+
+.sources a:hover { color: var(--blue); }
+
+@media (max-width: 860px) {
+  .map { grid-template-columns: 1fr; }
+  .map dt { border-bottom: 0; padding-bottom: 0; }
+  .map dd { padding-top: 2px; }
+  .outs li { grid-template-columns: 1fr; gap: 8px; }
+  .lvl-tag { justify-self: start; padding: 3px 10px 4px; }
+}
+
+@media (max-width: 800px) {
+  .scroll-layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .section-rail { display: none; }
+
+  .mobile-section-picker {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: block;
+    margin: 0 -14px 28px;
+    padding: 10px 14px;
+    background: rgba(250, 250, 249, .96);
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    backdrop-filter: blur(10px);
+  }
+
+  .mobile-section-picker label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--faint);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  #mobile-section-nav {
+    width: 100%;
+    padding: 4px 28px 4px 0;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    font-family: var(--body);
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 720px) {
+  .page { width: min(100% - 36px, 1180px); padding: 42px 0 64px; }
+  h1 { font-size: clamp(46px, 15vw, 70px); }
+  .kicker { margin-top: 48px; }
+  .hero { margin-bottom: 44px; }
+  .panel + .panel { margin-top: 60px; padding-top: 48px; }
+  .point { font-size: 17px; }
+  .dag-wrap { padding: 14px; }
+  .sec-head { flex-wrap: wrap; }
+  .sec-note { margin-left: 0; width: 100%; text-align: left; }
+  .topbar, .footer { flex-direction: column; gap: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+
+@media print {
+  .page { width: 100%; padding: 0; }
+  .scroll-layout { display: block; }
+  .section-rail, .mobile-section-picker, .draft { display: none; }
+  .panel { break-inside: avoid; }
+  .panel + .panel { margin-top: 40px; padding-top: 0; border-top: 0; }
+  .dag-wrap { break-inside: avoid; background: #fff; }
+  .hero { margin-bottom: 40px; }
+  h1 { font-size: 48px; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <marker id="a" viewBox="0 0 10 7" refX="9.5" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 3.5 L0 7 z" fill="#171717"></path>
+  </marker>
+  <marker id="ar" viewBox="0 0 10 7" refX="9.5" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 3.5 L0 7 z" fill="#d92d20"></path>
+  </marker>
+  <marker id="ag" viewBox="0 0 10 7" refX="9.5" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 3.5 L0 7 z" fill="#27843f"></path>
+  </marker>
+</defs></svg>
+
+<div class="page">
+
+  <div class="topbar">
+    <span><a href="../">&larr; all explainers</a></span>
+    <span>work in progress</span>
+  </div>
+
+  <p class="kicker">RDI 101</p>
+
+  <div class="hero">
+    <h1>Redis Data Integration</h1>
+    <p class="intro"><b>Short name <a href="https://redis.io/docs/latest/integrate/redis-data-integration/">RDI</a>.</b> Everyone keeps a copy of their data in Redis. The only argument is how the copy gets there.</p>
+  </div>
+
+  <div class="mobile-section-picker">
+    <label for="mobile-section-nav">section</label>
+    <select id="mobile-section-nav" aria-label="Current section">
+      <option value="section-fridge">why own a fridge?</option>
+      <option value="section-before-after">which way do arrows point?</option>
+      <option value="section-breaks">how wrong can it get?</option>
+      <option value="section-how">what if it stayed current?</option>
+      <option value="section-examples">what if you need more?</option>
+      <option value="section-limits">would it read yours?</option>
+    </select>
+  </div>
+
+  <div class="scroll-layout">
+
+  <nav class="nav section-rail" aria-label="Article sections">
+    <button class="nav-step active" type="button" data-shape="circle" data-section-target="section-fridge"><span class="step-num">1</span><span class="step-lbl">why own a fridge?</span></button>
+    <button class="nav-step" type="button" data-shape="square" data-section-target="section-before-after"><span class="step-num">2</span><span class="step-lbl">which way do arrows point?</span></button>
+    <button class="nav-step" type="button" data-shape="diamond" data-section-target="section-breaks"><span class="step-num">3</span><span class="step-lbl">how wrong can it get?</span></button>
+    <button class="nav-step" type="button" data-shape="triangle" data-section-target="section-how"><span class="step-num">4</span><span class="step-lbl">what if it stayed current?</span></button>
+    <button class="nav-step" type="button" data-shape="hexagon" data-section-target="section-examples"><span class="step-num">5</span><span class="step-lbl">what if you need more?</span></button>
+    <button class="nav-step" type="button" data-shape="squircle" data-section-target="section-limits"><span class="step-num">6</span><span class="step-lbl">would it read yours?</span></button>
+  </nav>
+
+  <main class="scroll-article">
+
+  <!-- 01 -->
+  <section class="panel" id="section-fridge" data-section-id="section-fridge">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2>Why do you own a fridge?</h2>
+    </div>
+
+    <p class="point">Would you drive to the store for every glass of milk?</p>
+
+    <ul class="beats">
+      <li><span><b>The store has everything.</b> Getting there takes a while.</span></li>
+      <li><span><b>So you keep a copy at home.</b> The fridge is right there.</span></li>
+      <li><span><b>The only question is how the fridge gets filled.</b> You drive over for each item as you need it, or the store keeps it stocked for you.</span></li>
+    </ul>
+
+    <dl class="map">
+      <dt>THE STORE</dt><dd>Your real database. Oracle, Postgres, MySQL, Mongo.</dd>
+      <dt>THE FRIDGE</dt><dd>Redis.</dd>
+      <dt>DRIVING OVER</dt><dd>Cache-aside. Where everyone starts.</dd>
+      <dt>KEEPING IT STOCKED</dt><dd>Redis Data Integration.</dd>
+    </dl>
+
+    <div class="say">
+      <span class="say-label">SAY IT LIKE THIS</span>
+      <p>The store has everything and takes time to reach. The fridge is fast, so you keep a copy at home. The only question is whether you drive over for each item or the store keeps your fridge full.</p>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="panel" id="section-before-after" data-section-id="section-before-after">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2>Which way should the arrows point?</h2>
+      <span class="sec-note">follow the arrows</span>
+    </div>
+
+    <p class="point">If data only moves one way, why does cache-aside need an arrow that doubles back?</p>
+
+    <div class="dag">
+      <div class="dag-wrap">
+        <svg viewBox="0 0 880 270" style="min-width:700px" role="img" aria-label="Cache-aside, flowing left to right. Source database to Redis to application. Nothing fills Redis on its own, and on every miss the application has to reach all the way back to the source database, shown as an arrow doubling back.">
+          <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
+            <text x="110" y="18">SOURCE DATABASE</text>
+            <text x="440" y="18">REDIS</text>
+            <text x="770" y="18">APPLICATION</text>
+          </g>
+          <line x1="275" y1="28" x2="275" y2="206" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+          <line x1="605" y1="28" x2="605" y2="206" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+
+          <rect x="20" y="46" width="180" height="64" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <text x="110" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Source database</text>
+          <text x="110" y="95" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">ORACLE, POSTGRES</text>
+
+          <rect x="350" y="46" width="180" height="64" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
+          <text x="440" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Redis</text>
+          <text x="440" y="95" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">A FEW KEYS, EACH ON A TIMER</text>
+
+          <rect x="680" y="46" width="180" height="64" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <text x="770" y="83" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Application</text>
+
+          <line x1="204" y1="78" x2="344" y2="78" stroke="#d92d20" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ar)"></line>
+          <line x1="534" y1="78" x2="674" y2="78" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></line>
+
+          <g font-family="Space Mono, monospace" font-size="11" text-anchor="middle">
+            <text x="274" y="132" fill="#d92d20">NOTHING FILLS REDIS</text>
+            <text x="274" y="147" fill="#d92d20">ON ITS OWN</text>
+            <text x="604" y="132" fill="#171717">READ</text>
+          </g>
+
+          <path d="M 770 114 L 770 178 L 110 178 L 110 116" fill="none" stroke="#d92d20" stroke-width="2" marker-end="url(#ar)"></path>
+          <text x="440" y="198" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">ON EVERY MISS, THE APP GOES ALL THE WAY BACK HERE ITSELF</text>
+
+          <text x="20" y="234" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Nobody owns keeping Redis correct, so the app has to.</text>
+          <text x="20" y="256" font-family="Inter, sans-serif" font-size="14" fill="#353535">It decides what to keep, how long to keep it, and what to do when it is missing.</text>
+        </svg>
+      </div>
+      <p class="dag-cap">CACHE-ASIDE. THE RED ARROW UNDERNEATH IS THE PROBLEM.</p>
+    </div>
+
+    <div class="dag">
+      <div class="dag-wrap">
+        <svg viewBox="0 0 880 270" style="min-width:760px" role="img" aria-label="With RDI, flowing left to right. Source database, then RDI, then Redis, then application. Every arrow points the same way and the application never reaches past Redis.">
+          <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
+            <text x="105" y="18">SOURCE DATABASE</text>
+            <text x="330" y="18">RDI</text>
+            <text x="555" y="18">REDIS</text>
+            <text x="780" y="18">APPLICATION</text>
+          </g>
+          <line x1="217" y1="28" x2="217" y2="206" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+          <line x1="442" y1="28" x2="442" y2="206" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+          <line x1="667" y1="28" x2="667" y2="206" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+
+          <rect x="20" y="46" width="170" height="64" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <text x="105" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Source database</text>
+          <text x="105" y="95" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">ORACLE, POSTGRES</text>
+
+          <rect x="245" y="46" width="170" height="64" fill="#eef6ff" stroke="#2f6fcc" stroke-width="2"></rect>
+          <text x="330" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">RDI</text>
+          <text x="330" y="95" font-family="Space Mono, monospace" font-size="10" fill="#2f6fcc" text-anchor="middle">WATCHES AND COPIES</text>
+
+          <rect x="470" y="46" width="170" height="64" fill="#effaf1" stroke="#27843f" stroke-width="1.5"></rect>
+          <text x="555" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Redis</text>
+          <text x="555" y="95" font-family="Space Mono, monospace" font-size="10" fill="#27843f" text-anchor="middle">ALL OF IT, NO TIMERS</text>
+
+          <rect x="695" y="46" width="170" height="64" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <text x="780" y="83" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Application</text>
+
+          <g stroke="#171717" stroke-width="1.5">
+            <line x1="194" y1="78" x2="239" y2="78" marker-end="url(#a)"></line>
+            <line x1="419" y1="78" x2="464" y2="78" marker-end="url(#a)"></line>
+            <line x1="644" y1="78" x2="689" y2="78" marker-end="url(#a)"></line>
+          </g>
+
+          <g font-family="Space Mono, monospace" font-size="11" text-anchor="middle">
+            <text x="217" y="132" fill="#171717">EVERY CHANGE,</text>
+            <text x="217" y="147" fill="#171717">AS IT HAPPENS</text>
+            <text x="442" y="132" fill="#171717">SHAPED THE WAY</text>
+            <text x="442" y="147" fill="#171717">YOUR APP WANTS IT</text>
+            <text x="667" y="132" fill="#171717">READ</text>
+          </g>
+
+          <text x="440" y="184" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f" text-anchor="middle">NOTHING DOUBLES BACK. THE APP NEVER LOOKS PAST REDIS.</text>
+
+          <text x="20" y="234" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">RDI owns keeping Redis correct, so the app only reads.</text>
+          <text x="20" y="256" font-family="Inter, sans-serif" font-size="14" fill="#353535">Changes usually reach Redis within a few seconds of happening at the source.</text>
+        </svg>
+      </div>
+      <p class="dag-cap">WITH RDI. ONE STAGE ADDED, ONE ARROW REMOVED, EVERYTHING POINTING THE SAME WAY.</p>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="panel" id="section-breaks" data-section-id="section-breaks">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2>How wrong can your data get?</h2>
+    </div>
+
+    <p class="point">How long are you willing to hand out the wrong answer?</p>
+
+    <pre>value = redis.get(key)
+
+if value is None:
+    value = postgres.query(key)
+    redis.set(key, value, ex=<span class="bad">300</span>)
+
+return value</pre>
+    <p class="dag-cap" style="margin-bottom:44px">THAT 300 MEANS "THROW THIS AWAY IN FIVE MINUTES." IT IS A GUESS.</p>
+
+    <div class="dag">
+      <div class="dag-wrap">
+        <svg viewBox="0 0 860 300" style="min-width:640px" role="img" aria-label="Timeline comparison. With cache-aside, Redis serves the old value from the moment the row changes until the timer expires at 300 seconds. With RDI, Redis matches the source within a few seconds.">
+          <text x="20" y="20" font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" fill="#73736e">CACHE-ASIDE, ex=300</text>
+
+          <rect x="200" y="40" width="440" height="38" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
+          <text x="420" y="65" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">REDIS IS HANDING OUT THE OLD VALUE</text>
+
+          <line x1="60" y1="100" x2="800" y2="100" stroke="#171717" stroke-width="1.5"></line>
+          <line x1="200" y1="34" x2="200" y2="108" stroke="#171717" stroke-width="1.5"></line>
+          <line x1="640" y1="34" x2="640" y2="108" stroke="#171717" stroke-width="1.5"></line>
+
+          <g font-family="Space Mono, monospace" font-size="11" fill="#171717" text-anchor="middle">
+            <text x="200" y="126">SOMEBODY CHANGES THE ROW</text>
+            <text x="640" y="126">TIMER RUNS OUT</text>
+          </g>
+          <g font-family="Space Mono, monospace" font-size="11" fill="#9a9a94" text-anchor="middle">
+            <text x="200" y="144">t = 0</text>
+            <text x="640" y="144">t = 5 min</text>
+          </g>
+
+          <text x="20" y="196" font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" fill="#73736e">WITH RDI</text>
+
+          <rect x="200" y="216" width="20" height="38" fill="#effaf1" stroke="#27843f" stroke-width="1.5"></rect>
+          <text x="236" y="240" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f">REDIS MATCHES THE SOURCE AGAIN</text>
+
+          <line x1="60" y1="276" x2="800" y2="276" stroke="#171717" stroke-width="1.5"></line>
+          <line x1="200" y1="210" x2="200" y2="284" stroke="#171717" stroke-width="1.5"></line>
+          <text x="200" y="298" font-family="Space Mono, monospace" font-size="11" fill="#9a9a94" text-anchor="middle">t = 0</text>
+        </svg>
+      </div>
+      <p class="dag-cap">SHORTEN THE TIMER AND THE RED BAR SHRINKS, BUT NOW YOU ARE HITTING THE SOURCE CONSTANTLY AND THE CACHE STOPS HELPING.</p>
+    </div>
+
+    <div class="dag">
+      <div class="dag-wrap">
+        <svg viewBox="0 0 860 260" style="min-width:640px" role="img" aria-label="Two grids of fifty squares. With cache-aside only five squares are filled, the keys somebody happened to ask for. With RDI all fifty are filled.">
+          <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" fill="#73736e">
+            <text x="30" y="20">CACHE-ASIDE</text>
+            <text x="470" y="20">WITH RDI</text>
+          </g>
+
+          <g stroke="#d8d8d4" stroke-width="1.5" fill="#fff">
+            <rect x="30" y="38" width="22" height="22"></rect><rect x="56" y="38" width="22" height="22"></rect><rect x="82" y="38" width="22" height="22"></rect><rect x="108" y="38" width="22" height="22"></rect><rect x="134" y="38" width="22" height="22"></rect><rect x="160" y="38" width="22" height="22"></rect><rect x="186" y="38" width="22" height="22"></rect><rect x="212" y="38" width="22" height="22"></rect><rect x="238" y="38" width="22" height="22"></rect><rect x="264" y="38" width="22" height="22"></rect>
+            <rect x="30" y="64" width="22" height="22"></rect><rect x="56" y="64" width="22" height="22"></rect><rect x="82" y="64" width="22" height="22"></rect><rect x="108" y="64" width="22" height="22"></rect><rect x="134" y="64" width="22" height="22"></rect><rect x="160" y="64" width="22" height="22"></rect><rect x="186" y="64" width="22" height="22"></rect><rect x="212" y="64" width="22" height="22"></rect><rect x="238" y="64" width="22" height="22"></rect><rect x="264" y="64" width="22" height="22"></rect>
+            <rect x="30" y="90" width="22" height="22"></rect><rect x="56" y="90" width="22" height="22"></rect><rect x="82" y="90" width="22" height="22"></rect><rect x="108" y="90" width="22" height="22"></rect><rect x="134" y="90" width="22" height="22"></rect><rect x="160" y="90" width="22" height="22"></rect><rect x="186" y="90" width="22" height="22"></rect><rect x="212" y="90" width="22" height="22"></rect><rect x="238" y="90" width="22" height="22"></rect><rect x="264" y="90" width="22" height="22"></rect>
+            <rect x="30" y="116" width="22" height="22"></rect><rect x="56" y="116" width="22" height="22"></rect><rect x="82" y="116" width="22" height="22"></rect><rect x="108" y="116" width="22" height="22"></rect><rect x="134" y="116" width="22" height="22"></rect><rect x="160" y="116" width="22" height="22"></rect><rect x="186" y="116" width="22" height="22"></rect><rect x="212" y="116" width="22" height="22"></rect><rect x="238" y="116" width="22" height="22"></rect><rect x="264" y="116" width="22" height="22"></rect>
+            <rect x="30" y="142" width="22" height="22"></rect><rect x="56" y="142" width="22" height="22"></rect><rect x="82" y="142" width="22" height="22"></rect><rect x="108" y="142" width="22" height="22"></rect><rect x="134" y="142" width="22" height="22"></rect><rect x="160" y="142" width="22" height="22"></rect><rect x="186" y="142" width="22" height="22"></rect><rect x="212" y="142" width="22" height="22"></rect><rect x="238" y="142" width="22" height="22"></rect><rect x="264" y="142" width="22" height="22"></rect>
+          </g>
+          <g fill="#171717">
+            <rect x="30" y="38" width="22" height="22"></rect><rect x="108" y="64" width="22" height="22"></rect><rect x="238" y="38" width="22" height="22"></rect><rect x="56" y="116" width="22" height="22"></rect><rect x="186" y="142" width="22" height="22"></rect>
+          </g>
+          <text x="30" y="196" font-family="Space Mono, monospace" font-size="13" font-weight="700" fill="#171717">5 OF 50</text>
+          <text x="30" y="222" font-family="Inter, sans-serif" font-size="14" fill="#353535">Only what somebody already asked for.</text>
+          <text x="30" y="244" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#d92d20">Searching this gives a partial answer.</text>
+
+          <g fill="#171717">
+            <rect x="470" y="38" width="22" height="22"></rect><rect x="496" y="38" width="22" height="22"></rect><rect x="522" y="38" width="22" height="22"></rect><rect x="548" y="38" width="22" height="22"></rect><rect x="574" y="38" width="22" height="22"></rect><rect x="600" y="38" width="22" height="22"></rect><rect x="626" y="38" width="22" height="22"></rect><rect x="652" y="38" width="22" height="22"></rect><rect x="678" y="38" width="22" height="22"></rect><rect x="704" y="38" width="22" height="22"></rect>
+            <rect x="470" y="64" width="22" height="22"></rect><rect x="496" y="64" width="22" height="22"></rect><rect x="522" y="64" width="22" height="22"></rect><rect x="548" y="64" width="22" height="22"></rect><rect x="574" y="64" width="22" height="22"></rect><rect x="600" y="64" width="22" height="22"></rect><rect x="626" y="64" width="22" height="22"></rect><rect x="652" y="64" width="22" height="22"></rect><rect x="678" y="64" width="22" height="22"></rect><rect x="704" y="64" width="22" height="22"></rect>
+            <rect x="470" y="90" width="22" height="22"></rect><rect x="496" y="90" width="22" height="22"></rect><rect x="522" y="90" width="22" height="22"></rect><rect x="548" y="90" width="22" height="22"></rect><rect x="574" y="90" width="22" height="22"></rect><rect x="600" y="90" width="22" height="22"></rect><rect x="626" y="90" width="22" height="22"></rect><rect x="652" y="90" width="22" height="22"></rect><rect x="678" y="90" width="22" height="22"></rect><rect x="704" y="90" width="22" height="22"></rect>
+            <rect x="470" y="116" width="22" height="22"></rect><rect x="496" y="116" width="22" height="22"></rect><rect x="522" y="116" width="22" height="22"></rect><rect x="548" y="116" width="22" height="22"></rect><rect x="574" y="116" width="22" height="22"></rect><rect x="600" y="116" width="22" height="22"></rect><rect x="626" y="116" width="22" height="22"></rect><rect x="652" y="116" width="22" height="22"></rect><rect x="678" y="116" width="22" height="22"></rect><rect x="704" y="116" width="22" height="22"></rect>
+            <rect x="470" y="142" width="22" height="22"></rect><rect x="496" y="142" width="22" height="22"></rect><rect x="522" y="142" width="22" height="22"></rect><rect x="548" y="142" width="22" height="22"></rect><rect x="574" y="142" width="22" height="22"></rect><rect x="600" y="142" width="22" height="22"></rect><rect x="626" y="142" width="22" height="22"></rect><rect x="652" y="142" width="22" height="22"></rect><rect x="678" y="142" width="22" height="22"></rect><rect x="704" y="142" width="22" height="22"></rect>
+          </g>
+          <text x="470" y="196" font-family="Space Mono, monospace" font-size="13" font-weight="700" fill="#171717">50 OF 50</text>
+          <text x="470" y="222" font-family="Inter, sans-serif" font-size="14" fill="#353535">The whole dataset.</text>
+          <text x="470" y="244" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#27843f">Searching this gives the real answer.</text>
+        </svg>
+      </div>
+      <p class="dag-cap">FRAUD SCORING AND PERSONALIZATION NEED ALL OF IT, NOT A GOOD HIT RATE. THIS IS THE PART A BIGGER CACHE CANNOT FIX.</p>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="panel" id="section-how" data-section-id="section-how">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2>What if the store stocked it for you?</h2>
+      <span class="sec-note">names are from the Redis docs</span>
+    </div>
+
+    <p class="point">What if you filled it once and it stayed filled?</p>
+
+    <div class="dag">
+      <div class="dag-wrap">
+        <svg viewBox="0 0 1000 300" style="min-width:850px" role="img" aria-label="Inside RDI, flowing left to right. Source database, then RDI containing a CDC collector, the RDI database of Redis streams, and a stream processor, then the target Redis database, then the application.">
+          <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
+            <text x="71" y="20">SOURCE DATABASE</text>
+            <text x="757" y="20">REDIS</text>
+            <text x="911" y="20">APPLICATION</text>
+          </g>
+
+          <rect x="160" y="48" width="500" height="132" fill="#f7fbff" stroke="#2f6fcc" stroke-width="2"></rect>
+          <text x="176" y="70" font-family="Space Mono, monospace" font-size="13" font-weight="700" letter-spacing="1" fill="#2f6fcc">RDI</text>
+
+          <rect x="6" y="88" width="130" height="64" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <text x="71" y="114" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#171717" text-anchor="middle">Source</text>
+          <text x="71" y="132" font-family="Space Mono, monospace" font-size="9" fill="#9a9a94" text-anchor="middle">ORACLE, POSTGRES</text>
+
+          <rect x="178" y="88" width="140" height="64" fill="#fff" stroke="#2f6fcc" stroke-width="1.5"></rect>
+          <text x="248" y="114" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#171717" text-anchor="middle">CDC collector</text>
+          <text x="248" y="132" font-family="Space Mono, monospace" font-size="9" fill="#2f6fcc" text-anchor="middle">DEBEZIUM</text>
+
+          <rect x="338" y="88" width="140" height="64" fill="#fff" stroke="#2f6fcc" stroke-width="1.5"></rect>
+          <text x="408" y="114" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#171717" text-anchor="middle">RDI database</text>
+          <text x="408" y="132" font-family="Space Mono, monospace" font-size="9" fill="#2f6fcc" text-anchor="middle">REDIS STREAMS</text>
+
+          <rect x="498" y="88" width="140" height="64" fill="#fff" stroke="#2f6fcc" stroke-width="1.5"></rect>
+          <text x="568" y="114" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#171717" text-anchor="middle">Stream processor</text>
+          <text x="568" y="132" font-family="Space Mono, monospace" font-size="9" fill="#2f6fcc" text-anchor="middle">TRANSFORMATIONS</text>
+
+          <rect x="692" y="88" width="130" height="64" fill="#effaf1" stroke="#27843f" stroke-width="1.5"></rect>
+          <text x="757" y="114" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#171717" text-anchor="middle">Target Redis</text>
+          <text x="757" y="132" font-family="Space Mono, monospace" font-size="9" fill="#27843f" text-anchor="middle">ALL OF IT, CURRENT</text>
+
+          <rect x="846" y="88" width="130" height="64" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <text x="911" y="124" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#171717" text-anchor="middle">Application</text>
+
+          <g stroke="#171717" stroke-width="1.5">
+            <line x1="138" y1="120" x2="172" y2="120" marker-end="url(#a)"></line>
+            <line x1="320" y1="120" x2="332" y2="120" marker-end="url(#a)"></line>
+            <line x1="480" y1="120" x2="492" y2="120" marker-end="url(#a)"></line>
+            <line x1="662" y1="120" x2="686" y2="120" marker-end="url(#a)"></line>
+            <line x1="824" y1="120" x2="840" y2="120" marker-end="url(#a)"></line>
+          </g>
+
+          <line x1="6" y1="212" x2="976" y2="212" stroke="#d8d8d4" stroke-width="1.5"></line>
+          <g font-family="Space Mono, monospace" font-size="11" font-weight="700" fill="#171717">
+            <text x="6" y="238">PHASE 1&#160;&#160;INITIAL CACHE LOADING</text>
+            <text x="6" y="272">PHASE 2&#160;&#160;CHANGE STREAMING</text>
+          </g>
+          <g font-family="Inter, sans-serif" font-size="14" fill="#353535">
+            <text x="290" y="238">Copy the whole dataset in. Minutes or hours, once.</text>
+            <text x="290" y="272">Then every insert, update and delete, as it happens.</text>
+          </g>
+        </svg>
+      </div>
+      <p class="dag-cap">THE RDI DATABASE IS NOT THE ONE YOUR APP TALKS TO. IT HOLDS THE CHANGE STREAMS ON THE WAY THROUGH.</p>
+    </div>
+
+    <ul class="beats" style="margin-top:44px">
+      <li><span><b>No timers anywhere.</b> Nothing expires, because changes arrive on their own.</span></li>
+      <li><span><b>You pick the shape.</b> Source tables rarely match what an app wants to read. Transformations turn rows into the hashes or JSON documents your app actually wants. That is configuration, not app code.</span></li>
+      <li><span><b>Nothing gets lost.</b> Redis guarantees at-least-once delivery. A change may land twice, which is harmless, because writing it again changes nothing.</span></li>
+    </ul>
+  </section>
+
+  <!-- 05 -->
+  <section class="panel" id="section-examples" data-section-id="section-examples">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2>What if you need more than a copy?</h2>
+      <span class="sec-note">same pipeline, more work in the middle</span>
+    </div>
+
+    <p class="point">How much reshaping do you actually need?</p>
+
+    <ul class="outs">
+      <li>
+        <span class="lvl-tag">EASY</span>
+        <span><b>One table, copied as-is.</b> A product catalog read by ID. Rows become Redis hashes, keyed the way the app already asks. No reshaping. This is the five-minute version.</span>
+      </li>
+      <li>
+        <span class="lvl-tag b2">MEDIUM</span>
+        <span><b>Several tables, joined into one object.</b> A customer, their addresses, and their recent orders arrive separately and leave as one JSON document. The app reads it in a single call. The join happens in the pipeline instead of in your code.</span>
+      </li>
+      <li>
+        <span class="lvl-tag b3">HARD</span>
+        <span><b>Everything, indexed and searched.</b> Fraud scoring, personalization, anything that asks "across all of it, which ones matter." This is the case cache-aside cannot reach, because it never holds all of it.</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- 06 -->
+  <section class="panel" id="section-limits" data-section-id="section-limits">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <h2>Would it read your database?</h2>
+      <span class="sec-note">source list from the docs, Aug 2026</span>
+    </div>
+
+    <p class="point">Does RDI already read where your data lives?</p>
+
+    <p class="chip-label">SUPPORTED SOURCES</p>
+    <div class="chips">
+      <span class="chip">Oracle</span>
+      <span class="chip">PostgreSQL</span>
+      <span class="chip">MySQL</span>
+      <span class="chip">MariaDB</span>
+      <span class="chip">MongoDB</span>
+      <span class="chip">SQL Server</span>
+      <span class="chip">Spanner</span>
+      <span class="chip">AlloyDB</span>
+      <span class="chip">Aurora</span>
+      <span class="chip">Neon</span>
+      <span class="chip">Supabase</span>
+    </div>
+
+    <p class="chip-label">PREVIEW</p>
+    <div class="chips">
+      <span class="chip prev">Snowflake</span>
+    </div>
+
+    <p class="chip-label">NOT ON THE LIST</p>
+    <div class="chips">
+      <span class="chip no">Databricks</span>
+      <span class="chip no">BigQuery</span>
+    </div>
+
+    <ul class="beats" style="margin-top:38px">
+      <li><span><b>Every source needs a switch flipped first.</b> Change tracking is off by default. Oracle uses LogMiner, Postgres uses pgoutput, MySQL uses the binlog, MongoDB uses change streams, SQL Server uses its built-in feature.</span></li>
+      <li><span><b>Warehouse data is the honest gap.</b> Snowflake is preview. Databricks and BigQuery are not supported. If a customer lands data in a warehouse first and wants to serve it live, say so early.</span></li>
+    </ul>
+  </section>
+
+  </main>
+  </div>
+
+  <div class="sources">
+    checked against:
+    <a href="https://redis.io/docs/latest/integrate/redis-data-integration/architecture/">architecture</a> &#183;
+    <a href="https://redis.io/docs/latest/integrate/redis-data-integration/data-pipelines/prepare-dbs/">prepare source databases</a> &#183;
+    <a href="https://redis.io/docs/latest/integrate/redis-data-integration/">RDI overview</a>
+  </div>
+
+  <div class="footer">
+    <span>Redis Data Integration</span>
+    <span><a href="https://github.com/cedricturner/redis-artifacts">source on github</a></span>
+  </div>
+
+</div>
+
+<script id="endless-scroll-navigation">
+(function(){
+  var sectionElements = Array.prototype.slice.call(document.querySelectorAll('[data-section-id]'));
+  var sectionNavItems = Array.prototype.slice.call(document.querySelectorAll('[data-section-target]'));
+  var mobileSectionNav = document.getElementById('mobile-section-nav');
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var activeSectionId = sectionElements[0] ? sectionElements[0].getAttribute('data-section-id') : '';
+  var fallbackFrame = 0;
+
+  function hasSection(sectionId){
+    return sectionElements.some(function(section){
+      return section.getAttribute('data-section-id') === sectionId;
+    });
+  }
+
+  function setActiveSection(sectionId, updateHash){
+    if(!hasSection(sectionId)) return;
+    activeSectionId = sectionId;
+    var activeIndex = -1;
+    sectionNavItems.forEach(function(item, itemIndex){
+      if(item.getAttribute('data-section-target') === sectionId) activeIndex = itemIndex;
+    });
+    sectionNavItems.forEach(function(item, itemIndex){
+      var active = item.getAttribute('data-section-target') === sectionId;
+      item.classList.toggle('active', active);
+      item.classList.toggle('passed', itemIndex <= activeIndex);
+      if(active) item.setAttribute('aria-current', 'location');
+      else item.removeAttribute('aria-current');
+    });
+    var sectionRail = document.querySelector('.section-rail');
+    if(sectionRail){
+      var progress = sectionNavItems.length > 1 ? (activeIndex / (sectionNavItems.length - 1)) * 100 : 0;
+      sectionRail.style.setProperty('--rail-progress', progress + '%');
+    }
+    if(mobileSectionNav) mobileSectionNav.value = sectionId;
+    if(updateHash && window.location.hash !== '#' + sectionId){
+      history.replaceState(null, '', '#' + sectionId);
+    }
+  }
+
+  function navigateToSection(sectionId){
+    var section = document.querySelector('[data-section-id="' + sectionId + '"]');
+    if(!section) return;
+    section.scrollIntoView({behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'start'});
+    setActiveSection(sectionId, true);
+  }
+
+  function findActiveSection(){
+    if(window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2){
+      var finalSection = sectionElements[sectionElements.length - 1];
+      return finalSection ? finalSection.getAttribute('data-section-id') : '';
+    }
+    var readingLine = window.matchMedia('(max-width: 800px)').matches ? 96 : 120;
+    var selected = sectionElements[0];
+    sectionElements.forEach(function(section){
+      if(section.getBoundingClientRect().top <= readingLine) selected = section;
+    });
+    return selected ? selected.getAttribute('data-section-id') : '';
+  }
+
+  function syncActiveSection(){
+    var sectionId = findActiveSection();
+    if(sectionId && sectionId !== activeSectionId) setActiveSection(sectionId, true);
+  }
+
+  function fallbackScrollHandler(){
+    if(fallbackFrame) return;
+    fallbackFrame = requestAnimationFrame(function(){
+      fallbackFrame = 0;
+      syncActiveSection();
+    });
+  }
+
+  function initScrollNavigation(){
+    sectionNavItems.forEach(function(item){
+      item.addEventListener('click', function(){
+        navigateToSection(item.getAttribute('data-section-target'));
+      });
+    });
+    if(mobileSectionNav){
+      mobileSectionNav.addEventListener('change', function(){
+        navigateToSection(mobileSectionNav.value);
+      });
+    }
+
+    var initialHash = window.location.hash.slice(1);
+    var hasInitialSection = hasSection(initialHash);
+    setActiveSection(hasInitialSection ? initialHash : activeSectionId, false);
+    if(hasInitialSection){
+      document.querySelector('[data-section-id="' + initialHash + '"]').scrollIntoView({behavior:'auto',block:'start'});
+    }
+
+    if('IntersectionObserver' in window){
+      var observer = new IntersectionObserver(syncActiveSection, {
+        rootMargin: '-96px 0px -70% 0px',
+        threshold: [0, .01]
+      });
+      sectionElements.forEach(function(section){ observer.observe(section); });
+    }
+    window.addEventListener('scroll', fallbackScrollHandler, {passive:true});
+    window.addEventListener('hashchange', function(){
+      var sectionId = window.location.hash.slice(1);
+      if(hasSection(sectionId)) navigateToSection(sectionId);
+    });
+  }
+
+  initScrollNavigation();
+})();
+</script>
+</body>
+</html>
