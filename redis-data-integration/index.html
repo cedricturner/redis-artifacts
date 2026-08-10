@@ -569,8 +569,8 @@ pre {
 
 .tbl {
   width: 100%;
-  max-width: 720px;
-  min-width: 520px;
+  max-width: 900px;
+  min-width: 660px;
   border-collapse: collapse;
   border-top: 1px solid var(--ink);
 }
@@ -594,11 +594,14 @@ pre {
 }
 
 .tbl td:first-child {
-  width: 210px;
+  width: 156px;
   font-size: 15px;
   font-weight: 600;
   color: var(--ink);
 }
+
+.tbl th:last-child, .tbl td:last-child { padding-right: 0; }
+.tbl td:nth-child(2), .tbl td:nth-child(3) { width: 37%; }
 
 .tbl a {
   text-decoration: underline;
@@ -1290,36 +1293,43 @@ pre {
     <div class="tbl-wrap">
       <table class="tbl">
         <thead>
-          <tr><th>WHAT</th><th>HOW</th></tr>
+          <tr><th>WHAT</th><th>HOW</th><th>DOWNSIDES</th></tr>
         </thead>
         <tbody>
           <tr>
             <td><a href="https://debezium.io/documentation/reference/stable/architecture.html">Debezium</a></td>
-            <td>The open source engine that reads a database log and emits change events. This is the same collector inside RDI. It gets the changes out. Everything after that is yours to build.</td>
+            <td>Open source engine that reads a database log and emits change events. The same collector that sits inside RDI.</td>
+            <td>It only gets the changes out of the door. Transport, transformations, recovery and the writes into Redis are all yours to build.</td>
           </tr>
           <tr>
             <td><a href="https://redis-field-engineering.github.io/redis-kafka-connect/">Kafka plus a Redis sink</a></td>
-            <td>Debezium lands change events in Kafka, then a sink connector writes them into Redis. Redis Field Engineering publishes one, <a href="https://docs.confluent.io/kafka-connectors/redis/current/overview.html">Confluent</a> publishes another, and <a href="https://docs.lenses.io/4.0/integrations/connectors/stream-reactor/sinks/redissinkconnector/">Lenses</a> has one too. You run and operate Kafka.</td>
+            <td>Debezium lands change events in Kafka, then a sink connector writes them into Redis. Redis Field Engineering, <a href="https://docs.confluent.io/kafka-connectors/redis/current/overview.html">Confluent</a> and <a href="https://docs.lenses.io/4.0/integrations/connectors/stream-reactor/sinks/redissinkconnector/">Lenses</a> each publish one.</td>
+            <td>You now run Kafka. Brokers, topics, retention, rebalances and the pager at 3am belong to your team.</td>
           </tr>
           <tr>
             <td>Managed Kafka</td>
-            <td>Confluent Cloud and similar services run the brokers for you and offer the same Redis sink connector. You stop operating Kafka. Designing the pipeline, the transformations, and the recovery behaviour is still your job.</td>
+            <td>Confluent Cloud and services like it run the brokers for you and offer the same Redis sink connector.</td>
+            <td>Another vendor and another bill, and you still design the pipeline, the transformations and what happens when the target disappears.</td>
           </tr>
           <tr>
             <td><a href="https://docs.airbyte.com/integrations/destinations/redis">Airbyte</a></td>
-            <td>An integration platform with an official Redis destination connector. Data arrives on a sync schedule, so this suits regular refreshes better than second-by-second freshness.</td>
+            <td>Integration platform with an official Redis destination connector. Data lands on a sync schedule.</td>
+            <td>Freshness is capped by the schedule, so you are back to serving stale data, just with a longer window than a five minute timer.</td>
           </tr>
           <tr>
             <td>Your own application code</td>
-            <td>Cache-aside or writing to both places at once. No new software to buy or run. You own the round trip, the expiry guess, and every bug in it.</td>
+            <td>Cache-aside, or writing to the database and Redis in the same request.</td>
+            <td>You own the round trip and the expiry guess. Dual writes drift apart the first time one succeeds and the other fails, and Redis never holds the whole set.</td>
           </tr>
           <tr>
             <td>A scheduled reload</td>
-            <td>Any scheduler plus a script that dumps the dataset into Redis. Redis ends up complete, and exactly as old as the last run.</td>
+            <td>Any scheduler plus a script that dumps the dataset into Redis.</td>
+            <td>Your data is exactly as old as the last run, and running it often enough to feel current gets expensive quickly.</td>
           </tr>
           <tr>
             <td>Source database triggers</td>
-            <td>The database itself pushes rows out when they change. Nothing new to install, but application logic now lives in your database and every write on the source gets slower.</td>
+            <td>The source database pushes rows out itself whenever they change.</td>
+            <td>Application logic moves into your database, every write on the source gets slower, and it turns into the code nobody will touch.</td>
           </tr>
         </tbody>
       </table>
