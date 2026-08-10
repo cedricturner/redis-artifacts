@@ -1369,7 +1369,7 @@ pre {
 
     <p style="margin-top:34px">Change tracking is switched off by default on every one of these, so the source needs preparing first. Oracle uses LogMiner, Postgres uses pgoutput, MySQL and MariaDB use the binlog, SQL Server uses its built-in feature, MongoDB uses change streams, and Spanner uses change streams too. Spanner and Snowflake only work when RDI runs on Kubernetes with Helm.</p>
 
-    <p class="chip-label" style="margin-top:44px">WHAT PEOPLE ASK NEXT</p>
+    <p class="chip-label" style="margin-top:44px">COMMON QUESTIONS</p>
 
     <ul class="qa">
       <li>
@@ -1402,7 +1402,7 @@ pre {
       </li>
     </ul>
 
-    <p style="margin-top:34px"><b>Two things worth raising early.</b> RDI needs a commercial licence with Redis software, which includes two extra shards for its own database. And warehouse sources are thin: Snowflake is preview, Databricks and BigQuery are not supported at all. If a customer lands data in a warehouse first and wants to serve it live, say so in the first meeting.</p>
+    <p style="margin-top:34px"><b>Two things to know before you start.</b> RDI needs a commercial licence alongside Redis software, and that licence includes two extra shards to run RDI's own database. And if your data lands in a warehouse before you want to serve it, that is the thin part today: Snowflake is in preview, and Databricks and BigQuery are not supported.</p>
   </section>
 
   </main>
