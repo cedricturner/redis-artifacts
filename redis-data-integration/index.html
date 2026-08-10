@@ -1046,7 +1046,7 @@ pre {
 4   throw that copy away in <span class="bad">five minutes</span></pre>
     <p class="dag-cap">STEP 4 IS A GUESS AND NOBODY CAN MAKE IT CORRECTLY</p>
 
-    <p style="margin-top:30px"><b>So why throw the copy away at all?</b> Because nothing tells Redis when the database changed. Somebody could edit that row a second after you made the copy, and Redis has no way to find out. The timer is not a feature. It stands in for information you do not have.</p>
+    <p style="margin-top:30px"><b>So why throw the copy away at all?</b> Because nothing tells Redis when the database changed. Somebody could edit that row a second after you made the copy, and Redis has no way to find out. With no signal to go on, a clock is all you have left.</p>
 
     <p style="margin-bottom:44px">So you bin the copy on a schedule and fetch a fresh one, and now you are picking a number. Long, and you hand out wrong answers for longer. Short, and you are back to asking the database constantly, which is the thing the copy was meant to avoid. Five minutes is not a good answer. There is no good answer.</p>
 
@@ -1118,7 +1118,7 @@ pre {
           <text x="470" y="244" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#27843f">Searching this gives the real answer.</text>
         </svg>
       </div>
-      <p class="dag-cap">FRAUD SCORING NEEDS ALL OF IT, NOT A GOOD HIT RATE</p>
+      <p class="dag-cap">A GOOD HIT RATE STILL LEAVES FRAUD SCORING BLIND</p>
     </div>
   </section>
 
@@ -1191,7 +1191,7 @@ pre {
 
     <ul class="beats" style="margin-top:44px">
       <li><span><b>No timers anywhere.</b> Nothing expires, because changes arrive on their own.</span></li>
-      <li><span><b>You pick the shape.</b> Source tables rarely match what an app wants to read. Transformations turn rows into the hashes or JSON documents your app actually wants. That is configuration, not app code.</span></li>
+      <li><span><b>You pick the shape.</b> Source tables rarely match what an app wants to read. Transformations turn rows into the hashes or JSON documents your app actually wants. You set that up once in configuration.</span></li>
       <li><span><b>Nothing gets lost.</b> Redis guarantees at-least-once delivery. A change may land twice, which is harmless, because writing it again changes nothing.</span></li>
     </ul>
   </section>
