@@ -564,7 +564,62 @@ pre {
 }
 
 .chip.prev { border-color: #b7790b; color: #b7790b; }
-.chip.no { border-style: dashed; color: var(--muted); }
+
+.tbl-wrap { overflow-x: auto; }
+
+.tbl {
+  width: 100%;
+  max-width: 720px;
+  min-width: 520px;
+  border-collapse: collapse;
+  border-top: 1px solid var(--ink);
+}
+
+.tbl th {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--muted);
+  font-weight: 400;
+  text-align: left;
+  padding: 11px 18px 12px 0;
+  border-bottom: 1px solid var(--ink);
+}
+
+.tbl td {
+  padding: 17px 18px 18px 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  font-size: 14px;
+}
+
+.tbl td:first-child {
+  width: 210px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.tbl a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 3px;
+  transition: color 120ms ease, text-decoration-color 120ms ease;
+}
+
+.tbl a:hover { color: var(--blue); text-decoration-color: var(--blue); }
+
+.qa { list-style: none; margin: 0; padding: 0; max-width: 700px; border-top: 1px solid var(--rule); }
+.qa li { padding: 18px 0 20px; border-bottom: 1px solid var(--rule); }
+
+.qa b {
+  display: block;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
 
 .chip-label {
   font-family: var(--mono);
@@ -1226,36 +1281,51 @@ pre {
   <section class="panel" id="section-alternatives" data-section-id="section-alternatives">
     <div class="sec-head">
       <span class="sec-num">06</span>
-      <h2>What else could you do instead?</h2>
-      <span class="sec-note">five real options</span>
+      <h2>What else could do this job?</h2>
+      <span class="sec-note">checked against each vendor's own docs</span>
     </div>
 
-    <p class="point">Every one of these works. The question is how much of it you want to own.</p>
+    <p class="point">Plenty of software can get change data into Redis. The question is how much of the pipeline you end up running.</p>
 
-    <ul class="outs">
-      <li>
-        <span class="lvl-tag">OPTION 1</span>
-        <span><b>Write it in the app.</b> Cache-aside, the one from the start of this page. Free to begin and already in your codebase. You own the round trip, the expiry guess, and the fact that Redis never holds all of it.</span>
-      </li>
-      <li>
-        <span class="lvl-tag">OPTION 2</span>
-        <span><b>Write to both places at once.</b> The app saves to the database and to Redis in the same request. Easy to explain in a meeting. It breaks the first time one write succeeds and the other fails, and no transaction covers both, so the two drift apart quietly.</span>
-      </li>
-      <li>
-        <span class="lvl-tag">OPTION 3</span>
-        <span><b>Reload everything on a schedule.</b> A nightly job that dumps the dataset into Redis. Simple, and Redis is complete after it runs. Your data is as old as the last run, and running it often enough to feel fresh gets expensive fast.</span>
-      </li>
-      <li>
-        <span class="lvl-tag">OPTION 4</span>
-        <span><b>Put triggers on the source database.</b> The database itself pushes rows out when they change. It is close to real time, and it puts application logic inside your database, adds work to every write on the source, and becomes the thing nobody wants to touch.</span>
-      </li>
-      <li>
-        <span class="lvl-tag b2">OPTION 5</span>
-        <span><b>Build the pipeline yourself.</b> Debezium, a streaming layer, and a consumer you write. This genuinely works, because it is the same shape RDI uses. You now own a streaming platform: checkpoints so you can restart safely, backpressure for when the source outruns the target, replays, and every transformation.</span>
-      </li>
-    </ul>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead>
+          <tr><th>WHAT</th><th>HOW</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://debezium.io/documentation/reference/stable/architecture.html">Debezium</a></td>
+            <td>The open source engine that reads a database log and emits change events. This is the same collector inside RDI. It gets the changes out. Everything after that is yours to build.</td>
+          </tr>
+          <tr>
+            <td><a href="https://redis-field-engineering.github.io/redis-kafka-connect/">Kafka plus a Redis sink</a></td>
+            <td>Debezium lands change events in Kafka, then a sink connector writes them into Redis. Redis Field Engineering publishes one, <a href="https://docs.confluent.io/kafka-connectors/redis/current/overview.html">Confluent</a> publishes another, and <a href="https://docs.lenses.io/4.0/integrations/connectors/stream-reactor/sinks/redissinkconnector/">Lenses</a> has one too. You run and operate Kafka.</td>
+          </tr>
+          <tr>
+            <td>Managed Kafka</td>
+            <td>Confluent Cloud and similar services run the brokers for you and offer the same Redis sink connector. You stop operating Kafka. Designing the pipeline, the transformations, and the recovery behaviour is still your job.</td>
+          </tr>
+          <tr>
+            <td><a href="https://docs.airbyte.com/integrations/destinations/redis">Airbyte</a></td>
+            <td>An integration platform with an official Redis destination connector. Data arrives on a sync schedule, so this suits regular refreshes better than second-by-second freshness.</td>
+          </tr>
+          <tr>
+            <td>Your own application code</td>
+            <td>Cache-aside or writing to both places at once. No new software to buy or run. You own the round trip, the expiry guess, and every bug in it.</td>
+          </tr>
+          <tr>
+            <td>A scheduled reload</td>
+            <td>Any scheduler plus a script that dumps the dataset into Redis. Redis ends up complete, and exactly as old as the last run.</td>
+          </tr>
+          <tr>
+            <td>Source database triggers</td>
+            <td>The database itself pushes rows out when they change. Nothing new to install, but application logic now lives in your database and every write on the source gets slower.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-    <p style="margin-top:34px"><b>RDI is option 5 with the plumbing already built.</b> Same approach, same components, but the checkpointing, the backpressure handling, and the delivery guarantee come with it instead of becoming your team's problem.</p>
+    <p style="margin-top:34px"><b>Every row here works.</b> Debezium plus Kafka plus a sink connector is genuinely the same shape as RDI, because RDI is built from those parts. What RDI adds is that the checkpointing, the backpressure handling, the dead letter queue, and the at-least-once guarantee arrive already built and supported instead of becoming your team's on-call rotation.</p>
   </section>
 
   <section class="panel" id="section-limits" data-section-id="section-limits">
@@ -1269,34 +1339,60 @@ pre {
 
     <p class="chip-label">SUPPORTED SOURCES</p>
     <div class="chips">
-      <span class="chip">Oracle</span>
-      <span class="chip">PostgreSQL</span>
-      <span class="chip">MySQL</span>
-      <span class="chip">MariaDB</span>
-      <span class="chip">MongoDB</span>
-      <span class="chip">SQL Server</span>
-      <span class="chip">Spanner</span>
-      <span class="chip">AlloyDB</span>
-      <span class="chip">Aurora</span>
-      <span class="chip">Neon</span>
-      <span class="chip">Supabase</span>
+      <span class="chip" style="border-color:#C74634;color:#C74634">Oracle</span>
+      <span class="chip" style="border-color:#336791;color:#336791">PostgreSQL</span>
+      <span class="chip" style="border-color:#00758F;color:#00758F">MySQL</span>
+      <span class="chip" style="border-color:#003545;color:#003545">MariaDB</span>
+      <span class="chip" style="border-color:#00ED64;color:#00973f">MongoDB</span>
+      <span class="chip" style="border-color:#CC2927;color:#CC2927">SQL Server</span>
+      <span class="chip" style="border-color:#4285F4;color:#3f7fea">Spanner</span>
+      <span class="chip" style="border-color:#4285F4;color:#3f7fea">AlloyDB</span>
+      <span class="chip" style="border-color:#FF9900;color:#c17400">Aurora</span>
+      <span class="chip" style="border-color:#00E599;color:#009261">Neon</span>
+      <span class="chip" style="border-color:#3ECF8E;color:#2c9566">Supabase</span>
     </div>
 
     <p class="chip-label">PREVIEW</p>
     <div class="chips">
-      <span class="chip prev">Snowflake</span>
+      <span class="chip" style="border-color:#29B5E8;color:#2090b9">Snowflake</span>
     </div>
 
-    <p class="chip-label">NOT ON THE LIST</p>
-    <div class="chips">
-      <span class="chip no">Databricks</span>
-      <span class="chip no">BigQuery</span>
-    </div>
+    <p style="margin-top:34px">Change tracking is switched off by default on every one of these, so the source needs preparing first. Oracle uses LogMiner, Postgres uses pgoutput, MySQL and MariaDB use the binlog, SQL Server uses its built-in feature, MongoDB uses change streams, and Spanner uses change streams too. Spanner and Snowflake only work when RDI runs on Kubernetes with Helm.</p>
 
-    <ul class="beats" style="margin-top:38px">
-      <li><span><b>Every source needs a switch flipped first.</b> Change tracking is off by default. Oracle uses LogMiner, Postgres uses pgoutput, MySQL uses the binlog, MongoDB uses change streams, SQL Server uses its built-in feature.</span></li>
-      <li><span><b>Warehouse data is the honest gap.</b> Snowflake is preview. Databricks and BigQuery are not supported. If a customer lands data in a warehouse first and wants to serve it live, say so early.</span></li>
+    <p class="chip-label" style="margin-top:44px">WHAT PEOPLE ASK NEXT</p>
+
+    <ul class="qa">
+      <li>
+        <b>How much can it handle?</b>
+        One processing unit is one CPU core and moves roughly 10,000 records a second at about 1KB a record. One unit is usually enough for a whole relational database.
+      </li>
+      <li>
+        <b>Does it work with any Redis?</b>
+        No. RDI is built and tested for Redis software only. The target can be any version, including an Active-Active replica or an Auto tiering database.
+      </li>
+      <li>
+        <b>Can I run more than one on a cluster?</b>
+        Not on Kubernetes. One RDI installation per cluster, even across separate namespaces. More than that means more clusters.
+      </li>
+      <li>
+        <b>What happens if Redis goes down?</b>
+        RDI keeps capturing from the source and retrying the target, holding events in its own database. As that fills it slows the capture rate on purpose. Source logs hold changes for hours, so it catches up once the target returns.
+      </li>
+      <li>
+        <b>What happens to broken records?</b>
+        They go to a dead letter queue with the reason attached, stored as a capped stream. You can read it in Redis Insight or from the command line.
+      </li>
+      <li>
+        <b>Does it notice schema changes?</b>
+        Yes. New tables and new or renamed columns get picked up on their own, unless you pinned it to a specific set. The Redis keys change to match.
+      </li>
+      <li>
+        <b>Which processor should I pick?</b>
+        There are two. Classic is still the default. Flink has been generally available since RDI 1.19.0 and Redis recommends it for new pipelines: faster snapshots, lower latency, and horizontal scaling on the same delivery guarantee.
+      </li>
     </ul>
+
+    <p style="margin-top:34px"><b>Two things worth raising early.</b> RDI needs a commercial licence with Redis software, which includes two extra shards for its own database. And warehouse sources are thin: Snowflake is preview, Databricks and BigQuery are not supported at all. If a customer lands data in a warehouse first and wants to serve it live, say so in the first meeting.</p>
   </section>
 
   </main>
