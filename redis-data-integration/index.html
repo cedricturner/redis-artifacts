@@ -565,6 +565,13 @@ pre {
 
 .chip.prev { border-color: #b7790b; color: #b7790b; }
 
+a.chip { text-decoration: none; }
+a.chip:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
 .tbl-wrap { overflow-x: auto; }
 
 .tbl {
@@ -612,17 +619,6 @@ pre {
 }
 
 .tbl a:hover { color: var(--blue); text-decoration-color: var(--blue); }
-
-.qa { list-style: none; margin: 0; padding: 0; max-width: 700px; border-top: 1px solid var(--rule); }
-.qa li { padding: 18px 0 20px; border-bottom: 1px solid var(--rule); }
-
-.qa b {
-  display: block;
-  color: var(--ink);
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 3px;
-}
 
 .chip-label {
   font-family: var(--mono);
@@ -1296,13 +1292,14 @@ pre {
       <span class="sec-note">checked against each vendor's own docs</span>
     </div>
 
-    <p class="point">Plenty of software can get change data into Redis. The question is how much of the pipeline you end up running.</p>
+    <p class="point">There are three ways to do this without RDI. They differ in how much of the pipeline you end up operating, and in how fresh the copy can get.</p>
+
+    <p class="chip-label" style="margin-top:38px">ONE. ASSEMBLE OPEN SOURCE PARTS</p>
+    <p style="margin:0 0 18px">Nothing to license, and it is the same architecture RDI uses. Everything that keeps it running is yours to build and carry.</p>
 
     <div class="tbl-wrap">
       <table class="tbl">
-        <thead>
-          <tr><th>WHAT</th><th>HOW</th><th>DOWNSIDES</th></tr>
-        </thead>
+        <thead><tr><th>WHAT</th><th>HOW</th><th>DOWNSIDES</th></tr></thead>
         <tbody>
           <tr>
             <td><a href="https://debezium.io/documentation/reference/stable/architecture.html">Debezium</a></td>
@@ -1314,6 +1311,17 @@ pre {
             <td>Debezium lands change events in Kafka, then a sink connector writes them into Redis. Redis Field Engineering, <a href="https://docs.confluent.io/kafka-connectors/redis/current/overview.html">Confluent</a> and <a href="https://docs.lenses.io/4.0/integrations/connectors/stream-reactor/sinks/redissinkconnector/">Lenses</a> each publish one.</td>
             <td>You now run Kafka. Brokers, topics, retention, rebalances and the pager at 3am belong to your team.</td>
           </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="chip-label" style="margin-top:44px">TWO. BUY A MANAGED PRODUCT</p>
+    <p style="margin:0 0 18px">Somebody else runs the infrastructure and the bill arrives monthly. Designing the pipeline is still your job.</p>
+
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>WHAT</th><th>HOW</th><th>DOWNSIDES</th></tr></thead>
+        <tbody>
           <tr>
             <td>Managed Kafka</td>
             <td>Confluent Cloud and services like it run the brokers for you and offer the same Redis sink connector.</td>
@@ -1324,6 +1332,17 @@ pre {
             <td>Integration platform with an official Redis destination connector. Data lands on a sync schedule.</td>
             <td>Freshness is capped by the schedule, so you are back to serving stale data, just with a longer window than a five minute timer.</td>
           </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="chip-label" style="margin-top:44px">THREE. BUILD IT YOURSELF</p>
+    <p style="margin:0 0 18px">Nothing new to install and no new vendor. What you save in setup you pay back in drift, staleness, or slower writes.</p>
+
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>WHAT</th><th>HOW</th><th>DOWNSIDES</th></tr></thead>
+        <tbody>
           <tr>
             <td>Your own application code</td>
             <td>Cache-aside, or writing to the database and Redis in the same request.</td>
@@ -1343,7 +1362,7 @@ pre {
       </table>
     </div>
 
-    <p style="margin-top:34px"><b>Every row here works.</b> Debezium plus Kafka plus a sink connector is genuinely the same shape as RDI, because RDI is built from those parts. What RDI adds is that the checkpointing, the backpressure handling, the dead letter queue, and the at-least-once guarantee arrive already built and supported instead of becoming your team's on-call rotation.</p>
+    <p style="margin-top:34px"><b>Every route here works, and the first group is RDI's own.</b> RDI is Debezium reading the log, Redis Streams carrying the events, and a processor writing the target. What it adds is that the checkpointing, the backpressure handling, the dead letter queue, and the at-least-once guarantee arrive already built and supported instead of becoming your team's on-call rotation.</p>
   </section>
 
   <section class="panel" id="section-limits" data-section-id="section-limits">
@@ -1357,56 +1376,25 @@ pre {
 
     <p class="chip-label">SUPPORTED SOURCES</p>
     <div class="chips">
-      <span class="chip" style="border-color:#C74634;color:#C74634">Oracle</span>
-      <span class="chip" style="border-color:#336791;color:#336791">PostgreSQL</span>
-      <span class="chip" style="border-color:#00758F;color:#00758F">MySQL</span>
-      <span class="chip" style="border-color:#003545;color:#003545">MariaDB</span>
-      <span class="chip" style="border-color:#00ED64;color:#00973f">MongoDB</span>
-      <span class="chip" style="border-color:#CC2927;color:#CC2927">SQL Server</span>
-      <span class="chip" style="border-color:#4285F4;color:#3f7fea">Spanner</span>
-      <span class="chip" style="border-color:#4285F4;color:#3f7fea">AlloyDB</span>
-      <span class="chip" style="border-color:#FF9900;color:#c17400">Aurora</span>
-      <span class="chip" style="border-color:#00E599;color:#009261">Neon</span>
-      <span class="chip" style="border-color:#3ECF8E;color:#2c9566">Supabase</span>
-      <span class="chip" style="border-color:#29B5E8;color:#2090b9">Snowflake</span>
+      <a class="chip" href="https://redis.io/docs/latest/integrate/redis-data-integration/data-pipelines/prepare-dbs/oracle/" style="border-color:#C74634;color:#C74634">Oracle</a>
+      <a class="chip" href="https://redis.io/docs/latest/integrate/redis-data-integration/data-pipelines/prepare-dbs/postgresql/" style="border-color:#336791;color:#336791">PostgreSQL</a>
+      <a class="chip" href="https://redis.io/docs/latest/integrate/redis-data-integration/data-pipelines/prepare-dbs/my-sql-mariadb/" style="border-color:#00758F;color:#00758F">MySQL</a>
+      <a class="chip" href="https://redis.io/docs/latest/integrate/redis-data-integration/data-pipelines/prepare-dbs/my-sql-mariadb/" style="border-color:#003545;color:#003545">MariaDB</a>
+      <a class="chip" href="https://redis.io/docs/latest/integrate/redis-data-integration/data-pipelines/prepare-dbs/mongodb/" style="border-color:#00ED64;color:#00973f">MongoDB</a>
+      <a class="chip" href="https://redis.io/docs/latest/integrate/redis-data-integration/data-pipelines/prepare-dbs/sql-server/" style="border-color:#CC2927;color:#CC2927">SQL Server</a>
+      <a class="chip" href="https://redis.io/docs/latest/integrate/redis-data-integration/data-pipelines/prepare-dbs/spanner/" style="border-color:#4285F4;color:#3f7fea">Spanner</a>
+      <a class="chip" href="https://redis.io/docs/latest/integrate/redis-data-integration/data-pipelines/prepare-dbs/" style="border-color:#4285F4;color:#3f7fea">AlloyDB</a>
+      <a class="chip" href="https://redis.io/docs/latest/integrate/redis-data-integration/data-pipelines/prepare-dbs/aws-aurora-rds/" style="border-color:#FF9900;color:#c17400">Aurora</a>
+      <a class="chip" href="https://redis.io/docs/latest/integrate/redis-data-integration/data-pipelines/prepare-dbs/neon/" style="border-color:#00E599;color:#009261">Neon</a>
+      <a class="chip" href="https://redis.io/docs/latest/integrate/redis-data-integration/data-pipelines/prepare-dbs/supabase/" style="border-color:#3ECF8E;color:#2c9566">Supabase</a>
+      <a class="chip prev" href="https://redis.io/docs/latest/integrate/redis-data-integration/data-pipelines/prepare-dbs/snowflake/">Snowflake (preview)</a>
     </div>
+
+    <p style="margin:14px 0 0;font-size:13px;color:var(--muted)">Each source links to its setup page in the Redis docs. AlloyDB has no page of its own and is covered by the support table on the index.</p>
 
     <p style="margin-top:34px">Change tracking is switched off by default on every one of these, so the source needs preparing first. Oracle uses LogMiner, Postgres uses pgoutput, MySQL and MariaDB use the binlog, SQL Server uses its built-in feature, MongoDB uses change streams, and Spanner uses change streams too. If you run RDI yourself, Spanner and Snowflake need it on Kubernetes with Helm. On Redis Cloud, Snowflake is one of the managed sources and has to be hosted on AWS.</p>
 
-    <p class="chip-label" style="margin-top:44px">COMMON QUESTIONS</p>
-
-    <ul class="qa">
-      <li>
-        <b>How much can it handle?</b>
-        One processing unit is one CPU core and moves roughly 10,000 records a second at about 1KB a record. One unit is usually enough for a whole relational database.
-      </li>
-      <li>
-        <b>Does it work with any Redis?</b>
-        Redis Cloud and Redis Software, not open source Redis. On Redis Software you install and run RDI yourself, and the target can be an Active-Active replica or an Auto tiering database. On Redis Cloud, Redis runs it for you, but the target has to be a Cloud Pro database on AWS and Active-Active targets are not supported.
-      </li>
-      <li>
-        <b>Can I run more than one on a cluster?</b>
-        Not on Kubernetes. One RDI installation per cluster, even across separate namespaces. More than that means more clusters.
-      </li>
-      <li>
-        <b>What happens if Redis goes down?</b>
-        RDI keeps capturing from the source and retrying the target, holding events in its own database. As that fills it slows the capture rate on purpose. Source logs hold changes for hours, so it catches up once the target returns.
-      </li>
-      <li>
-        <b>What happens to broken records?</b>
-        They go to a dead letter queue with the reason attached, stored as a capped stream. You can read it in Redis Insight or from the command line.
-      </li>
-      <li>
-        <b>Does it notice schema changes?</b>
-        Yes. New tables and new or renamed columns get picked up on their own, unless you pinned it to a specific set. The Redis keys change to match.
-      </li>
-      <li>
-        <b>Which processor should I pick?</b>
-        There are two. Classic is still the default. Flink has been generally available since RDI 1.19.0 and Redis recommends it for new pipelines: faster snapshots, lower latency, and horizontal scaling on the same delivery guarantee.
-      </li>
-    </ul>
-
-    <p style="margin-top:34px"><b>Two things to know before you start.</b> On Redis Software, RDI needs a commercial licence, and that licence includes two extra shards to run RDI's own database; on Redis Cloud it comes with a Cloud Pro subscription on AWS. And if your data lands in a warehouse before you want to serve it, Snowflake is the only one covered. Databricks and BigQuery are not supported.</p>
+    <p style="margin-top:34px"><b>Three things to know before you start.</b> RDI runs against Redis Cloud and Redis Software, not open source Redis. On Redis Software you install it yourself and it needs a commercial licence, and that licence includes two extra shards to run RDI's own database; on Redis Cloud it comes with a Cloud Pro subscription on AWS. And if your data lands in a warehouse before you want to serve it, Snowflake is the only one covered. Databricks and BigQuery are not supported.</p>
   </section>
 
   </main>
