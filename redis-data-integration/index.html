@@ -796,12 +796,11 @@ pre {
     </g>
   </symbol>
 
-  <symbol id="ico-van" viewBox="0 0 44 44">
+  <symbol id="ico-butler" viewBox="0 0 44 44">
     <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
-      <path d="M3 13 h24 v18 H3 Z"></path>
-      <path d="M27 19 h8 l6 6 v6 H27"></path>
-      <circle cx="12" cy="34" r="3.5"></circle>
-      <circle cx="34" cy="34" r="3.5"></circle>
+      <circle cx="22" cy="10" r="6.5"></circle>
+      <path d="M22 22 L16 18.5 L16 25.5 Z M22 22 L28 18.5 L28 25.5 Z"></path>
+      <path d="M7 41 C7 25 37 25 37 41"></path>
     </g>
   </symbol>
 </defs></svg>
@@ -810,21 +809,21 @@ pre {
 
   <div class="topbar">
     <span><a href="../">&larr; all explainers</a></span>
-    <span>work in progress</span>
+    <span>updated august 2026</span>
   </div>
 
   <p class="kicker">RDI 101</p>
 
   <div class="hero">
     <h1>Redis Data Integration</h1>
-    <p class="intro"><b>AKA <a href="https://redis.io/docs/latest/integrate/redis-data-integration/">RDI</a>.</b> Everyone keeps a copy of their data in Redis. The only argument is how the copy gets there.</p>
+    <p class="intro"><b>AKA <a href="https://redis.io/docs/latest/integrate/redis-data-integration/">RDI</a>.</b> Everyone keeps a copy of their data in Redis. The only argument is how the copy stays right.</p>
   </div>
 
   <div class="mobile-section-picker">
     <label for="mobile-section-nav">section</label>
     <select id="mobile-section-nav" aria-label="Current section">
       <option value="section-fridge">why own a fridge?</option>
-      <option value="section-before-after">what does the trip cost?</option>
+      <option value="section-before-after">what if it changed?</option>
       <option value="section-breaks">how wrong can it get?</option>
       <option value="section-how">what if it stayed current?</option>
       <option value="section-examples">what if you need more?</option>
@@ -837,7 +836,7 @@ pre {
 
   <nav class="nav section-rail" aria-label="Article sections">
     <button class="nav-step active" type="button" data-shape="circle" data-section-target="section-fridge"><span class="step-num">1</span><span class="step-lbl">why own a fridge?</span></button>
-    <button class="nav-step" type="button" data-shape="square" data-section-target="section-before-after"><span class="step-num">2</span><span class="step-lbl">what does the trip cost?</span></button>
+    <button class="nav-step" type="button" data-shape="square" data-section-target="section-before-after"><span class="step-num">2</span><span class="step-lbl">what if it changed?</span></button>
     <button class="nav-step" type="button" data-shape="diamond" data-section-target="section-breaks"><span class="step-num">3</span><span class="step-lbl">how wrong can it get?</span></button>
     <button class="nav-step" type="button" data-shape="triangle" data-section-target="section-how"><span class="step-num">4</span><span class="step-lbl">what if it stayed current?</span></button>
     <button class="nav-step" type="button" data-shape="hexagon" data-section-target="section-examples"><span class="step-num">5</span><span class="step-lbl">what if you need more?</span></button>
@@ -859,19 +858,20 @@ pre {
     <ul class="beats">
       <li><span><b>The store has everything, but it is not in your house.</b></span></li>
       <li><span><b>So you keep a copy at home.</b> That is the fridge. It is right there and it is fast.</span></li>
-      <li><span><b>Keeping it full is your job, not the store's.</b> So the only question is how you do it. Drive over yourself every time you run out, or pay somebody to deliver before you notice.</span></li>
+      <li><span><b>The copy is only as good as the day you made it.</b> The store keeps changing what is on its shelves. Your fridge does not hear about any of it.</span></li>
+      <li><span><b>Keeping the copy honest is your job, not the store's.</b> Either you go and check, or somebody tells you the moment something changes.</span></li>
     </ul>
 
     <dl class="map">
       <dt>THE STORE</dt><dd>Your real database</dd>
       <dt>THE FRIDGE</dt><dd>Redis</dd>
-      <dt>DRIVING OVER</dt><dd>Cache-aside</dd>
-      <dt>KEEPING IT STOCKED</dt><dd>Redis Data Integration</dd>
+      <dt>GOING TO CHECK</dt><dd>Cache-aside</dd>
+      <dt>KEEPING IT HONEST</dt><dd>Redis Data Integration</dd>
     </dl>
 
     <div class="say">
       <span class="say-label">SAY IT LIKE THIS</span>
-      <p>The store has everything, but it is not in your house. The fridge is fast, so you keep a copy at home. Keeping that copy full is on you, not the store. So the only question is whether you drive over every time you run out, or you have it delivered.</p>
+      <p>The store has everything, but it is not in your house. The fridge is fast, so you keep a copy at home. But the store keeps changing things, and your fridge never hears about it. Keeping that copy honest is on you, not the store. So the only question is whether you go and check, or somebody tells you the moment something changes.</p>
     </div>
   </section>
 
@@ -879,21 +879,21 @@ pre {
   <section class="panel" id="section-before-after" data-section-id="section-before-after">
     <div class="sec-head">
       <span class="sec-num">02</span>
-      <h2>How much time do you waste going back?</h2>
+      <h2>What happens when the store changes something?</h2>
       <span class="sec-note">before and after</span>
     </div>
 
-    <p class="point">Every trip back to the store is time your app spends waiting. What if you never had to make it?</p>
+    <p class="point">Everything is fine until something changes. Then your copy is wrong, and you keep handing it out anyway.</p>
 
     <div class="ba-head">
       <span class="ba-label">BEFORE</span>
-      <span class="ba-sub">YOU FETCH IT YOURSELF</span>
-      <span class="ba-cost">20 MINUTES, EVERY TIME</span>
+      <span class="ba-sub">NOBODY TELLS YOU</span>
+      <span class="ba-cost">SIX MEALS, ALREADY SERVED</span>
     </div>
 
     <div class="dag">
       <div class="dag-wrap">
-        <svg viewBox="0 0 880 310" style="min-width:700px" role="img" aria-label="Kitchen version, before. A grocery store, your nearly empty fridge, and you. Whenever something is missing you drive all the way back to the store yourself.">
+        <svg viewBox="0 0 880 310" style="min-width:700px" role="img" aria-label="Kitchen version, before. A grocery store that has issued a recall, your fridge still holding the recalled jar, and you serving dinner from it. No signal crosses from the store to the fridge, so you keep serving it until the date you wrote on the jar yourself passes.">
           <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
             <text x="110" y="18">GROCERY STORE</text>
             <text x="440" y="18">YOUR FRIDGE</text>
@@ -905,32 +905,34 @@ pre {
           <rect x="20" y="36" width="180" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
           <use href="#ico-store" x="88" y="48" width="44" height="44"></use>
           <text x="110" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Grocery store</text>
-          <text x="110" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">HAS EVERYTHING</text>
+          <text x="110" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">RECALL ISSUED 9:02 AM</text>
 
           <rect x="350" y="36" width="180" height="104" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
           <use href="#ico-fridge" x="418" y="48" width="44" height="44"></use>
           <text x="440" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Fridge</text>
-          <text x="440" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">NEARLY EMPTY</text>
+          <text x="440" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">STILL HOLDS THE OLD JAR</text>
 
           <rect x="680" y="36" width="180" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
           <use href="#ico-person" x="748" y="48" width="44" height="44"></use>
           <text x="770" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">You</text>
-          <text x="770" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">HUNGRY NOW</text>
+          <text x="770" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">SERVING DINNER</text>
 
-          <line x1="204" y1="88" x2="344" y2="88" stroke="#d92d20" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ar)"></line>
+          <line x1="204" y1="88" x2="258" y2="88" stroke="#d92d20" stroke-width="1.5" stroke-dasharray="5 4"></line>
+          <path d="M266 80 L282 96 M282 80 L266 96" stroke="#d92d20" stroke-width="2" fill="none"></path>
+          <line x1="290" y1="88" x2="344" y2="88" stroke="#d92d20" stroke-width="1.5" stroke-dasharray="5 4"></line>
           <line x1="534" y1="88" x2="674" y2="88" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></line>
 
           <g font-family="Space Mono, monospace" font-size="11" text-anchor="middle">
-            <text x="274" y="164" fill="#d92d20">ONLY WHAT YOU</text>
-            <text x="274" y="179" fill="#d92d20">CARRIED BACK</text>
+            <text x="274" y="164" fill="#d92d20">NO SIGNAL</text>
+            <text x="274" y="179" fill="#d92d20">CROSSES HERE</text>
             <text x="604" y="164" fill="#171717">OPEN THE DOOR</text>
           </g>
 
           <path d="M 770 144 L 770 214 L 110 214 L 110 146" fill="none" stroke="#d92d20" stroke-width="2.5" marker-end="url(#ar)"></path>
-          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">OUT OF MILK? DRIVE ALL THE WAY BACK YOURSELF. 20 MINUTES.</text>
+          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">WHEN YOUR DATE PASSES YOU DRIVE OVER AND FETCH A NEW JAR.</text>
 
-          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">You do the driving, and you do it again every time something runs out.</text>
-          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">The fridge only ever holds what you already thought to buy.</text>
+          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Nobody printed a recall date on that jar. You wrote your own date on it.</text>
+          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">The recall does not move your date. You keep serving it until your date passes.</text>
         </svg>
       </div>
       <p class="dag-cap">THE KITCHEN VERSION</p>
@@ -938,7 +940,7 @@ pre {
 
     <div class="dag">
       <div class="dag-wrap">
-        <svg viewBox="0 0 880 280" style="min-width:700px" role="img" aria-label="Database version, before. Source database, then Redis, then the application. Nothing fills Redis on its own, so on every miss the application makes the full round trip back to the source database.">
+        <svg viewBox="0 0 880 280" style="min-width:700px" role="img" aria-label="Database version, before. Source database, then Redis, then the application. The row changed at the source, but nothing tells Redis, so Redis keeps serving the old value to every read until its own timer expires.">
           <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
             <text x="110" y="18">SOURCE DATABASE</text>
             <text x="440" y="18">REDIS</text>
@@ -953,25 +955,27 @@ pre {
 
           <rect x="350" y="46" width="180" height="64" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
           <text x="440" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Redis</text>
-          <text x="440" y="95" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">A FEW KEYS, EACH ON A TIMER</text>
+          <text x="440" y="95" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">OLD VALUE, TIMER RUNNING</text>
 
           <rect x="680" y="46" width="180" height="64" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
           <text x="770" y="83" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Application</text>
 
-          <line x1="204" y1="78" x2="344" y2="78" stroke="#d92d20" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ar)"></line>
+          <line x1="204" y1="78" x2="258" y2="78" stroke="#d92d20" stroke-width="1.5" stroke-dasharray="5 4"></line>
+          <path d="M266 70 L282 86 M282 70 L266 86" stroke="#d92d20" stroke-width="2" fill="none"></path>
+          <line x1="290" y1="78" x2="344" y2="78" stroke="#d92d20" stroke-width="1.5" stroke-dasharray="5 4"></line>
           <line x1="534" y1="78" x2="674" y2="78" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></line>
 
           <g font-family="Space Mono, monospace" font-size="11" text-anchor="middle">
-            <text x="274" y="132" fill="#d92d20">NOTHING FILLS REDIS</text>
-            <text x="274" y="147" fill="#d92d20">ON ITS OWN</text>
+            <text x="274" y="132" fill="#d92d20">THE ROW CHANGED,</text>
+            <text x="274" y="147" fill="#d92d20">NOTHING TELLS REDIS</text>
             <text x="604" y="132" fill="#171717">READ</text>
           </g>
 
           <path d="M 770 114 L 770 184 L 110 184 L 110 116" fill="none" stroke="#d92d20" stroke-width="2.5" marker-end="url(#ar)"></path>
-          <text x="440" y="204" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">CACHE MISS? THE FULL ROUND TRIP, WHILE A USER WAITS.</text>
+          <text x="440" y="204" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">WHEN THE TIMER EXPIRES, THE APP FETCHES THE ROW AGAIN.</text>
 
-          <text x="20" y="244" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">The app does the driving, and the user pays for it in latency.</text>
-          <text x="20" y="266" font-family="Inter, sans-serif" font-size="14" fill="#353535">Redis only ever holds what somebody already asked for.</text>
+          <text x="20" y="244" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">The database moved on. Redis did not, and nothing was ever going to tell it.</text>
+          <text x="20" y="266" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20">AT 200 READS A SECOND, A FIVE MINUTE TIMER IS 60,000 WRONG ANSWERS.</text>
         </svg>
       </div>
       <p class="dag-cap">THE SAME PICTURE IN DATABASE TERMS</p>
@@ -979,16 +983,16 @@ pre {
 
     <div class="ba-head">
       <span class="ba-label">AFTER</span>
-      <span class="ba-sub">SOMEBODY ELSE KEEPS IT STOCKED</span>
-      <span class="ba-cost">NO TRIP AT ALL</span>
+      <span class="ba-sub">SOMEBODY IS WATCHING THE STORE</span>
+      <span class="ba-cost">CAUGHT BEFORE THE NEXT PLATE</span>
     </div>
 
     <div class="dag">
       <div class="dag-wrap">
-        <svg viewBox="0 0 880 310" style="min-width:760px" role="img" aria-label="Kitchen version, after. A grocery store, a delivery service that keeps the fridge stocked, your full fridge, and you. You never drive anywhere.">
+        <svg viewBox="0 0 880 310" style="min-width:760px" role="img" aria-label="Kitchen version, after. A grocery store that has issued a recall, a butler you hired who watches the shelves, your fridge which now matches the store, and you serving dinner. The butler takes the recalled jar out and puts the new one in before you reach for it.">
           <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
             <text x="105" y="18">GROCERY STORE</text>
-            <text x="330" y="18">DELIVERY SERVICE</text>
+            <text x="330" y="18">BUTLER</text>
             <text x="555" y="18">YOUR FRIDGE</text>
             <text x="780" y="18">YOU</text>
           </g>
@@ -999,22 +1003,22 @@ pre {
           <rect x="20" y="36" width="170" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
           <use href="#ico-store" x="83" y="48" width="44" height="44"></use>
           <text x="105" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Grocery store</text>
-          <text x="105" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">HAS EVERYTHING</text>
+          <text x="105" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">RECALL AT 9:02 AM</text>
 
           <rect x="245" y="36" width="170" height="104" fill="#eef6ff" stroke="#2f6fcc" stroke-width="2"></rect>
-          <use href="#ico-van" x="308" y="48" width="44" height="44"></use>
-          <text x="330" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Delivery service</text>
+          <use href="#ico-butler" x="308" y="48" width="44" height="44"></use>
+          <text x="330" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Butler</text>
           <text x="330" y="130" font-family="Space Mono, monospace" font-size="10" fill="#2f6fcc" text-anchor="middle">YOU HIRED THEM</text>
 
           <rect x="470" y="36" width="170" height="104" fill="#effaf1" stroke="#27843f" stroke-width="1.5"></rect>
           <use href="#ico-fridge" x="533" y="48" width="44" height="44"></use>
           <text x="555" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Fridge</text>
-          <text x="555" y="130" font-family="Space Mono, monospace" font-size="10" fill="#27843f" text-anchor="middle">ALWAYS FULL</text>
+          <text x="555" y="130" font-family="Space Mono, monospace" font-size="10" fill="#27843f" text-anchor="middle">MATCHES THE STORE</text>
 
           <rect x="695" y="36" width="170" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
           <use href="#ico-person" x="758" y="48" width="44" height="44"></use>
           <text x="780" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">You</text>
-          <text x="780" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">STILL HUNGRY</text>
+          <text x="780" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">SERVING DINNER</text>
 
           <g stroke="#171717" stroke-width="1.5">
             <line x1="194" y1="88" x2="239" y2="88" marker-end="url(#a)"></line>
@@ -1023,18 +1027,18 @@ pre {
           </g>
 
           <g font-family="Space Mono, monospace" font-size="11" text-anchor="middle" fill="#171717">
-            <text x="217" y="164">THEY WATCH FOR</text>
-            <text x="217" y="179">ANYTHING NEW</text>
-            <text x="442" y="164">THEY PUT IT</text>
-            <text x="442" y="179">AWAY FOR YOU</text>
+            <text x="217" y="164">THEY WATCH</text>
+            <text x="217" y="179">THE SHELVES</text>
+            <text x="442" y="164">OUT WITH THE OLD,</text>
+            <text x="442" y="179">IN WITH THE NEW</text>
             <text x="667" y="164">OPEN THE DOOR</text>
           </g>
 
           <text x="330" y="208" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#2f6fcc" text-anchor="middle">THIS IS RDI</text>
-          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f" text-anchor="middle">YOU NEVER DRIVE ANYWHERE. FIVE SECONDS TO DINNER.</text>
+          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f" text-anchor="middle">THE OLD JAR IS GONE BEFORE YOU REACH FOR IT.</text>
 
-          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Still your fridge, still your job. You just stopped doing the driving.</text>
-          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">And because the fridge is full, you can plan a whole meal from it.</text>
+          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Still your fridge, still your job. You just stopped being the one who finds out late.</text>
+          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">The butler is not reading dates on jars. They are watching the store.</text>
         </svg>
       </div>
       <p class="dag-cap">THE KITCHEN VERSION, ONE STAGE ADDED</p>
@@ -1042,7 +1046,7 @@ pre {
 
     <div class="dag">
       <div class="dag-wrap">
-        <svg viewBox="0 0 880 280" style="min-width:760px" role="img" aria-label="Database version, after. Source database, then RDI, then Redis holding all of it, then the application. Every arrow points the same way and the application never reaches past Redis.">
+        <svg viewBox="0 0 880 280" style="min-width:760px" role="img" aria-label="Database version, after. Source database, then RDI watching its change log, then Redis matching the source, then the application. Every arrow points the same way, there are no timers, and an update or delete reaches Redis within seconds.">
           <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
             <text x="105" y="18">SOURCE DATABASE</text>
             <text x="330" y="18">RDI</text>
@@ -1059,11 +1063,11 @@ pre {
 
           <rect x="245" y="46" width="170" height="64" fill="#eef6ff" stroke="#2f6fcc" stroke-width="2"></rect>
           <text x="330" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">RDI</text>
-          <text x="330" y="95" font-family="Space Mono, monospace" font-size="10" fill="#2f6fcc" text-anchor="middle">WATCHES AND COPIES</text>
+          <text x="330" y="95" font-family="Space Mono, monospace" font-size="10" fill="#2f6fcc" text-anchor="middle">WATCHES THE CHANGE LOG</text>
 
           <rect x="470" y="46" width="170" height="64" fill="#effaf1" stroke="#27843f" stroke-width="1.5"></rect>
           <text x="555" y="76" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Redis</text>
-          <text x="555" y="95" font-family="Space Mono, monospace" font-size="10" fill="#27843f" text-anchor="middle">ALL OF IT, NO TIMERS</text>
+          <text x="555" y="95" font-family="Space Mono, monospace" font-size="10" fill="#27843f" text-anchor="middle">MATCHES THE SOURCE</text>
 
           <rect x="695" y="46" width="170" height="64" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
           <text x="780" y="83" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Application</text>
@@ -1080,13 +1084,13 @@ pre {
             <text x="667" y="132">READ</text>
           </g>
 
-          <text x="440" y="204" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f" text-anchor="middle">NO ROUND TRIP. THE APP NEVER LOOKS PAST REDIS.</text>
+          <text x="440" y="204" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f" text-anchor="middle">NO TIMER TO WAIT ON. THE WRONG ANSWER IS GONE IN SECONDS.</text>
 
-          <text x="20" y="244" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">RDI does the driving, so the app never waits on the source.</text>
+          <text x="20" y="244" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">An update replaces the old value. A delete removes the key outright.</text>
           <text x="20" y="266" font-family="Inter, sans-serif" font-size="14" fill="#353535">Changes usually reach Redis within a few seconds of happening at the source.</text>
         </svg>
       </div>
-      <p class="dag-cap">THE SAME PICTURE IN DATABASE TERMS, ONE ROUND TRIP GONE</p>
+      <p class="dag-cap">THE SAME PICTURE IN DATABASE TERMS, NO TIMER LEFT TO GUESS</p>
     </div>
   </section>
 
@@ -1098,6 +1102,8 @@ pre {
 
     <p class="point">How long are you willing to hand out the wrong answer?</p>
 
+    <p style="margin-bottom:30px">So why did nobody tell the fridge? Because in a cache-aside setup, nothing can.</p>
+
     <pre>1   look in Redis
 2   not there, so ask the database and wait
 3   put a copy in Redis
@@ -1106,7 +1112,9 @@ pre {
 
     <p style="margin-top:30px"><b>So why throw the copy away at all?</b> Because nothing tells Redis when the database changed. Somebody could edit that row a second after you made the copy, and Redis has no way to find out. With no signal to go on, a clock is all you have left.</p>
 
-    <p style="margin-bottom:44px">So you bin the copy on a schedule and fetch a fresh one, and now you are picking a number. Long, and you hand out wrong answers for longer. Short, and you are back to asking the database constantly, which is the thing the copy was meant to avoid. Five minutes is not a good answer. There is no good answer.</p>
+    <p>So you bin the copy on a schedule and fetch a fresh one, and now you are picking a number. Long, and you hand out wrong answers for longer. Short, and you are back to asking the database constantly, which is the thing the copy was meant to avoid. Five minutes is not a good answer. There is no good answer.</p>
+
+    <p style="margin-bottom:44px"><b>Milk has a real sell-by date because milk actually decays.</b> A customer's address does not. It is right until somebody changes it, and then it is wrong that second, with nothing printed on it anywhere. The five minutes is not your data's expiry date. It is yours, in Sharpie, because you had nothing better to go on.</p>
 
     <div class="dag">
       <div class="dag-wrap">
@@ -1184,11 +1192,11 @@ pre {
   <section class="panel" id="section-how" data-section-id="section-how">
     <div class="sec-head">
       <span class="sec-num">04</span>
-      <h2>What if the store stocked it for you?</h2>
+      <h2>What if you were told the moment it changed?</h2>
       <span class="sec-note">names are from the Redis docs</span>
     </div>
 
-    <p class="point">What if you filled it once and it stayed filled?</p>
+    <p class="point">What if you filled it once and it stayed right?</p>
 
     <div class="dag">
       <div class="dag-wrap">
