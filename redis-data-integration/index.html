@@ -1322,9 +1322,9 @@ pre {
             <td>You own the round trip and the expiry guess. Dual writes drift apart the first time one succeeds and the other fails, and Redis never holds the whole set.</td>
           </tr>
           <tr>
-            <td>A scheduled reload</td>
-            <td>Any scheduler plus a script that dumps the dataset into Redis.</td>
-            <td>Your data is exactly as old as the last run, and running it often enough to feel current gets expensive quickly.</td>
+            <td>A batch reload</td>
+            <td>Any scheduler plus a script that loads the whole dataset into Redis in one batch.</td>
+            <td>Your data is exactly as old as the last batch, and running it often enough to feel current gets expensive quickly.</td>
           </tr>
           <tr>
             <td>Source database triggers</td>
@@ -1360,14 +1360,10 @@ pre {
       <span class="chip" style="border-color:#FF9900;color:#c17400">Aurora</span>
       <span class="chip" style="border-color:#00E599;color:#009261">Neon</span>
       <span class="chip" style="border-color:#3ECF8E;color:#2c9566">Supabase</span>
-    </div>
-
-    <p class="chip-label">PREVIEW</p>
-    <div class="chips">
       <span class="chip" style="border-color:#29B5E8;color:#2090b9">Snowflake</span>
     </div>
 
-    <p style="margin-top:34px">Change tracking is switched off by default on every one of these, so the source needs preparing first. Oracle uses LogMiner, Postgres uses pgoutput, MySQL and MariaDB use the binlog, SQL Server uses its built-in feature, MongoDB uses change streams, and Spanner uses change streams too. Spanner and Snowflake only work when RDI runs on Kubernetes with Helm.</p>
+    <p style="margin-top:34px">Change tracking is switched off by default on every one of these, so the source needs preparing first. Oracle uses LogMiner, Postgres uses pgoutput, MySQL and MariaDB use the binlog, SQL Server uses its built-in feature, MongoDB uses change streams, and Spanner uses change streams too. If you run RDI yourself, Spanner and Snowflake need it on Kubernetes with Helm. On Redis Cloud, Snowflake is one of the managed sources and has to be hosted on AWS.</p>
 
     <p class="chip-label" style="margin-top:44px">COMMON QUESTIONS</p>
 
@@ -1378,7 +1374,7 @@ pre {
       </li>
       <li>
         <b>Does it work with any Redis?</b>
-        No. RDI is built and tested for Redis software only. The target can be any version, including an Active-Active replica or an Auto tiering database.
+        Redis Cloud and Redis Software, not open source Redis. On Redis Software you install and run RDI yourself, and the target can be an Active-Active replica or an Auto tiering database. On Redis Cloud, Redis runs it for you, but the target has to be a Cloud Pro database on AWS and Active-Active targets are not supported.
       </li>
       <li>
         <b>Can I run more than one on a cluster?</b>
@@ -1402,7 +1398,7 @@ pre {
       </li>
     </ul>
 
-    <p style="margin-top:34px"><b>Two things to know before you start.</b> RDI needs a commercial licence alongside Redis software, and that licence includes two extra shards to run RDI's own database. And if your data lands in a warehouse before you want to serve it, that is the thin part today: Snowflake is in preview, and Databricks and BigQuery are not supported.</p>
+    <p style="margin-top:34px"><b>Two things to know before you start.</b> On Redis Software, RDI needs a commercial licence, and that licence includes two extra shards to run RDI's own database; on Redis Cloud it comes with a Cloud Pro subscription on AWS. And if your data lands in a warehouse before you want to serve it, Snowflake is the only one covered. Databricks and BigQuery are not supported.</p>
   </section>
 
   </main>
