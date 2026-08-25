@@ -769,12 +769,13 @@ a.chip:hover {
     <path d="M0 0 L10 3.5 L0 7 z" fill="#7ad13a"></path>
   </marker>
 
-  <symbol id="ico-store" viewBox="0 0 44 44">
+  <symbol id="ico-dairy" viewBox="0 0 44 44">
     <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
-      <path d="M6 17 v24 h32 V17"></path>
-      <path d="M3 17 L9 6 h26 l6 11 Z"></path>
-      <path d="M14 6 L11 17 M24 6 L23 17 M33 6 L34 17"></path>
-      <path d="M17 41 v-12 h10 v12"></path>
+      <path d="M5 40 V19 h22 v21"></path>
+      <path d="M3 20 L9 11 L16 7 L23 11 L29 20"></path>
+      <path d="M12 40 v-11 h8 v11"></path>
+      <path d="M34 40 V17 a4 4 0 0 1 7 0 V40"></path>
+      <path d="M34 24 h7"></path>
     </g>
   </symbol>
 
@@ -786,18 +787,21 @@ a.chip:hover {
     </g>
   </symbol>
 
-  <symbol id="ico-person" viewBox="0 0 44 44">
+  <symbol id="ico-shop" viewBox="0 0 44 44">
     <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
-      <circle cx="22" cy="13" r="7"></circle>
-      <path d="M8 41 C8 27 36 27 36 41"></path>
+      <path d="M6 17 v24 h32 V17"></path>
+      <path d="M3 17 L9 6 h26 l6 11 Z"></path>
+      <path d="M14 6 L11 17 M24 6 L23 17 M33 6 L34 17"></path>
+      <path d="M17 41 v-12 h10 v12"></path>
     </g>
   </symbol>
 
-  <symbol id="ico-butler" viewBox="0 0 44 44">
+  <symbol id="ico-van" viewBox="0 0 44 44">
     <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
-      <circle cx="22" cy="10" r="6.5"></circle>
-      <path d="M22 22 L16 18.5 L16 25.5 Z M22 22 L28 18.5 L28 25.5 Z"></path>
-      <path d="M7 41 C7 25 37 25 37 41"></path>
+      <path d="M3 12 h23 v20 H3 Z"></path>
+      <path d="M26 19 h6 l6 7 v6 H26 Z"></path>
+      <circle cx="12" cy="35" r="3.2"></circle>
+      <circle cx="32" cy="35" r="3.2"></circle>
     </g>
   </symbol>
 </defs></svg>
@@ -819,7 +823,7 @@ a.chip:hover {
   <div class="mobile-section-picker">
     <label for="mobile-section-nav">section</label>
     <select id="mobile-section-nav" aria-label="Current section">
-      <option value="section-fridge">why own a fridge?</option>
+      <option value="section-fridge">why keep a fridge?</option>
       <option value="section-before-after">what if it changed?</option>
       <option value="section-breaks">how wrong can it get?</option>
       <option value="section-how">what if it stayed current?</option>
@@ -832,7 +836,7 @@ a.chip:hover {
   <div class="scroll-layout">
 
   <nav class="nav section-rail" aria-label="Article sections">
-    <button class="nav-step active" type="button" data-shape="circle" data-section-target="section-fridge"><span class="step-num">1</span><span class="step-lbl">why own a fridge?</span></button>
+    <button class="nav-step active" type="button" data-shape="circle" data-section-target="section-fridge"><span class="step-num">1</span><span class="step-lbl">why keep a fridge?</span></button>
     <button class="nav-step" type="button" data-shape="square" data-section-target="section-before-after"><span class="step-num">2</span><span class="step-lbl">what if it changed?</span></button>
     <button class="nav-step" type="button" data-shape="diamond" data-section-target="section-breaks"><span class="step-num">3</span><span class="step-lbl">how wrong can it get?</span></button>
     <button class="nav-step" type="button" data-shape="triangle" data-section-target="section-how"><span class="step-num">4</span><span class="step-lbl">what if it stayed current?</span></button>
@@ -847,28 +851,29 @@ a.chip:hover {
   <section class="panel" id="section-fridge" data-section-id="section-fridge">
     <div class="sec-head">
       <span class="sec-num">01</span>
-      <h2>Why do you own a fridge?</h2>
+      <h2>Why does a milkshake shop keep a fridge?</h2>
     </div>
 
-    <p class="point">Would you drive to the store for every glass of milk?</p>
+    <p class="point">Would you drive out to the dairy for every milkshake you sell?</p>
 
     <ul class="beats">
-      <li><span><b>The store has everything, but it is not in your house.</b></span></li>
-      <li><span><b>So you keep a copy at home.</b> That is the fridge. It is right there and it is fast.</span></li>
-      <li><span><b>The copy is only as good as the day you made it.</b> The store keeps changing what is on its shelves. Your fridge does not hear about any of it.</span></li>
-      <li><span><b>Keeping the copy honest is your job, not the store's.</b> Either you go and check, or somebody tells you the moment something changes.</span></li>
+      <li><span><b>The dairy has all the milk, and the dairy is an hour away.</b></span></li>
+      <li><span><b>So you keep a fridge behind the counter.</b> Right there, cold, close enough to blend an order while somebody waits for it.</span></li>
+      <li><span><b>What is in the fridge is only as good as the last delivery.</b> The dairy keeps bottling and recalling and repricing. Your fridge hears none of it.</span></li>
+      <li><span><b>Keeping the fridge honest is your job, not the dairy's.</b> Either you drive out and check, or somebody brings you the change the moment it happens.</span></li>
     </ul>
 
     <dl class="map">
-      <dt>THE STORE</dt><dd>Your real database</dd>
-      <dt>THE FRIDGE</dt><dd>Redis</dd>
-      <dt>GOING TO CHECK</dt><dd>Cache-aside</dd>
-      <dt>KEEPING IT HONEST</dt><dd>Redis Data Integration</dd>
+      <dt>THE DAIRY</dt><dd>Your real database</dd>
+      <dt>YOUR FRIDGE</dt><dd>Redis</dd>
+      <dt>THE MILKSHAKE SHOP</dt><dd>Your application</dd>
+      <dt>DRIVING OUT TO CHECK</dt><dd>Cache-aside</dd>
+      <dt>KEEPING THE FRIDGE HONEST</dt><dd>Redis Data Integration</dd>
     </dl>
 
     <div class="say">
       <span class="say-label">SAY IT LIKE THIS</span>
-      <p>The store has everything, but it is not in your house. The fridge is fast, so you keep a copy at home. But the store keeps changing things, and your fridge never hears about it. Keeping that copy honest is on you, not the store. So the only question is whether you go and check, or somebody tells you the moment something changes.</p>
+      <p>The dairy has all the milk, and the dairy is an hour away. The fridge behind the counter is fast, so you keep what you need in it. But the dairy keeps bottling, and your fridge never hears about it. Keeping that milk honest is on you, not the dairy. So the only question is whether you drive out and check, or somebody brings you the change the moment it happens.</p>
     </div>
   </section>
 
@@ -876,43 +881,43 @@ a.chip:hover {
   <section class="panel" id="section-before-after" data-section-id="section-before-after">
     <div class="sec-head">
       <span class="sec-num">02</span>
-      <h2>What happens when the store changes something?</h2>
+      <h2>What happens when the dairy changes something?</h2>
       <span class="sec-note">before and after</span>
     </div>
 
-    <p class="point">Everything is fine until something changes. Then your copy is wrong, and you keep handing it out anyway.</p>
+    <p class="point">Everything is fine until something changes. Then what is in your fridge is wrong, and you keep selling it anyway.</p>
 
     <div class="ba-head">
       <span class="ba-label">BEFORE</span>
       <span class="ba-sub">NOBODY TELLS YOU</span>
-      <span class="ba-cost">SIX MEALS, ALREADY SERVED</span>
+      <span class="ba-cost">SIX MILKSHAKES, ALREADY SOLD</span>
     </div>
 
     <div class="dag">
       <div class="dag-wrap">
-        <svg viewBox="0 0 880 310" style="min-width:700px" role="img" aria-label="Kitchen version, before. A grocery store that has issued a recall, your fridge still holding the recalled jar, and you serving dinner from it. No signal crosses from the store to the fridge, so you keep serving it until the date you wrote on the jar yourself passes.">
+        <svg viewBox="0 0 880 310" style="min-width:700px" role="img" aria-label="Milkshake shop version, before. The dairy has recalled this morning's batch, your fridge still holds a jug from it, and the shop keeps blending orders out of that jug. No signal crosses from the dairy to the fridge, so you keep pouring until the date you wrote on the jug yourself passes.">
           <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
-            <text x="110" y="18">GROCERY STORE</text>
+            <text x="110" y="18">THE DAIRY</text>
             <text x="440" y="18">YOUR FRIDGE</text>
-            <text x="770" y="18">YOU</text>
+            <text x="770" y="18">MILKSHAKE SHOP</text>
           </g>
           <line x1="275" y1="28" x2="275" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
           <line x1="605" y1="28" x2="605" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
 
           <rect x="20" y="36" width="180" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
-          <use href="#ico-store" x="88" y="48" width="44" height="44"></use>
-          <text x="110" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Grocery store</text>
-          <text x="110" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">RECALL ISSUED 9:02 AM</text>
+          <use href="#ico-dairy" x="88" y="48" width="44" height="44"></use>
+          <text x="110" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">The dairy</text>
+          <text x="110" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">BATCH RECALLED 9:02 AM</text>
 
           <rect x="350" y="36" width="180" height="104" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
           <use href="#ico-fridge" x="418" y="48" width="44" height="44"></use>
           <text x="440" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Fridge</text>
-          <text x="440" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">STILL HOLDS THE OLD JAR</text>
+          <text x="440" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">STILL HOLDS THAT JUG</text>
 
           <rect x="680" y="36" width="180" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
-          <use href="#ico-person" x="748" y="48" width="44" height="44"></use>
-          <text x="770" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">You</text>
-          <text x="770" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">SERVING DINNER</text>
+          <use href="#ico-shop" x="748" y="48" width="44" height="44"></use>
+          <text x="770" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Milkshake shop</text>
+          <text x="770" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">BLENDING ORDERS</text>
 
           <line x1="204" y1="88" x2="258" y2="88" stroke="#d92d20" stroke-width="1.5" stroke-dasharray="5 4"></line>
           <path d="M266 80 L282 96 M282 80 L266 96" stroke="#d92d20" stroke-width="2" fill="none"></path>
@@ -926,13 +931,13 @@ a.chip:hover {
           </g>
 
           <path d="M 770 144 L 770 214 L 110 214 L 110 146" fill="none" stroke="#d92d20" stroke-width="2.5" marker-end="url(#ar)"></path>
-          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">WHEN YOUR DATE PASSES YOU DRIVE OVER AND FETCH A NEW JAR.</text>
+          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">WHEN YOUR DATE PASSES YOU DRIVE OUT AND FETCH A FRESH JUG.</text>
 
-          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Nobody printed a recall date on that jar. You wrote your own date on it.</text>
-          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">The recall does not move your date. You keep serving it until your date passes.</text>
+          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Nobody printed the recall on that jug. You wrote your own date on it.</text>
+          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">The recall does not move your date. You keep pouring until your date passes.</text>
         </svg>
       </div>
-      <p class="dag-cap">THE KITCHEN VERSION</p>
+      <p class="dag-cap">THE MILKSHAKE SHOP VERSION</p>
     </div>
 
     <div class="dag">
@@ -980,42 +985,42 @@ a.chip:hover {
 
     <div class="ba-head">
       <span class="ba-label">AFTER</span>
-      <span class="ba-sub">SOMEBODY IS WATCHING THE STORE</span>
-      <span class="ba-cost">CAUGHT BEFORE THE NEXT PLATE</span>
+      <span class="ba-sub">SOMEBODY IS WATCHING THE DAIRY</span>
+      <span class="ba-cost">CAUGHT BEFORE THE NEXT ORDER</span>
     </div>
 
     <div class="dag">
       <div class="dag-wrap">
-        <svg viewBox="0 0 880 310" style="min-width:760px" role="img" aria-label="Kitchen version, after. A grocery store that has issued a recall, a butler you hired who watches the shelves, your fridge which now matches the store, and you serving dinner. The butler takes the recalled jar out and puts the new one in before you reach for it.">
+        <svg viewBox="0 0 880 310" style="min-width:760px" role="img" aria-label="Milkshake shop version, after. The dairy has recalled this morning's batch, a driver you hired is standing at the bottling line, your fridge now matches the dairy, and the shop keeps blending orders. The recalled jug is out and a fresh one is in before you reach for it.">
           <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
-            <text x="105" y="18">GROCERY STORE</text>
-            <text x="330" y="18">BUTLER</text>
+            <text x="105" y="18">THE DAIRY</text>
+            <text x="330" y="18">YOUR DRIVER</text>
             <text x="555" y="18">YOUR FRIDGE</text>
-            <text x="780" y="18">YOU</text>
+            <text x="780" y="18">MILKSHAKE SHOP</text>
           </g>
           <line x1="217" y1="28" x2="217" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
           <line x1="442" y1="28" x2="442" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
           <line x1="667" y1="28" x2="667" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
 
           <rect x="20" y="36" width="170" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
-          <use href="#ico-store" x="83" y="48" width="44" height="44"></use>
-          <text x="105" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Grocery store</text>
+          <use href="#ico-dairy" x="83" y="48" width="44" height="44"></use>
+          <text x="105" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">The dairy</text>
           <text x="105" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">RECALL AT 9:02 AM</text>
 
           <rect x="245" y="36" width="170" height="104" fill="#eef6ff" stroke="#2f6fcc" stroke-width="2"></rect>
-          <use href="#ico-butler" x="308" y="48" width="44" height="44"></use>
-          <text x="330" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Butler</text>
+          <use href="#ico-van" x="308" y="48" width="44" height="44"></use>
+          <text x="330" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Your driver</text>
           <text x="330" y="130" font-family="Space Mono, monospace" font-size="10" fill="#2f6fcc" text-anchor="middle">YOU HIRED THEM</text>
 
           <rect x="470" y="36" width="170" height="104" fill="#effaf1" stroke="#27843f" stroke-width="1.5"></rect>
           <use href="#ico-fridge" x="533" y="48" width="44" height="44"></use>
           <text x="555" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Fridge</text>
-          <text x="555" y="130" font-family="Space Mono, monospace" font-size="10" fill="#27843f" text-anchor="middle">MATCHES THE STORE</text>
+          <text x="555" y="130" font-family="Space Mono, monospace" font-size="10" fill="#27843f" text-anchor="middle">MATCHES THE DAIRY</text>
 
           <rect x="695" y="36" width="170" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
-          <use href="#ico-person" x="758" y="48" width="44" height="44"></use>
-          <text x="780" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">You</text>
-          <text x="780" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">SERVING DINNER</text>
+          <use href="#ico-shop" x="758" y="48" width="44" height="44"></use>
+          <text x="780" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Milkshake shop</text>
+          <text x="780" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">BLENDING ORDERS</text>
 
           <g stroke="#171717" stroke-width="1.5">
             <line x1="194" y1="88" x2="239" y2="88" marker-end="url(#a)"></line>
@@ -1024,21 +1029,21 @@ a.chip:hover {
           </g>
 
           <g font-family="Space Mono, monospace" font-size="11" text-anchor="middle" fill="#171717">
-            <text x="217" y="164">THEY WATCH</text>
-            <text x="217" y="179">THE SHELVES</text>
+            <text x="217" y="164">THEY WATCH THE</text>
+            <text x="217" y="179">BOTTLING LINE</text>
             <text x="442" y="164">OUT WITH THE OLD,</text>
-            <text x="442" y="179">IN WITH THE NEW</text>
+            <text x="442" y="179">IN WITH THE FRESH</text>
             <text x="667" y="164">OPEN THE DOOR</text>
           </g>
 
           <text x="330" y="208" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#2f6fcc" text-anchor="middle">THIS IS RDI</text>
-          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f" text-anchor="middle">THE OLD JAR IS GONE BEFORE YOU REACH FOR IT.</text>
+          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f" text-anchor="middle">THE RECALLED JUG IS GONE BEFORE YOU REACH FOR IT.</text>
 
-          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Still your fridge, still your job. You just stopped being the one who finds out late.</text>
-          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">The butler is not reading dates on jars. They are watching the store.</text>
+          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Still your fridge, still your shop. You just stopped being the one who finds out late.</text>
+          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">Your driver is not sniffing jugs in the fridge. They are watching the dairy.</text>
         </svg>
       </div>
-      <p class="dag-cap">THE KITCHEN VERSION, ONE STAGE ADDED</p>
+      <p class="dag-cap">THE MILKSHAKE SHOP VERSION, ONE STAGE ADDED</p>
     </div>
 
     <div class="dag">
@@ -1111,7 +1116,9 @@ a.chip:hover {
 
     <p>So you bin the copy on a schedule and fetch a fresh one, and now you are picking a number. Long, and you hand out wrong answers for longer. Short, and you are back to asking the database constantly, which is the thing the copy was meant to avoid. Five minutes is not a good answer. There is no good answer.</p>
 
-    <p style="margin-bottom:44px"><b>Milk has a real sell-by date because milk actually decays.</b> A customer's address does not. It is right until somebody changes it, and then it is wrong that second, with nothing printed on it anywhere. The five minutes is not your data's expiry date. It is yours, in Sharpie, because you had nothing better to go on.</p>
+    <p><b>When the milk in the fridge is no good, you get three moves and you will not like any of them.</b> Stop selling milkshakes, which nobody accepts. Drive out to the dairy in the middle of the lunch rush, which is what a cache miss is: the customer waits at the counter while you go to the source. Or wait for tomorrow's delivery, which is what a nightly batch job is: right at six in the morning, drifting by noon, wrong by close.</p>
+
+    <p style="margin-bottom:44px"><b>And this is where the milk analogy stops being kind to you.</b> Milk has a real sell-by date, printed by somebody who knows how fast milk turns. A customer's address has nothing printed on it anywhere. It is right until somebody changes it, and then it is wrong that second. The five minutes is not your data's expiry date. It is yours, in Sharpie, because you had nothing better to go on.</p>
 
     <div class="dag">
       <div class="dag-wrap">
