@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redis use cases</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cline x1='11.5' y1='20.5' x2='20.5' y2='11.5' stroke='%23171717' stroke-width='2.4'/%3E%3Ccircle cx='7.5' cy='24.5' r='5' fill='%23171717'/%3E%3Ccircle cx='24.5' cy='7.5' r='5' fill='%23ffffff' stroke='%23171717' stroke-width='2.4'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #fff;
+  --ink: #171717;
+  --text: #353535;
+  --muted: #73736e;
+  --rule: #d8d8d4;
+  --surface: #fafaf9;
+  --faint: #9a9a94;
+
+  /* Redis brand accent, hex unconfirmed, see INTERNAL-NOTES */
+  --redis-green: #7ad13a;
+
+  --blue: #1f5b8f;
+  --teal: #16807a;
+  --green: #3f7c49;
+  --ochre: #a66b1f;
+  --orange: #b8512e;
+  --rose: #aa4b73;
+  --violet: #6e4b8b;
+
+  --body: Inter, "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: "Space Mono", "SFMono-Regular", Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { color: #fff; background: var(--ink); }
+a { color: inherit; }
+
+.page {
+  width: min(1180px, calc(100% - 56px));
+  margin: 0 auto;
+  padding: 68px 0 80px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .06em;
+}
+
+.topbar a { text-decoration: none; }
+.topbar a:hover { color: var(--blue); }
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: #4a4a4a;
+  margin: 76px 0 20px;
+}
+
+.hero { margin-bottom: 76px; }
+
+h1 {
+  font-size: clamp(48px, 8vw, 88px);
+  font-weight: 500;
+  letter-spacing: -.065em;
+  line-height: .92;
+  max-width: 840px;
+  margin: 0 0 28px;
+  color: var(--ink);
+}
+
+.intro {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #4a4a4a;
+  max-width: 520px;
+  margin: 0;
+}
+
+.intro + .intro { margin-top: 18px; }
+.intro b { color: var(--ink); font-weight: 600; }
+
+.intro a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 3px;
+  transition: color 120ms ease, text-decoration-color 120ms ease;
+}
+
+.intro a:hover { color: var(--blue); text-decoration-color: var(--blue); }
+.intro a:focus-visible { outline: 1.5px solid var(--blue); outline-offset: 3px; }
+
+/* ---------- band ---------- */
+
+.band {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 0 0 46px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.band-label {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--ink);
+}
+
+.band-note {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--muted);
+}
+
+.band-count {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* ---------- sticky section rail ---------- */
+
+.mobile-section-picker { display: none; }
+
+.scroll-layout {
+  display: grid;
+  grid-template-columns: minmax(164px, 190px) minmax(0, 1fr);
+  gap: clamp(36px, 5vw, 64px);
+  align-items: start;
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.nav-step {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  justify-items: start;
+  gap: 0;
+  padding: 11px 12px;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: var(--body);
+  font-size: 13px;
+  text-align: left;
+}
+
+.nav-step:hover { color: var(--ink); }
+
+.section-rail {
+  --rail-progress: 0%;
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100vh - 48px);
+  min-height: 560px;
+  margin: 0;
+  padding: 4px 0;
+  border: 0;
+  isolation: isolate;
+}
+
+.section-rail::before,
+.section-rail::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 20px;
+  left: 16px;
+  width: 2px;
+  border-radius: 60% 40% 55% 45%;
+  transform: rotate(-.25deg);
+}
+
+.section-rail::before {
+  bottom: 20px;
+  background: repeating-linear-gradient(to bottom, #d6d3d1 0 8px, #ebe8e3 8px 11px);
+}
+
+.section-rail::after {
+  height: calc((100% - 40px) * var(--rail-progress) / 100%);
+  background: repeating-linear-gradient(to bottom, var(--ink) 0 9px, #555 9px 11px);
+  transition: height .35s ease;
+}
+
+.section-rail .nav-step {
+  width: 100%;
+  position: relative;
+  padding: 5px 4px 5px 0;
+  text-align: left;
+  border: 0;
+  background: transparent;
+}
+
+.section-rail .step-num {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #aaa;
+  background: var(--paper);
+  border: 1.5px solid #c9c5be;
+  border-radius: 52% 48% 45% 55%;
+  transform: rotate(-2deg);
+}
+
+.section-rail .nav-step:nth-child(even) .step-num {
+  border-radius: 46% 54% 52% 48%;
+  transform: rotate(2deg);
+}
+
+.section-rail .nav-step.passed .step-num { color: var(--ink); border-color: var(--ink); }
+.section-rail .nav-step.active { color: var(--ink); background: transparent; }
+
+.section-rail .nav-step.active .step-num {
+  color: var(--paper);
+  background: var(--shape-color);
+  border-color: var(--shape-color);
+  transform: rotate(-4deg) scale(1.08);
+}
+
+.section-rail .nav-step[data-shape="circle"]   { --shape-color: #d95721; }
+.section-rail .nav-step[data-shape="square"]   { --shape-color: #2f6fcc; }
+.section-rail .nav-step[data-shape="diamond"]  { --shape-color: #b7790b; --shape-text: #171717; }
+.section-rail .nav-step[data-shape="triangle"] { --shape-color: #7c3fa0; }
+.section-rail .nav-step[data-shape="hexagon"]  { --shape-color: #27843f; }
+.section-rail .nav-step[data-shape="squircle"] { --shape-color: #b52f35; }
+.section-rail .nav-step[data-shape="burst"]    { --shape-color: #147d7e; }
+
+.section-rail .nav-step.active .step-num { color: var(--shape-text, #fff); }
+
+.section-rail .nav-step[data-shape="circle"].active .step-num {
+  border-radius: 50%;
+  transform: rotate(-2deg) scale(1.08);
+}
+
+.section-rail .nav-step[data-shape="square"] .step-num {
+  border-radius: 12% 7% 14% 5%;
+  transform: rotate(3deg);
+}
+
+.section-rail .nav-step[data-shape="diamond"] .step-num {
+  border-radius: 7%;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.section-rail .nav-step[data-shape="triangle"] .step-num {
+  padding-top: 5px;
+  border: 0;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: #f3f1ed;
+  filter: drop-shadow(0 0 1px #777);
+}
+
+.section-rail .nav-step[data-shape="triangle"].active .step-num { background: var(--shape-color); }
+
+.section-rail .nav-step[data-shape="hexagon"] .step-num {
+  border: 0;
+  clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0 50%);
+  background: #f3f1ed;
+  filter: drop-shadow(0 0 1px #777);
+}
+
+.section-rail .nav-step[data-shape="hexagon"].active .step-num { background: var(--shape-color); }
+
+.section-rail .nav-step[data-shape="squircle"] .step-num {
+  border-radius: 44% 56% 48% 52% / 52% 43% 57% 48%;
+}
+
+.section-rail .nav-step[data-shape="burst"] .step-num {
+  border: 0;
+  clip-path: polygon(50% 0, 62% 24%, 85% 15%, 76% 39%, 100% 50%, 76% 61%, 85% 85%, 62% 76%, 50% 100%, 38% 76%, 15% 85%, 24% 61%, 0 50%, 24% 39%, 15% 15%, 38% 24%);
+  background: #f3f1ed;
+  filter: drop-shadow(0 0 1px #777);
+}
+
+.section-rail .nav-step[data-shape="burst"].active .step-num { background: var(--shape-color); }
+
+.section-rail .nav-step:not(.active) .step-num {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: #666;
+  background: var(--paper);
+  border: 1.5px solid #aaa;
+  border-radius: 52% 48% 45% 55%;
+  clip-path: none;
+  filter: none;
+  transform: rotate(-2deg);
+}
+
+.section-rail .step-lbl {
+  padding: 3px 5px;
+  background: rgba(250, 250, 249, .92);
+  line-height: 1.3;
+}
+
+.section-rail .nav-step:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+.scroll-article { min-width: 0; }
+.panel { scroll-margin-top: 32px; }
+
+.panel + .panel {
+  margin-top: 96px;
+  padding-top: 72px;
+  border-top: 1px solid var(--rule);
+}
+
+
+@media (max-width: 800px) {
+  .scroll-layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .section-rail { display: none; }
+
+  .mobile-section-picker {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: block;
+    margin: 0 -14px 28px;
+    padding: 10px 14px;
+    background: rgba(250, 250, 249, .96);
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    backdrop-filter: blur(10px);
+  }
+
+  .mobile-section-picker label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--faint);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  #mobile-section-nav {
+    width: 100%;
+    padding: 4px 28px 4px 0;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    font-family: var(--body);
+    font-size: 14px;
+  }
+}
+
+/* ---------- section internals ---------- */
+
+.panel { --sec-ink: var(--blue); }
+.panel:nth-of-type(2) { --sec-ink: var(--teal); }
+.panel:nth-of-type(3) { --sec-ink: var(--green); }
+.panel:nth-of-type(4) { --sec-ink: var(--ochre); }
+.panel:nth-of-type(5) { --sec-ink: var(--orange); }
+.panel:nth-of-type(6) { --sec-ink: var(--rose); }
+.panel:nth-of-type(7) { --sec-ink: var(--violet); }
+
+.panel + .panel {
+  margin-top: 96px;
+  padding-top: 72px;
+  border-top: 1px solid var(--rule);
+}
+
+.panel + .panel.sub { margin-top: 0; padding-top: 0; border-top: 0; }
+
+/* splitting one entry across panels must not collapse its internal rhythm */
+.panel.sub > .chip-label:first-of-type { margin-top: 44px; }
+.panel.sub > .ba-head:first-of-type { margin-top: 52px; }
+.panel > .dag-cap:last-child { margin-bottom: 0; }
+
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 34px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.sec-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: #4a4a4a;
+  transition: color 120ms ease;
+}
+
+section:hover .sec-num { color: var(--sec-ink); }
+
+h2 { font-size: 14px; font-weight: 600; margin: 0; color: var(--ink); }
+
+.sec-note {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-align: right;
+}
+
+.sec-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .08em;
+  color: var(--muted);
+  border: 1.5px solid var(--rule);
+  padding: 3px 7px 4px;
+}
+
+.ask {
+  font-size: 26px;
+  line-height: 1.25;
+  font-weight: 500;
+  letter-spacing: -.03em;
+  color: var(--ink);
+  max-width: 720px;
+  margin: 0 0 10px;
+}
+
+.alias {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--faint);
+  margin: 0 0 30px;
+}
+
+p { max-width: 640px; }
+
+.point {
+  font-size: 19px;
+  line-height: 1.45;
+  font-weight: 500;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  max-width: 600px;
+  margin: 0 0 32px;
+}
+
+/* ---------- filters ---------- */
+
+[hidden] { display: none !important; }
+
+.filters { margin: 0 0 52px; padding-bottom: 22px; border-bottom: 1px solid var(--ink); }
+
+.chip-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--muted);
+  margin: 30px 0 12px;
+}
+
+.chip-label:first-of-type { margin-top: 0; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; max-width: 780px; }
+
+.chip {
+  appearance: none;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1.5px solid var(--rule);
+  border-radius: 0;
+  padding: 5px 9px 6px;
+  cursor: pointer;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+
+.chip:hover { color: var(--blue); border-color: var(--blue); }
+.chip:focus-visible { outline: 1.5px solid var(--blue); outline-offset: 3px; }
+.chip[aria-pressed="true"] { font-weight: 700; border-color: var(--ink); }
+.chip[disabled] { color: var(--faint); cursor: default; }
+.chip-n { color: var(--faint); font-weight: 400; }
+
+/* ---------- spec blocks ---------- */
+
+pre {
+  margin: 0;
+  padding: 20px 22px;
+  background: var(--surface);
+  border: 1.5px solid var(--rule);
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: var(--text);
+  max-width: 620px;
+}
+
+pre b { color: var(--ink); font-weight: 700; }
+.bad { color: #d92d20; font-weight: 700; }
+.good { color: #27843f; font-weight: 700; }
+
+.map {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  max-width: 640px;
+  margin: 38px 0 0;
+  border-top: 1px solid var(--rule);
+}
+
+.map dt {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .05em;
+  color: var(--muted);
+  padding: 12px 16px 13px 0;
+  border-bottom: 1px solid var(--rule);
+  line-height: 1.6;
+}
+
+.map dd {
+  margin: 0;
+  padding: 12px 0 13px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 14px;
+  color: var(--ink);
+}
+
+/* ---------- diagrams ---------- */
+
+.dag-wrap {
+  overflow-x: auto;
+  padding: 20px 22px 22px;
+  background: var(--surface);
+  border: 1.5px solid var(--rule);
+  margin: 0;
+}
+
+.dag-wrap svg { display: block; width: 100%; height: auto; }
+
+.dag-cap {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .05em;
+  color: var(--faint);
+  margin: 12px 0 0;
+  max-width: 640px;
+}
+
+.dag + .dag { margin-top: 40px; }
+
+.ba-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 52px 0 24px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.ba-label {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--ink);
+}
+
+.ba-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--muted);
+}
+
+.ba-cost {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--ink);
+}
+
+/* ---------- stack strip ---------- */
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 36px 0 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.stack div {
+  display: grid;
+  gap: 2px;
+  padding: 14px 26px 15px 0;
+  margin-right: 26px;
+  border-right: 1px solid var(--rule);
+}
+
+.stack div:last-child { border-right: 0; }
+
+.stack dt {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .07em;
+  color: var(--faint);
+}
+
+.stack dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.cmp-wrap { overflow-x: auto; margin: 44px 0 0; }
+
+.cmp {
+  width: 100%;
+  min-width: 660px;
+  border-collapse: collapse;
+  border-top: 1px solid var(--ink);
+}
+
+.cmp thead th {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: .08em;
+  color: var(--muted);
+  text-align: left;
+  padding: 11px 18px 12px 0;
+  border-bottom: 1px solid var(--ink);
+}
+
+.cmp td, .cmp tbody th {
+  text-align: left;
+  vertical-align: top;
+  padding: 17px 18px 18px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 14px;
+}
+
+.cmp tbody th {
+  width: 156px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.cmp th:last-child, .cmp td:last-child { padding-right: 0; }
+
+/* ---------- the list ---------- */
+
+.list { margin: 0; }
+
+.row {
+  display: grid;
+  grid-template-columns: 30px minmax(170px, .85fr) minmax(230px, 1.25fr) 132px 54px;
+  gap: 24px;
+  align-items: baseline;
+  padding: 18px 0 20px;
+  border-bottom: 1px solid var(--rule);
+  text-decoration: none;
+}
+
+.row:first-child { border-top: 1px solid var(--rule); }
+
+.row { --row-ink: var(--teal); }
+.row:nth-child(2) { --row-ink: var(--green); }
+.row:nth-child(3) { --row-ink: var(--ochre); }
+.row:nth-child(4) { --row-ink: var(--orange); }
+.row:nth-child(5) { --row-ink: var(--rose); }
+.row:nth-child(6) { --row-ink: var(--violet); }
+.row:nth-child(7) { --row-ink: var(--blue); }
+.row:nth-child(8) { --row-ink: var(--teal); }
+
+.row-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--faint);
+  transition: color 120ms ease;
+}
+
+.row-name {
+  display: block;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  transition: color 120ms ease;
+}
+
+.row-what { font-size: 14px; color: var(--text); }
+
+.row-cat {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .07em;
+  color: var(--faint);
+}
+
+.row-status {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .07em;
+  color: var(--faint);
+  text-align: right;
+}
+
+a.row .row-status { color: var(--ink); }
+a.row:hover .row-name, a.row:hover .row-num { color: var(--row-ink); }
+a.row:focus-visible { outline: 1.5px solid var(--row-ink); outline-offset: 5px; }
+
+.panel { scroll-margin-top: 32px; }
+
+.footer {
+  margin-top: 88px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.footer a { text-underline-offset: 4px; }
+.footer a:hover { color: var(--blue); }
+
+@media (max-width: 860px) {
+  .map { grid-template-columns: 1fr; }
+  .map dt { border-bottom: 0; padding-bottom: 0; }
+  .map dd { padding-top: 2px; }
+  .row { grid-template-columns: 30px minmax(0, 1fr); }
+  .row-what, .row-cat, .row-status { grid-column: 2; text-align: left; }
+}
+
+@media (max-width: 720px) {
+  .page { width: min(100% - 36px, 1180px); padding: 42px 0 64px; }
+  h1 { font-size: clamp(46px, 15vw, 70px); }
+  .kicker { margin-top: 48px; }
+  .hero { margin-bottom: 44px; }
+  .ask { font-size: 22px; }
+  .point { font-size: 17px; }
+  .dag-wrap { padding: 14px; }
+  .sec-head, .ba-head, .band { flex-wrap: wrap; }
+  .sec-note, .ba-cost, .band-count { margin-left: 0; width: 100%; text-align: left; }
+  .topbar, .footer { flex-direction: column; gap: 6px; }
+  .stack div { border-right: 0; margin-right: 0; padding-right: 0; }
+  .row { grid-template-columns: 1fr; gap: 6px; }
+  .row-what, .row-cat, .row-status { grid-column: auto; text-align: left; }
+}
+
+@media print {
+  .page { width: 100%; padding: 0; }
+  .filters { display: none; }
+  .hero { margin-bottom: 40px; }
+  h1 { font-size: 48px; }
+  .scroll-layout { display: block; }
+  .section-rail, .mobile-section-picker { display: none; }
+  .panel { break-inside: avoid; }
+  .dag-wrap { break-inside: avoid; background: #fff; overflow: visible; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <marker id="a" viewBox="0 0 10 7" refX="9.5" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 3.5 L0 7 z" fill="#171717"></path>
+  </marker>
+  <marker id="ar" viewBox="0 0 10 7" refX="9.5" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 3.5 L0 7 z" fill="#d92d20"></path>
+  </marker>
+  <marker id="ag" viewBox="0 0 10 7" refX="9.5" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 3.5 L0 7 z" fill="#27843f"></path>
+  </marker>
+
+  <symbol id="ico-robot" viewBox="0 0 44 44">
+    <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M22 6 v6"></path>
+      <circle cx="22" cy="4" r="2"></circle>
+      <rect x="11" y="12" width="22" height="17"></rect>
+      <path d="M17 19 h2 M25 19 h2"></path>
+      <path d="M14 29 v9 h16 v-9"></path>
+      <path d="M14 32 h-6 M30 32 h6"></path>
+    </g>
+  </symbol>
+
+  <symbol id="ico-server" viewBox="0 0 44 44">
+    <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <rect x="7" y="8" width="30" height="12"></rect>
+      <rect x="7" y="24" width="30" height="12"></rect>
+      <path d="M12 14 h0.5 M12 30 h0.5"></path>
+    </g>
+  </symbol>
+
+  <symbol id="ico-db" viewBox="0 0 44 44">
+    <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <ellipse cx="22" cy="11" rx="15" ry="6"></ellipse>
+      <path d="M7 11 v22 c0 3.3 6.7 6 15 6 s15 -2.7 15 -6 V11"></path>
+      <path d="M7 22 c0 3.3 6.7 6 15 6 s15 -2.7 15 -6"></path>
+    </g>
+  </symbol>
+
+  <symbol id="ico-gateway" viewBox="0 0 44 44">
+    <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M9 40 V14 L22 5 L35 14 v26"></path>
+      <path d="M17 40 V25 h10 v15"></path>
+    </g>
+  </symbol>
+
+  <symbol id="ico-clock" viewBox="0 0 44 44">
+    <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <circle cx="22" cy="23" r="15"></circle>
+      <path d="M22 14 v9 l6 4"></path>
+    </g>
+  </symbol>
+
+  <symbol id="ico-redis" viewBox="0 0 44 44">
+    <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M6 13 L22 6 L38 13 L22 20 Z"></path>
+      <path d="M6 22 L22 29 L38 22"></path>
+      <path d="M6 13 v18 L22 38 L38 31 V13"></path>
+    </g>
+  </symbol>
+</defs></svg>
+
+<div class="page">
+
+  <div class="topbar">
+    <span><a href="../">Redis artifacts</a></span>
+    <span>Use cases</span>
+    <span>unofficial draft, 1 of 8 drawn</span>
+  </div>
+
+  <p class="kicker">EIGHT USE CASES. ONE ARCHITECTURE EACH.</p>
+
+  <div class="hero">
+    <h1>What people build with Redis</h1>
+    <p class="intro">Almost everybody knows the one use case. This page is the other ones. Each one gets the architecture it needs, written out plainly, then drawn three times: <b>built from scratch, assembled from separate tools, and done with Redis</b>.</p>
+    <p class="intro">Where Redis does not fit, the page says so. Named customer stories are not here.</p>
+  </div>
+
+  <div class="filters">
+    <p class="chip-label">FILTER BY CATEGORY</p>
+    <div class="chips" role="group" aria-label="Filter by category">
+    <button class="chip" type="button" data-filter="all" aria-pressed="true">ALL</button>
+    <button class="chip" type="button" data-filter="physical" aria-pressed="false">PHYSICAL AI</button>
+    <button class="chip" type="button" data-filter="commerce" aria-pressed="false">COMMERCE</button>
+    <button class="chip" type="button" data-filter="agents" aria-pressed="false">AI AGENTS</button>
+    <button class="chip" type="button" data-filter="financial" aria-pressed="false">FINANCIAL SERVICES</button>
+    <button class="chip" type="button" data-filter="gaming" aria-pressed="false">GAMING</button>
+    <button class="chip" type="button" data-filter="media" aria-pressed="false">MEDIA</button>
+    <button class="chip" type="button" data-filter="industrial" aria-pressed="false">INDUSTRIAL</button>
+    </div>
+  </div>
+
+  <div class="mobile-section-picker">
+    <label for="mobile-section-nav">SECTION</label>
+    <select id="mobile-section-nav">
+      <option value="section-list">the list</option>
+      <option value="section-needs">what it takes</option>
+      <option value="section-loop">the loop</option>
+      <option value="section-scratch">from scratch</option>
+      <option value="section-assembled">assembled</option>
+      <option value="section-redis">with Redis</option>
+      <option value="section-compare">side by side</option>
+    </select>
+  </div>
+
+  <div class="scroll-layout">
+
+  <nav class="nav section-rail" aria-label="Page sections">
+    <button class="nav-step active" type="button" data-shape="circle" data-section-target="section-list"><span class="step-num">1</span><span class="step-lbl">the list</span></button>
+    <button class="nav-step" type="button" data-shape="square" data-section-target="section-needs"><span class="step-num">2</span><span class="step-lbl">what it takes</span></button>
+    <button class="nav-step" type="button" data-shape="diamond" data-section-target="section-loop"><span class="step-num">3</span><span class="step-lbl">the loop</span></button>
+    <button class="nav-step" type="button" data-shape="triangle" data-section-target="section-scratch"><span class="step-num">4</span><span class="step-lbl">from scratch</span></button>
+    <button class="nav-step" type="button" data-shape="hexagon" data-section-target="section-assembled"><span class="step-num">5</span><span class="step-lbl">assembled</span></button>
+    <button class="nav-step" type="button" data-shape="squircle" data-section-target="section-redis"><span class="step-num">6</span><span class="step-lbl">with Redis</span></button>
+    <button class="nav-step" type="button" data-shape="burst" data-section-target="section-compare"><span class="step-num">7</span><span class="step-lbl">side by side</span></button>
+  </nav>
+
+  <main class="scroll-article">
+
+  <section class="panel" id="section-list" data-section-id="section-list">
+  <div class="band">
+    <span class="band-label">USE CASES</span>
+    <span class="band-note">ONE ARCHITECTURE EACH</span>
+    <span class="band-count" data-count="list">8 total, 1 drawn</span>
+  </div>
+
+  <div class="list">
+    <div class="row" data-cat="commerce">
+      <span class="row-num">01</span>
+      <span class="row-name">Online checkout</span>
+      <span class="row-what">Cart survives the refresh, prices stay current</span>
+      <span class="row-cat">COMMERCE</span>
+      <span class="row-status">queued</span>
+    </div>
+    <div class="row" data-cat="gaming">
+      <span class="row-num">02</span>
+      <span class="row-name">Gaming leaderboard</span>
+      <span class="row-what">A million scores, ranked as you watch</span>
+      <span class="row-cat">GAMING</span>
+      <span class="row-status">queued</span>
+    </div>
+    <a class="row" href="#section-needs" data-cat="physical">
+      <span class="row-num">03</span>
+      <span class="row-name">Home robot butler</span>
+      <span class="row-what">Clears the table, loads the dishwasher</span>
+      <span class="row-cat">PHYSICAL AI</span>
+      <span class="row-status">drawn</span>
+    </a>
+    <div class="row" data-cat="financial">
+      <span class="row-num">04</span>
+      <span class="row-name">Fraud detection</span>
+      <span class="row-what">A score before the swipe clears</span>
+      <span class="row-cat">FINANCIAL SERVICES</span>
+      <span class="row-status">queued</span>
+    </div>
+    <div class="row" data-cat="agents">
+      <span class="row-num">05</span>
+      <span class="row-name">Agent memory</span>
+      <span class="row-what">Remembers what it was told last week</span>
+      <span class="row-cat">AI AGENTS</span>
+      <span class="row-status">queued</span>
+    </div>
+    <div class="row" data-cat="media">
+      <span class="row-num">06</span>
+      <span class="row-name">Live feed</span>
+      <span class="row-what">Loaded before the app finishes opening</span>
+      <span class="row-cat">MEDIA</span>
+      <span class="row-status">queued</span>
+    </div>
+    <div class="row" data-cat="physical">
+      <span class="row-num">07</span>
+      <span class="row-name">Self-driving fleet</span>
+      <span class="row-what">One view of the road, shared</span>
+      <span class="row-cat">PHYSICAL AI</span>
+      <span class="row-status">queued</span>
+    </div>
+    <div class="row" data-cat="industrial">
+      <span class="row-num">08</span>
+      <span class="row-name">Predictive maintenance</span>
+      <span class="row-what">Warns before the line stops</span>
+      <span class="row-cat">INDUSTRIAL</span>
+      <span class="row-status">queued</span>
+    </div>
+  </div>
+  </section>
+
+  <section class="panel" id="section-needs" data-section-id="section-needs" data-cat="physical">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <span class="sec-tag">PHYSICAL AI</span>
+      <h2>Home robot butler</h2>
+      <span class="sec-note">drawn three ways</span>
+    </div>
+
+    <p class="ask">Clears the table, loads the dishwasher, puts the plates away.</p>
+    <p class="alias">NEEDS: SENSOR INGEST / A MEMORY THAT ANSWERS / A DECISION INSIDE THE DEADLINE</p>
+
+    <p class="chip-label">WHAT IT TAKES</p>
+
+<pre>
+<b>A HOME ROBOT NEEDS</b>
+
+  <b>1</b>  somewhere to put what it just saw
+         arriving constantly, never stopping
+
+  <b>2</b>  somewhere to keep what it knows
+         the room, the people, what happened last time
+
+  <b>3</b>  an answer fast enough to act on
+         <span class="bad">before the arm has finished moving</span>
+
+  <b>4</b>  the decision handed back
+         and kept, so the next one is faster
+</pre>
+
+    <p class="dag-cap">FOUR REQUIREMENTS. NONE OF THEM ARE ABOUT THE ROBOT.</p>
+  </section>
+
+  <section class="panel sub" id="section-loop" data-section-id="section-loop" data-cat="physical">
+    <p class="chip-label">THE LOOP</p>
+
+<pre>
+<b>LOOP</b>
+
+  <b>1</b>  sensors  -> write what just happened
+               cameras, microphones, joints
+
+  <b>2</b>  robot    -> what do I know about this?
+               <span class="bad">needs an answer in under 10 ms</span>
+
+  <b>3</b>  store    -> the state of the room right now
+               what this object was last time
+               what the house is supposed to contain
+
+  <b>4</b>  robot    -> decide. move. put the plate away.
+
+  <b>5</b>  store    -> keep what happened
+               <span class="good">so the next plate is faster</span>
+</pre>
+
+    <p class="dag-cap">THE ROBOT IS TWO LINES OF THIS. THE OTHER THREE ARE A DATA PROBLEM.</p>
+
+    <dl class="map">
+      <dt>DATA COMING IN</dt>
+      <dd>Thousands of events a second from cameras, microphones and joints. It never pauses and it cannot be allowed to queue up behind a write.</dd>
+      <dt>A MEMORY TO ASK</dt>
+      <dd>What is this object. What happened last time I tried this. Who lives here. Asked as a question, answered by similarity, not by scanning a table.</dd>
+      <dt>AN ANSWER IN TIME</dt>
+      <dd>Single digit milliseconds. Past that, the plate has already moved and the answer is about a room that no longer exists.</dd>
+      <dt>THE DECISION BACK</dt>
+      <dd>Pushed to the robot the moment it exists. If the robot has to poll for it, the polling interval becomes the reaction time.</dd>
+      <dt>THE BORING DATA</dt>
+      <dd>The floor plan, the household, the product catalogue. It lives in systems you already run and has to arrive here fresh, not nightly.</dd>
+    </dl>
+
+  </section>
+
+  <section class="panel sub" id="section-scratch" data-section-id="section-scratch" data-cat="physical">
+    <p class="chip-label">BUILDING IT TODAY</p>
+
+    <div class="ba-head">
+      <span class="ba-label">ONE</span>
+      <span class="ba-sub">BUILD IT YOURSELF</span>
+      <span class="ba-cost">A DATABASE DOING A JOB IT WAS NOT BUILT FOR</span>
+    </div>
+
+    <div class="dag">
+      <div class="dag-wrap">
+        <svg viewBox="0 0 880 350" style="min-width:740px" role="img" aria-label="Path one, build it yourself. The robot talks to one server you wrote, which inserts every sensor frame as a row into a relational database and joins across those tables on every decision. A cleanup job you also wrote deletes old frames. The control loop ends up waiting on a disk read.">
+          <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
+            <text x="72" y="18">THE ROBOT</text>
+            <text x="278" y="18">YOUR SERVER</text>
+            <text x="600" y="18">WHAT YOU BUILD</text>
+          </g>
+
+          <line x1="164" y1="30" x2="164" y2="266" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+          <line x1="404" y1="30" x2="404" y2="266" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+
+          <rect x="20" y="118" width="108" height="84" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <use href="#ico-robot" x="54" y="126" width="40" height="40"></use>
+          <text x="74" y="188" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717" text-anchor="middle">Robot</text>
+
+          <line x1="132" y1="160" x2="190" y2="160" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></line>
+          <text x="161" y="148" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">SENSORS</text>
+
+          <rect x="194" y="118" width="178" height="84" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <use href="#ico-server" x="208" y="142" width="32" height="32"></use>
+          <text x="250" y="154" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717">Your server</text>
+          <text x="250" y="174" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94">ALL YOUR CODE</text>
+
+          <line x1="376" y1="160" x2="436" y2="160" stroke="#d92d20" stroke-width="1.5" marker-end="url(#ar)"></line>
+          <text x="406" y="148" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">INSERT</text>
+          <text x="406" y="180" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">THEN JOIN</text>
+
+          <rect x="440" y="76" width="216" height="168" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
+          <use href="#ico-db" x="530" y="88" width="36" height="36"></use>
+          <text x="548" y="148" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Tables you added</text>
+          <g font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">
+            <text x="548" y="174">ONE ROW PER FRAME</text>
+            <text x="548" y="191">JOINED ON EVERY DECISION</text>
+            <text x="548" y="208">NO SIMILARITY SEARCH AT ALL</text>
+          </g>
+
+          <line x1="706" y1="160" x2="662" y2="160" stroke="#d92d20" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ar)"></line>
+
+          <rect x="710" y="118" width="150" height="90" fill="#fff" stroke="#d92d20" stroke-width="1.5" stroke-dasharray="5 4"></rect>
+          <use href="#ico-clock" x="769" y="128" width="32" height="32"></use>
+          <text x="785" y="178" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717" text-anchor="middle">Cleanup job</text>
+          <text x="785" y="196" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">YOU WRITE THIS TOO</text>
+
+          <text x="20" y="298" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">There is no ingest, no memory, no expiry and no fan out until you build all four.</text>
+          <text x="20" y="320" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20">THE ARM WAITS ON A DISK READ. THE PLATE IS ALREADY FALLING.</text>
+        </svg>
+      </div>
+      <p class="dag-cap">PATH ONE, FROM SCRATCH</p>
+    </div>
+  </section>
+
+  <section class="panel sub" id="section-assembled" data-section-id="section-assembled" data-cat="physical">
+    <div class="ba-head">
+      <span class="ba-label">TWO</span>
+      <span class="ba-sub">ASSEMBLE IT FROM SEPARATE TOOLS</span>
+      <span class="ba-cost">FOUR STORES, AND THE GLUE IS YOURS</span>
+    </div>
+
+    <div class="dag">
+      <div class="dag-wrap">
+        <svg viewBox="0 0 880 400" style="min-width:780px" role="img" aria-label="Path two, assembled from separate tools. The robot talks to orchestration code you write and own. That code fans out to four separate stores: a message broker for the sensor feed, a vector database for what the robot has seen, a time series store for joint telemetry, and Redis used only as a cache. A database of record sits behind them. Every question the robot asks crosses four systems.">
+          <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
+            <text x="66" y="18">THE ROBOT</text>
+            <text x="258" y="18">GLUE YOU WRITE</text>
+            <text x="518" y="18">FOUR STORES</text>
+            <text x="782" y="18">SOURCE OF TRUTH</text>
+          </g>
+
+          <line x1="130" y1="30" x2="130" y2="322" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+          <line x1="390" y1="30" x2="390" y2="322" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+          <line x1="672" y1="30" x2="672" y2="322" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+
+          <rect x="16" y="160" width="104" height="84" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <use href="#ico-robot" x="48" y="168" width="40" height="40"></use>
+          <text x="68" y="230" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717" text-anchor="middle">Robot</text>
+
+          <line x1="124" y1="196" x2="156" y2="196" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></line>
+
+          <rect x="160" y="160" width="196" height="84" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
+          <use href="#ico-gateway" x="174" y="184" width="32" height="32"></use>
+          <text x="216" y="196" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717">Orchestration</text>
+          <text x="216" y="216" font-family="Space Mono, monospace" font-size="10" fill="#d92d20">YOU WRITE AND OWN THIS</text>
+
+          <path d="M360 186 C 392 186, 398 62, 424 62" fill="none" stroke="#d92d20" stroke-width="1.5" marker-end="url(#ar)"></path>
+          <path d="M360 194 C 392 194, 398 130, 424 130" fill="none" stroke="#d92d20" stroke-width="1.5" marker-end="url(#ar)"></path>
+          <path d="M360 210 C 392 210, 398 198, 424 198" fill="none" stroke="#d92d20" stroke-width="1.5" marker-end="url(#ar)"></path>
+          <path d="M360 218 C 392 218, 398 266, 424 266" fill="none" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></path>
+
+          <rect x="428" y="34" width="212" height="58" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
+          <text x="444" y="56" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717">Message broker</text>
+          <text x="444" y="76" font-family="Space Mono, monospace" font-size="10" fill="#d92d20">THE SENSOR FEED COMES IN HERE</text>
+
+          <rect x="428" y="102" width="212" height="58" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
+          <text x="444" y="124" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717">Vector database</text>
+          <text x="444" y="144" font-family="Space Mono, monospace" font-size="10" fill="#d92d20">WHAT IT HAS SEEN BEFORE</text>
+
+          <rect x="428" y="170" width="212" height="58" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
+          <text x="444" y="192" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717">Time series store</text>
+          <text x="444" y="212" font-family="Space Mono, monospace" font-size="10" fill="#d92d20">JOINT AND BATTERY TELEMETRY</text>
+
+          <rect x="428" y="238" width="212" height="58" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <use href="#ico-redis" x="440" y="252" width="30" height="30"></use>
+          <text x="478" y="262" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717">Redis</text>
+          <text x="478" y="282" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94">CACHE ONLY</text>
+
+          <line x1="644" y1="130" x2="700" y2="130" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></line>
+
+          <rect x="704" y="100" width="152" height="60" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <use href="#ico-db" x="716" y="114" width="30" height="30"></use>
+          <text x="754" y="124" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717">Database</text>
+          <text x="754" y="144" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94">NIGHTLY, AT BEST</text>
+
+          <g font-family="Space Mono, monospace" font-size="10" fill="#d92d20">
+            <text x="704" y="200">EACH ONE IS</text>
+            <text x="704" y="216">A HOP,</text>
+            <text x="704" y="232">A CLIENT LIBRARY,</text>
+            <text x="704" y="248">A FAILURE MODE,</text>
+            <text x="704" y="264">A BILL</text>
+          </g>
+
+          <text x="16" y="356" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Redis is in the picture, holding cached answers, while three other stores do the work it could do.</text>
+          <text x="16" y="378" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20">FOUR ROUND TRIPS BEFORE THE ARM CAN MOVE.</text>
+        </svg>
+      </div>
+      <p class="dag-cap">PATH TWO, ASSEMBLED. THE TOOLS ARE DRAWN BY WHAT THEY DO, NOT BY BRAND.</p>
+    </div>
+  </section>
+
+  <section class="panel sub" id="section-redis" data-section-id="section-redis" data-cat="physical">
+    <div class="ba-head">
+      <span class="ba-label">THREE</span>
+      <span class="ba-sub">USE WHAT REDIS ALREADY DOES</span>
+      <span class="ba-cost">ONE SYSTEM INSIDE THE LOOP</span>
+    </div>
+
+    <div class="dag">
+      <div class="dag-wrap">
+        <svg viewBox="0 0 880 450" style="min-width:800px" role="img" aria-label="Path three, using Redis. The robot writes what it just saw into Redis and reads what to do next back out, closing the loop through one system. Inside Redis, a stream carries the sensor feed, a hash holds the state of the room right now, a vector index answers what an object is based on what has been seen before, and publish and subscribe pushes the decision back. Redis Data Integration keeps the floor plan and household data current from the systems of record.">
+          <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
+            <text x="66" y="18">THE ROBOT</text>
+            <text x="424" y="18">REDIS</text>
+            <text x="792" y="18">SYSTEM OF RECORD</text>
+          </g>
+
+          <line x1="130" y1="30" x2="130" y2="392" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+          <line x1="718" y1="30" x2="718" y2="392" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
+
+          <rect x="16" y="196" width="104" height="88" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <use href="#ico-robot" x="48" y="204" width="40" height="40"></use>
+          <text x="68" y="270" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717" text-anchor="middle">Robot</text>
+
+          <line x1="124" y1="214" x2="162" y2="214" stroke="#27843f" stroke-width="1.5" marker-end="url(#ag)"></line>
+          <text x="143" y="204" font-family="Space Mono, monospace" font-size="9" fill="#27843f" text-anchor="middle">SAW</text>
+
+          <line x1="162" y1="266" x2="124" y2="266" stroke="#27843f" stroke-width="1.5" marker-end="url(#ag)"></line>
+          <text x="143" y="284" font-family="Space Mono, monospace" font-size="9" fill="#27843f" text-anchor="middle">DO</text>
+
+          <rect x="166" y="40" width="514" height="352" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <use href="#ico-redis" x="184" y="54" width="32" height="32"></use>
+          <text x="226" y="78" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#171717">Redis</text>
+          <text x="662" y="78" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="end">ONE SYSTEM IN THE LOOP</text>
+
+          <rect x="184" y="98" width="478" height="64" fill="#fff" stroke="#d8d8d4" stroke-width="1"></rect>
+          <text x="200" y="124" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717">Stream</text>
+          <text x="200" y="146" font-family="Space Mono, monospace" font-size="10" fill="#73736e">WHAT THE SENSORS JUST SAW. ORDERED, REPLAYABLE.</text>
+
+          <rect x="184" y="174" width="478" height="64" fill="#fff" stroke="#d8d8d4" stroke-width="1"></rect>
+          <text x="200" y="200" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717">Hash</text>
+          <text x="200" y="222" font-family="Space Mono, monospace" font-size="10" fill="#73736e">THE STATE OF THE ROOM RIGHT NOW.</text>
+
+          <rect x="184" y="250" width="478" height="64" fill="#fff" stroke="#d8d8d4" stroke-width="1"></rect>
+          <text x="200" y="276" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717">Vector index</text>
+          <text x="200" y="298" font-family="Space Mono, monospace" font-size="10" fill="#73736e">WHAT THIS OBJECT IS, FROM EVERYTHING SEEN BEFORE.</text>
+
+          <rect x="184" y="326" width="478" height="52" fill="#fff" stroke="#d8d8d4" stroke-width="1"></rect>
+          <text x="200" y="348" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#171717">Publish, subscribe</text>
+          <text x="200" y="368" font-family="Space Mono, monospace" font-size="10" fill="#73736e">THE DECISION, PUSHED BACK. NOTHING POLLS.</text>
+
+          <line x1="750" y1="214" x2="686" y2="214" stroke="#27843f" stroke-width="1.5" marker-end="url(#ag)"></line>
+          <text x="718" y="200" font-family="Space Mono, monospace" font-size="10" font-weight="700" fill="#27843f" text-anchor="middle">RDI</text>
+          <g font-family="Space Mono, monospace" font-size="9" fill="#27843f" text-anchor="middle">
+            <text x="718" y="236">THE HOUSE</text>
+            <text x="718" y="249">AND WHO IS</text>
+            <text x="718" y="262">IN IT</text>
+          </g>
+
+          <rect x="754" y="176" width="118" height="76" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <use href="#ico-db" x="797" y="186" width="32" height="32"></use>
+          <text x="813" y="240" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#171717" text-anchor="middle">Your systems</text>
+
+          <text x="16" y="420" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">One system takes the data in, answers the question, and hands the decision back.</text>
+          <text x="16" y="442" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f">THE WHOLE LOOP FITS INSIDE THE BUDGET THE ARM GIVES YOU.</text>
+        </svg>
+      </div>
+      <p class="dag-cap">PATH THREE, ONE SYSTEM. RDI IS REDIS DATA INTEGRATION.</p>
+    </div>
+  </section>
+
+  <section class="panel sub" id="section-compare" data-section-id="section-compare" data-cat="physical">
+    <div class="cmp-wrap">
+    <table class="cmp">
+      <thead>
+        <tr>
+          <th>PATH</th>
+          <th>WHERE THE ROBOT'S DATA LIVES</th>
+          <th>WHAT YOU HAVE TO BUILD</th>
+          <th>WHAT BREAKS FIRST</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>ONE</th>
+          <td>Tables in one relational database</td>
+          <td>Ingest, memory, expiry and fan out, all four by hand</td>
+          <td>The loop, as soon as the table gets big</td>
+        </tr>
+        <tr>
+          <th>TWO</th>
+          <td>Four stores, one per job</td>
+          <td>The orchestration between them, and every failure mode it has</td>
+          <td>The latency budget, spent on network hops</td>
+        </tr>
+        <tr>
+          <th>THREE</th>
+          <td>One system doing ingest, memory and fan out</td>
+          <td>The robot</td>
+          <td>Nothing in the data path</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <dl class="stack">
+      <div><dt>REDIS SHAPES</dt><dd>Stream, hash, vector index, publish and subscribe</dd></div>
+      <div><dt>ALSO USES</dt><dd>Redis Data Integration</dd></div>
+      <div><dt>WHAT IT REPLACES</dt><dd>A broker, a vector store and a cache</dd></div>
+      <div><dt>THE REAL CONSTRAINT</dt><dd>An answer before the arm moves</dd></div>
+    </dl>
+  </section>
+
+  </main>
+  </div>
+
+  <div class="footer">
+    <span>Local draft, not an official Redis page. My examples, my wording.</span>
+    <span>Seven queued</span>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var chips = [].slice.call(document.querySelectorAll('.chip'));
+  var items = [].slice.call(document.querySelectorAll('[data-cat]'));
+  var rows = [].slice.call(document.querySelectorAll('.row'));
+  var count = document.querySelector('[data-count]');
+
+  var total = {};
+  rows.forEach(function (el) {
+    var k = el.dataset.cat;
+    total[k] = (total[k] || 0) + 1;
+  });
+  chips.forEach(function (c) {
+    var f = c.dataset.filter;
+    var v = f === 'all' ? rows.length : (total[f] || 0);
+    var n = document.createElement('span');
+    n.className = 'chip-n';
+    n.textContent = ' ' + v;
+    c.appendChild(n);
+    if (v === 0) { c.disabled = true; }
+  });
+
+  function apply(val) {
+    chips.forEach(function (c) {
+      c.setAttribute('aria-pressed', String(c.dataset.filter === val));
+    });
+    items.forEach(function (el) {
+      el.hidden = !(val === 'all' || el.dataset.cat === val);
+    });
+    var shown = document.querySelectorAll('.row:not([hidden])').length;
+    count.textContent = val === 'all' ? shown + ' total, 1 drawn' : shown + ' shown';
+    [].slice.call(document.querySelectorAll('[data-section-target]')).forEach(function (step) {
+      var target = document.getElementById(step.dataset.sectionTarget);
+      step.hidden = !!(target && target.hidden);
+    });
+  }
+
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () { apply(c.dataset.filter); });
+  });
+  apply('all');
+})();
+</script>
+<script id="endless-scroll-navigation">
+(function(){
+  var sectionElements = Array.prototype.slice.call(document.querySelectorAll('[data-section-id]'));
+  var sectionNavItems = Array.prototype.slice.call(document.querySelectorAll('[data-section-target]'));
+  var mobileSectionNav = document.getElementById('mobile-section-nav');
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var activeSectionId = sectionElements[0] ? sectionElements[0].getAttribute('data-section-id') : '';
+  var fallbackFrame = 0;
+
+  function hasSection(sectionId){
+    return sectionElements.some(function(section){
+      return section.getAttribute('data-section-id') === sectionId;
+    });
+  }
+
+  function setActiveSection(sectionId, updateHash){
+    if(!hasSection(sectionId)) return;
+    activeSectionId = sectionId;
+    var activeIndex = -1;
+    sectionNavItems.forEach(function(item, itemIndex){
+      if(item.getAttribute('data-section-target') === sectionId) activeIndex = itemIndex;
+    });
+    sectionNavItems.forEach(function(item, itemIndex){
+      var active = item.getAttribute('data-section-target') === sectionId;
+      item.classList.toggle('active', active);
+      item.classList.toggle('passed', itemIndex <= activeIndex);
+      if(active) item.setAttribute('aria-current', 'location');
+      else item.removeAttribute('aria-current');
+    });
+    var sectionRail = document.querySelector('.section-rail');
+    if(sectionRail){
+      var progress = sectionNavItems.length > 1 ? (activeIndex / (sectionNavItems.length - 1)) * 100 : 0;
+      sectionRail.style.setProperty('--rail-progress', progress + '%');
+    }
+    if(mobileSectionNav) mobileSectionNav.value = sectionId;
+    if(updateHash && window.location.hash !== '#' + sectionId){
+      history.replaceState(null, '', '#' + sectionId);
+    }
+  }
+
+  function navigateToSection(sectionId){
+    var section = document.querySelector('[data-section-id="' + sectionId + '"]');
+    if(!section) return;
+    section.scrollIntoView({behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'start'});
+    setActiveSection(sectionId, true);
+  }
+
+  function findActiveSection(){
+    if(window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2){
+      var finalSection = sectionElements[sectionElements.length - 1];
+      return finalSection ? finalSection.getAttribute('data-section-id') : '';
+    }
+    var readingLine = window.matchMedia('(max-width: 800px)').matches ? 96 : 120;
+    var selected = sectionElements[0];
+    sectionElements.forEach(function(section){
+      if(section.getBoundingClientRect().top <= readingLine) selected = section;
+    });
+    return selected ? selected.getAttribute('data-section-id') : '';
+  }
+
+  function syncActiveSection(){
+    var sectionId = findActiveSection();
+    if(sectionId && sectionId !== activeSectionId) setActiveSection(sectionId, true);
+  }
+
+  function fallbackScrollHandler(){
+    if(fallbackFrame) return;
+    fallbackFrame = requestAnimationFrame(function(){
+      fallbackFrame = 0;
+      syncActiveSection();
+    });
+  }
+
+  function initScrollNavigation(){
+    sectionNavItems.forEach(function(item){
+      item.addEventListener('click', function(){
+        navigateToSection(item.getAttribute('data-section-target'));
+      });
+    });
+    if(mobileSectionNav){
+      mobileSectionNav.addEventListener('change', function(){
+        navigateToSection(mobileSectionNav.value);
+      });
+    }
+
+    var initialHash = window.location.hash.slice(1);
+    var hasInitialSection = hasSection(initialHash);
+    setActiveSection(hasInitialSection ? initialHash : activeSectionId, false);
+    if(hasInitialSection){
+      document.querySelector('[data-section-id="' + initialHash + '"]').scrollIntoView({behavior:'auto',block:'start'});
+    }
+
+    if('IntersectionObserver' in window){
+      var observer = new IntersectionObserver(syncActiveSection, {
+        rootMargin: '-96px 0px -70% 0px',
+        threshold: [0, .01]
+      });
+      sectionElements.forEach(function(section){ observer.observe(section); });
+    }
+    window.addEventListener('scroll', fallbackScrollHandler, {passive:true});
+    window.addEventListener('hashchange', function(){
+      var sectionId = window.location.hash.slice(1);
+      if(hasSection(sectionId)) navigateToSection(sectionId);
+    });
+  }
+
+  initScrollNavigation();
+})();
+</script>
+</body>
+</html>

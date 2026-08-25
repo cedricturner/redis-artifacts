@@ -1,3 +1,4 @@
 INTERNAL-NOTES.md
 .DS_Store
 what-is-redis/
+*.bak-*
