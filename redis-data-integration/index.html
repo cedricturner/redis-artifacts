@@ -109,6 +109,98 @@ h1 {
 .intro a:hover { color: var(--blue); text-decoration-color: var(--blue); }
 .intro a:focus-visible { outline: 1.5px solid var(--blue); outline-offset: 3px; }
 
+/* ---------- tl;dr ---------- */
+
+.tldr {
+  max-width: 880px;
+  margin: 0 0 76px;
+  padding-top: 26px;
+  border-top: 1px solid var(--ink);
+}
+
+.tldr-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.tldr-lede {
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 660px;
+  margin: 0 0 32px;
+}
+
+.tldr-lede b { font-weight: 600; }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.card {
+  padding: 18px 20px 22px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.card-num {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .05em;
+  color: var(--faint);
+  margin-bottom: 16px;
+}
+
+.card-name {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 7px;
+}
+
+.card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.card-note {
+  margin-top: 14px !important;
+  padding-top: 13px;
+  border-top: 1px solid var(--rule);
+  color: var(--muted) !important;
+  font-size: 13px !important;
+}
+
+.tldr-sub {
+  display: block;
+  margin-top: 38px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--ink);
+}
+
+.tldr-why {
+  max-width: 660px;
+  margin: 32px 0 0;
+  padding-left: 20px;
+  border-left: 1px solid var(--ink);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+
 /* ---------- sticky section rail ---------- */
 
 .mobile-section-picker { display: none; }
@@ -678,6 +770,7 @@ a.chip:hover {
 .sources a:hover { color: var(--blue); }
 
 @media (max-width: 860px) {
+  .cards { grid-template-columns: 1fr; }
   .map { grid-template-columns: 1fr; }
   .map dt { border-bottom: 0; padding-bottom: 0; }
   .map dd { padding-top: 2px; }
@@ -726,6 +819,8 @@ a.chip:hover {
 
 @media (max-width: 720px) {
   .page { width: min(100% - 36px, 1180px); padding: 42px 0 64px; }
+  .tldr { margin-bottom: 44px; }
+  .tldr-lede { font-size: 17px; }
   h1 { font-size: clamp(46px, 15vw, 70px); }
   .kicker { margin-top: 48px; }
   .hero { margin-bottom: 44px; }
@@ -769,13 +864,13 @@ a.chip:hover {
     <path d="M0 0 L10 3.5 L0 7 z" fill="#7ad13a"></path>
   </marker>
 
-  <symbol id="ico-dairy" viewBox="0 0 44 44">
+  <symbol id="ico-orchard" viewBox="0 0 44 44">
     <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
-      <path d="M5 40 V19 h22 v21"></path>
-      <path d="M3 20 L9 11 L16 7 L23 11 L29 20"></path>
-      <path d="M12 40 v-11 h8 v11"></path>
-      <path d="M34 40 V17 a4 4 0 0 1 7 0 V40"></path>
-      <path d="M34 24 h7"></path>
+      <circle cx="22" cy="14" r="10.5"></circle>
+      <path d="M22 24.5 v5.5"></path>
+      <path d="M9 30 h26 v11 H9 Z"></path>
+      <path d="M9 34.5 h26"></path>
+      <path d="M17.5 30 v11 M26.5 30 v11"></path>
     </g>
   </symbol>
 
@@ -820,11 +915,63 @@ a.chip:hover {
     <p class="intro"><b>AKA <a href="https://redis.io/docs/latest/integrate/redis-data-integration/">RDI</a>.</b> Everyone keeps a copy of their data in Redis. The only argument is how the copy stays right.</p>
   </div>
 
+  <div class="tldr">
+    <span class="tldr-label">TL;DR</span>
+
+    <p class="tldr-lede">Redis Data Integration keeps the copy of your data in Redis <b>in sync with the database it came from</b>.</p>
+
+    <div class="dag">
+      <div class="dag-wrap">
+        <svg viewBox="0 0 880 122" style="min-width:620px" role="img" aria-label="Your source database on the left, Redis in the middle, your application on the right. Redis Data Integration moves every change out of the source database into Redis as it happens. The application reads from Redis instead of from the source database.">
+          <rect x="20" y="20" width="200" height="76" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <text x="120" y="53" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Source database</text>
+          <text x="120" y="73" font-family="Space Mono, monospace" font-size="10" letter-spacing="1" fill="#73736e" text-anchor="middle">WHERE IT IS TRUE</text>
+
+          <text x="280" y="42" font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" fill="#171717" text-anchor="middle">RDI</text>
+          <line x1="222" y1="58" x2="336" y2="58" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></line>
+          <text x="280" y="78" font-family="Space Mono, monospace" font-size="10" letter-spacing="1" fill="#73736e" text-anchor="middle">EVERY CHANGE</text>
+
+          <rect x="340" y="20" width="200" height="76" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <text x="440" y="53" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Redis</text>
+          <text x="440" y="73" font-family="Space Mono, monospace" font-size="10" letter-spacing="1" fill="#73736e" text-anchor="middle">WHERE IT IS FAST</text>
+
+          <text x="600" y="42" font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" fill="#171717" text-anchor="middle">READS</text>
+          <line x1="542" y1="58" x2="656" y2="58" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></line>
+          <text x="600" y="78" font-family="Space Mono, monospace" font-size="10" letter-spacing="1" fill="#73736e" text-anchor="middle">UNDER 1 MS</text>
+
+          <rect x="660" y="20" width="200" height="76" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
+          <text x="760" y="53" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Your application</text>
+          <text x="760" y="73" font-family="Space Mono, monospace" font-size="10" letter-spacing="1" fill="#73736e" text-anchor="middle">WHERE SOMEBODY WAITS</text>
+        </svg>
+      </div>
+      <p class="dag-cap">THE APPLICATION NEVER GOES BACK TO THE SOURCE DATABASE.</p>
+    </div>
+
+    <span class="tldr-sub">TWO REASONS PEOPLE NEED IT</span>
+
+    <div class="cards">
+      <div class="card">
+        <span class="card-num">01</span>
+        <span class="card-name">the answer is wrong</span>
+        <p>The row changed at the source. Redis kept handing out the old one, and nothing in the data says so. The application acted on it anyway.</p>
+        <p class="card-note">In the pie shop: you baked with fruit that turned three days ago, and you sold it.</p>
+      </div>
+      <div class="card">
+        <span class="card-num">02</span>
+        <span class="card-name">the reads are too many</span>
+        <p>Redis only holds what somebody already asked for. Everything else falls through to the source database, and at scale it all falls through at once.</p>
+        <p class="card-note">In the pie shop: a hundred people want blueberry, you are out, and you are driving to the orchard while the queue builds.</p>
+      </div>
+    </div>
+
+    <p class="tldr-why">RDI answers both, and it is the same mechanism either way. Every change arrives as it happens, so the copy is never behind and it never expires out from under you.</p>
+  </div>
+
   <div class="mobile-section-picker">
     <label for="mobile-section-nav">section</label>
     <select id="mobile-section-nav" aria-label="Current section">
       <option value="section-fridge">why keep a fridge?</option>
-      <option value="section-before-after">what if it changed?</option>
+      <option value="section-before-after">what if it turned?</option>
       <option value="section-breaks">how wrong can it get?</option>
       <option value="section-how">what if it stayed current?</option>
       <option value="section-examples">what if you need more?</option>
@@ -837,7 +984,7 @@ a.chip:hover {
 
   <nav class="nav section-rail" aria-label="Article sections">
     <button class="nav-step active" type="button" data-shape="circle" data-section-target="section-fridge"><span class="step-num">1</span><span class="step-lbl">why keep a fridge?</span></button>
-    <button class="nav-step" type="button" data-shape="square" data-section-target="section-before-after"><span class="step-num">2</span><span class="step-lbl">what if it changed?</span></button>
+    <button class="nav-step" type="button" data-shape="square" data-section-target="section-before-after"><span class="step-num">2</span><span class="step-lbl">what if it turned?</span></button>
     <button class="nav-step" type="button" data-shape="diamond" data-section-target="section-breaks"><span class="step-num">3</span><span class="step-lbl">how wrong can it get?</span></button>
     <button class="nav-step" type="button" data-shape="triangle" data-section-target="section-how"><span class="step-num">4</span><span class="step-lbl">what if it stayed current?</span></button>
     <button class="nav-step" type="button" data-shape="hexagon" data-section-target="section-examples"><span class="step-num">5</span><span class="step-lbl">what if you need more?</span></button>
@@ -851,29 +998,34 @@ a.chip:hover {
   <section class="panel" id="section-fridge" data-section-id="section-fridge">
     <div class="sec-head">
       <span class="sec-num">01</span>
-      <h2>Why does a milkshake shop keep a fridge?</h2>
+      <h2>Why does a pie shop keep a fridge?</h2>
     </div>
 
-    <p class="point">Would you drive out to the dairy for every milkshake you sell?</p>
+    <p class="point">Would you drive out to the orchard for every pie you bake?</p>
 
     <ul class="beats">
-      <li><span><b>The dairy has all the milk, and the dairy is an hour away.</b></span></li>
-      <li><span><b>So you keep a fridge behind the counter.</b> Right there, cold, close enough to blend an order while somebody waits for it.</span></li>
-      <li><span><b>What is in the fridge is only as good as the last delivery.</b> The dairy keeps bottling and recalling and repricing. Your fridge hears none of it.</span></li>
-      <li><span><b>Keeping the fridge honest is your job, not the dairy's.</b> Either you drive out and check, or somebody brings you the change the moment it happens.</span></li>
+      <li><span><b>The orchard has all the fruit, and the orchard is an hour away.</b></span></li>
+      <li><span><b>So you keep a fridge behind the counter.</b> Right there, cold, close enough to fill a pie while somebody waits for it.</span></li>
+      <li><span><b>The delivery comes once a week, at six in the morning.</b> That is all the fruit you get, and those crates were not all picked on the same day.</span></li>
+      <li><span><b>The mold starts at the bottom of the crate.</b> You reach in from the top, so you can be baking with fruit that has turned long before anybody sees it.</span></li>
+      <li><span><b>When the last good crate is gone, you are shut.</b> No pies until the next delivery.</span></li>
+      <li><span><b>Keeping the fridge honest is your job, not the orchard's.</b> Either you drive out and check, or somebody brings you a fresh crate the moment it is picked.</span></li>
     </ul>
 
     <dl class="map">
-      <dt>THE DAIRY</dt><dd>Your real database</dd>
+      <dt>THE ORCHARD</dt><dd>Your real database</dd>
       <dt>YOUR FRIDGE</dt><dd>Redis</dd>
-      <dt>THE MILKSHAKE SHOP</dt><dd>Your application</dd>
+      <dt>THE PIE SHOP</dt><dd>Your application</dd>
+      <dt>FRUIT GOING MOLDY</dt><dd>Your copy going stale</dd>
+      <dt>THE WEEKLY DELIVERY</dt><dd>A batch job on a schedule</dd>
+      <dt>RUNNING OUT OF FRUIT</dt><dd>A cache miss</dd>
       <dt>DRIVING OUT TO CHECK</dt><dd>Cache-aside</dd>
       <dt>KEEPING THE FRIDGE HONEST</dt><dd>Redis Data Integration</dd>
     </dl>
 
     <div class="say">
       <span class="say-label">SAY IT LIKE THIS</span>
-      <p>The dairy has all the milk, and the dairy is an hour away. The fridge behind the counter is fast, so you keep what you need in it. But the dairy keeps bottling, and your fridge never hears about it. Keeping that milk honest is on you, not the dairy. So the only question is whether you drive out and check, or somebody brings you the change the moment it happens.</p>
+      <p>The orchard has all the fruit, and the orchard is an hour away. The fridge behind the counter is fast, so you keep a week of fruit in it. The delivery lands at six on Monday morning and that is all you get. Those crates were not all picked on the same day, so they turn at different times, and the mold starts at the bottom where you are not looking. You bake with it for a while before anybody sees it. Then the last good crate is gone and you are shut. Keeping that fruit honest is on you, not the orchard. So the only question is whether you drive out and check, or somebody brings you a fresh crate the moment it is picked.</p>
     </div>
   </section>
 
@@ -881,43 +1033,43 @@ a.chip:hover {
   <section class="panel" id="section-before-after" data-section-id="section-before-after">
     <div class="sec-head">
       <span class="sec-num">02</span>
-      <h2>What happens when the dairy changes something?</h2>
-      <span class="sec-note">before and after</span>
+      <h2>What happens as the fruit sits there?</h2>
+      <span class="sec-note">path one, wrong answers</span>
     </div>
 
-    <p class="point">Everything is fine until something changes. Then what is in your fridge is wrong, and you keep selling it anyway.</p>
+    <p class="point">The top of the crate looks fine. Underneath it is turning, you keep baking with it, and then one afternoon there is none left.</p>
 
     <div class="ba-head">
       <span class="ba-label">BEFORE</span>
-      <span class="ba-sub">NOBODY TELLS YOU</span>
-      <span class="ba-cost">SIX MILKSHAKES, ALREADY SOLD</span>
+      <span class="ba-sub">ONE DELIVERY A WEEK</span>
+      <span class="ba-cost">MOLDY PIES, ALREADY SOLD</span>
     </div>
 
     <div class="dag">
       <div class="dag-wrap">
-        <svg viewBox="0 0 880 310" style="min-width:700px" role="img" aria-label="Milkshake shop version, before. The dairy has recalled this morning's batch, your fridge still holds a jug from it, and the shop keeps blending orders out of that jug. No signal crosses from the dairy to the fridge, so you keep pouring until the date you wrote on the jug yourself passes.">
+        <svg viewBox="0 0 880 310" style="min-width:700px" role="img" aria-label="Pie shop version, before. The orchard delivers once a week at six in the morning, the crates in your fridge turn at different times because they were not all picked on the same day, and the shop keeps baking pies out of them. Nothing crosses from the orchard to the fridge until the next delivery, so you keep baking until you run out.">
           <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
-            <text x="110" y="18">THE DAIRY</text>
+            <text x="110" y="18">THE ORCHARD</text>
             <text x="440" y="18">YOUR FRIDGE</text>
-            <text x="770" y="18">MILKSHAKE SHOP</text>
+            <text x="770" y="18">PIE SHOP</text>
           </g>
           <line x1="275" y1="28" x2="275" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
           <line x1="605" y1="28" x2="605" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
 
           <rect x="20" y="36" width="180" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
-          <use href="#ico-dairy" x="88" y="48" width="44" height="44"></use>
-          <text x="110" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">The dairy</text>
-          <text x="110" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">BATCH RECALLED 9:02 AM</text>
+          <use href="#ico-orchard" x="88" y="48" width="44" height="44"></use>
+          <text x="110" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">The orchard</text>
+          <text x="110" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">DELIVERS 6:00 AM MONDAY</text>
 
           <rect x="350" y="36" width="180" height="104" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
           <use href="#ico-fridge" x="418" y="48" width="44" height="44"></use>
           <text x="440" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Fridge</text>
-          <text x="440" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">STILL HOLDS THAT JUG</text>
+          <text x="440" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">CRATES TURNING, ONE BY ONE</text>
 
           <rect x="680" y="36" width="180" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
           <use href="#ico-shop" x="748" y="48" width="44" height="44"></use>
-          <text x="770" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Milkshake shop</text>
-          <text x="770" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">BLENDING ORDERS</text>
+          <text x="770" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Pie shop</text>
+          <text x="770" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">BAKING PIES</text>
 
           <line x1="204" y1="88" x2="258" y2="88" stroke="#d92d20" stroke-width="1.5" stroke-dasharray="5 4"></line>
           <path d="M266 80 L282 96 M282 80 L266 96" stroke="#d92d20" stroke-width="2" fill="none"></path>
@@ -925,19 +1077,19 @@ a.chip:hover {
           <line x1="534" y1="88" x2="674" y2="88" stroke="#171717" stroke-width="1.5" marker-end="url(#a)"></line>
 
           <g font-family="Space Mono, monospace" font-size="11" text-anchor="middle">
-            <text x="274" y="164" fill="#d92d20">NO SIGNAL</text>
-            <text x="274" y="179" fill="#d92d20">CROSSES HERE</text>
+            <text x="274" y="164" fill="#d92d20">NOTHING CROSSES</text>
+            <text x="274" y="179" fill="#d92d20">UNTIL NEXT MONDAY</text>
             <text x="604" y="164" fill="#171717">OPEN THE DOOR</text>
           </g>
 
           <path d="M 770 144 L 770 214 L 110 214 L 110 146" fill="none" stroke="#d92d20" stroke-width="2.5" marker-end="url(#ar)"></path>
-          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">WHEN YOUR DATE PASSES YOU DRIVE OUT AND FETCH A FRESH JUG.</text>
+          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">WHEN THE LAST GOOD CRATE IS GONE YOU DRIVE OUT, OR YOU SHUT.</text>
 
-          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Nobody printed the recall on that jug. You wrote your own date on it.</text>
-          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">The recall does not move your date. You keep pouring until your date passes.</text>
+          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Nobody printed a date on those crates. You wrote your own, in Sharpie.</text>
+          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">The fruit does not check your date before it turns. You keep baking either way.</text>
         </svg>
       </div>
-      <p class="dag-cap">THE MILKSHAKE SHOP VERSION</p>
+      <p class="dag-cap">THE PIE SHOP VERSION</p>
     </div>
 
     <div class="dag">
@@ -985,27 +1137,27 @@ a.chip:hover {
 
     <div class="ba-head">
       <span class="ba-label">AFTER</span>
-      <span class="ba-sub">SOMEBODY IS WATCHING THE DAIRY</span>
-      <span class="ba-cost">CAUGHT BEFORE THE NEXT ORDER</span>
+      <span class="ba-sub">SOMEBODY IS WATCHING THE ORCHARD</span>
+      <span class="ba-cost">NOTHING SITS LONG ENOUGH TO TURN</span>
     </div>
 
     <div class="dag">
       <div class="dag-wrap">
-        <svg viewBox="0 0 880 310" style="min-width:760px" role="img" aria-label="Milkshake shop version, after. The dairy has recalled this morning's batch, a driver you hired is standing at the bottling line, your fridge now matches the dairy, and the shop keeps blending orders. The recalled jug is out and a fresh one is in before you reach for it.">
+        <svg viewBox="0 0 880 310" style="min-width:760px" role="img" aria-label="Pie shop version, after. A driver you hired stands at the orchard and watches what gets picked, so a fresh crate reaches your fridge as soon as it exists. Your fridge now matches the orchard, nothing sits in it long enough to mold, and the shop keeps baking pies without running out.">
           <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
-            <text x="105" y="18">THE DAIRY</text>
+            <text x="105" y="18">THE ORCHARD</text>
             <text x="330" y="18">YOUR DRIVER</text>
             <text x="555" y="18">YOUR FRIDGE</text>
-            <text x="780" y="18">MILKSHAKE SHOP</text>
+            <text x="780" y="18">PIE SHOP</text>
           </g>
           <line x1="217" y1="28" x2="217" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
           <line x1="442" y1="28" x2="442" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
           <line x1="667" y1="28" x2="667" y2="244" stroke="#d8d8d4" stroke-dasharray="3 5"></line>
 
           <rect x="20" y="36" width="170" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
-          <use href="#ico-dairy" x="83" y="48" width="44" height="44"></use>
-          <text x="105" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">The dairy</text>
-          <text x="105" y="130" font-family="Space Mono, monospace" font-size="10" fill="#d92d20" text-anchor="middle">RECALL AT 9:02 AM</text>
+          <use href="#ico-orchard" x="83" y="48" width="44" height="44"></use>
+          <text x="105" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">The orchard</text>
+          <text x="105" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">PICKING ALL DAY</text>
 
           <rect x="245" y="36" width="170" height="104" fill="#eef6ff" stroke="#2f6fcc" stroke-width="2"></rect>
           <use href="#ico-van" x="308" y="48" width="44" height="44"></use>
@@ -1015,12 +1167,12 @@ a.chip:hover {
           <rect x="470" y="36" width="170" height="104" fill="#effaf1" stroke="#27843f" stroke-width="1.5"></rect>
           <use href="#ico-fridge" x="533" y="48" width="44" height="44"></use>
           <text x="555" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Fridge</text>
-          <text x="555" y="130" font-family="Space Mono, monospace" font-size="10" fill="#27843f" text-anchor="middle">MATCHES THE DAIRY</text>
+          <text x="555" y="130" font-family="Space Mono, monospace" font-size="10" fill="#27843f" text-anchor="middle">MATCHES THE ORCHARD</text>
 
           <rect x="695" y="36" width="170" height="104" fill="#fff" stroke="#171717" stroke-width="1.5"></rect>
           <use href="#ico-shop" x="758" y="48" width="44" height="44"></use>
-          <text x="780" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Milkshake shop</text>
-          <text x="780" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">BLENDING ORDERS</text>
+          <text x="780" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Pie shop</text>
+          <text x="780" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">BAKING PIES</text>
 
           <g stroke="#171717" stroke-width="1.5">
             <line x1="194" y1="88" x2="239" y2="88" marker-end="url(#a)"></line>
@@ -1029,21 +1181,21 @@ a.chip:hover {
           </g>
 
           <g font-family="Space Mono, monospace" font-size="11" text-anchor="middle" fill="#171717">
-            <text x="217" y="164">THEY WATCH THE</text>
-            <text x="217" y="179">BOTTLING LINE</text>
+            <text x="217" y="164">THEY WATCH WHAT</text>
+            <text x="217" y="179">GETS PICKED</text>
             <text x="442" y="164">OUT WITH THE OLD,</text>
             <text x="442" y="179">IN WITH THE FRESH</text>
             <text x="667" y="164">OPEN THE DOOR</text>
           </g>
 
           <text x="330" y="208" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#2f6fcc" text-anchor="middle">THIS IS RDI</text>
-          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f" text-anchor="middle">THE RECALLED JUG IS GONE BEFORE YOU REACH FOR IT.</text>
+          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f" text-anchor="middle">NOTHING SITS LONG ENOUGH TO MOLD, AND YOU NEVER RUN OUT.</text>
 
           <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Still your fridge, still your shop. You just stopped being the one who finds out late.</text>
-          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">Your driver is not sniffing jugs in the fridge. They are watching the dairy.</text>
+          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">Your driver is not digging through the fridge looking for mold. They are standing at the orchard.</text>
         </svg>
       </div>
-      <p class="dag-cap">THE MILKSHAKE SHOP VERSION, ONE STAGE ADDED</p>
+      <p class="dag-cap">THE PIE SHOP VERSION, ONE STAGE ADDED</p>
     </div>
 
     <div class="dag">
@@ -1116,9 +1268,9 @@ a.chip:hover {
 
     <p>So you bin the copy on a schedule and fetch a fresh one, and now you are picking a number. Long, and you hand out wrong answers for longer. Short, and you are back to asking the database constantly, which is the thing the copy was meant to avoid. Five minutes is not a good answer. There is no good answer.</p>
 
-    <p><b>When the milk in the fridge is no good, you get three moves and you will not like any of them.</b> Stop selling milkshakes, which nobody accepts. Drive out to the dairy in the middle of the lunch rush, which is what a cache miss is: the customer waits at the counter while you go to the source. Or wait for tomorrow's delivery, which is what a nightly batch job is: right at six in the morning, drifting by noon, wrong by close.</p>
+    <p><b>When the fruit in the fridge is no good, you get three moves and you will not like any of them.</b> Stop selling pies, which nobody accepts. Drive out to the orchard in the middle of the lunch rush, which is what a cache miss is: the customer waits at the counter while you go to the source. Or wait for the next delivery, which is what a batch job is: right at six in the morning, drifting by noon, wrong by close, and a week is a long time to be wrong.</p>
 
-    <p style="margin-bottom:44px"><b>And this is where the milk analogy stops being kind to you.</b> Milk has a real sell-by date, printed by somebody who knows how fast milk turns. A customer's address has nothing printed on it anywhere. It is right until somebody changes it, and then it is wrong that second. The five minutes is not your data's expiry date. It is yours, in Sharpie, because you had nothing better to go on.</p>
+    <p style="margin-bottom:44px"><b>And this is where the fruit analogy stops being kind to you.</b> Fruit tells on itself. It softens, it smells, it grows fuzz you can see from across the room. A customer's address does none of that. It is right until somebody changes it, then it is wrong that second, and it looks exactly the same as it did before. The five minutes is not your data's expiry date. It is yours, in Sharpie, because you had nothing better to go on.</p>
 
     <div class="dag">
       <div class="dag-wrap">
@@ -1154,42 +1306,20 @@ a.chip:hover {
       <p class="dag-cap">SHORTEN THE TIMER AND THE BAR SHRINKS, BUT NOW YOU HAMMER THE SOURCE AND THE CACHE STOPS HELPING</p>
     </div>
 
-    <div class="dag">
-      <div class="dag-wrap">
-        <svg viewBox="0 0 860 260" style="min-width:640px" role="img" aria-label="Two grids of fifty squares. With cache-aside only five squares are filled, the keys somebody happened to ask for. With RDI all fifty are filled.">
-          <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" fill="#73736e">
-            <text x="30" y="20">CACHE-ASIDE</text>
-            <text x="470" y="20">WITH RDI</text>
-          </g>
-
-          <g stroke="#d8d8d4" stroke-width="1.5" fill="#fff">
-            <rect x="30" y="38" width="22" height="22"></rect><rect x="56" y="38" width="22" height="22"></rect><rect x="82" y="38" width="22" height="22"></rect><rect x="108" y="38" width="22" height="22"></rect><rect x="134" y="38" width="22" height="22"></rect><rect x="160" y="38" width="22" height="22"></rect><rect x="186" y="38" width="22" height="22"></rect><rect x="212" y="38" width="22" height="22"></rect><rect x="238" y="38" width="22" height="22"></rect><rect x="264" y="38" width="22" height="22"></rect>
-            <rect x="30" y="64" width="22" height="22"></rect><rect x="56" y="64" width="22" height="22"></rect><rect x="82" y="64" width="22" height="22"></rect><rect x="108" y="64" width="22" height="22"></rect><rect x="134" y="64" width="22" height="22"></rect><rect x="160" y="64" width="22" height="22"></rect><rect x="186" y="64" width="22" height="22"></rect><rect x="212" y="64" width="22" height="22"></rect><rect x="238" y="64" width="22" height="22"></rect><rect x="264" y="64" width="22" height="22"></rect>
-            <rect x="30" y="90" width="22" height="22"></rect><rect x="56" y="90" width="22" height="22"></rect><rect x="82" y="90" width="22" height="22"></rect><rect x="108" y="90" width="22" height="22"></rect><rect x="134" y="90" width="22" height="22"></rect><rect x="160" y="90" width="22" height="22"></rect><rect x="186" y="90" width="22" height="22"></rect><rect x="212" y="90" width="22" height="22"></rect><rect x="238" y="90" width="22" height="22"></rect><rect x="264" y="90" width="22" height="22"></rect>
-            <rect x="30" y="116" width="22" height="22"></rect><rect x="56" y="116" width="22" height="22"></rect><rect x="82" y="116" width="22" height="22"></rect><rect x="108" y="116" width="22" height="22"></rect><rect x="134" y="116" width="22" height="22"></rect><rect x="160" y="116" width="22" height="22"></rect><rect x="186" y="116" width="22" height="22"></rect><rect x="212" y="116" width="22" height="22"></rect><rect x="238" y="116" width="22" height="22"></rect><rect x="264" y="116" width="22" height="22"></rect>
-            <rect x="30" y="142" width="22" height="22"></rect><rect x="56" y="142" width="22" height="22"></rect><rect x="82" y="142" width="22" height="22"></rect><rect x="108" y="142" width="22" height="22"></rect><rect x="134" y="142" width="22" height="22"></rect><rect x="160" y="142" width="22" height="22"></rect><rect x="186" y="142" width="22" height="22"></rect><rect x="212" y="142" width="22" height="22"></rect><rect x="238" y="142" width="22" height="22"></rect><rect x="264" y="142" width="22" height="22"></rect>
-          </g>
-          <g fill="#171717">
-            <rect x="30" y="38" width="22" height="22"></rect><rect x="108" y="64" width="22" height="22"></rect><rect x="238" y="38" width="22" height="22"></rect><rect x="56" y="116" width="22" height="22"></rect><rect x="186" y="142" width="22" height="22"></rect>
-          </g>
-          <text x="30" y="196" font-family="Space Mono, monospace" font-size="13" font-weight="700" fill="#171717">5 OF 50</text>
-          <text x="30" y="222" font-family="Inter, sans-serif" font-size="14" fill="#353535">Only what somebody already asked for.</text>
-          <text x="30" y="244" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#d92d20">Searching this gives a partial answer.</text>
-
-          <g fill="#171717">
-            <rect x="470" y="38" width="22" height="22"></rect><rect x="496" y="38" width="22" height="22"></rect><rect x="522" y="38" width="22" height="22"></rect><rect x="548" y="38" width="22" height="22"></rect><rect x="574" y="38" width="22" height="22"></rect><rect x="600" y="38" width="22" height="22"></rect><rect x="626" y="38" width="22" height="22"></rect><rect x="652" y="38" width="22" height="22"></rect><rect x="678" y="38" width="22" height="22"></rect><rect x="704" y="38" width="22" height="22"></rect>
-            <rect x="470" y="64" width="22" height="22"></rect><rect x="496" y="64" width="22" height="22"></rect><rect x="522" y="64" width="22" height="22"></rect><rect x="548" y="64" width="22" height="22"></rect><rect x="574" y="64" width="22" height="22"></rect><rect x="600" y="64" width="22" height="22"></rect><rect x="626" y="64" width="22" height="22"></rect><rect x="652" y="64" width="22" height="22"></rect><rect x="678" y="64" width="22" height="22"></rect><rect x="704" y="64" width="22" height="22"></rect>
-            <rect x="470" y="90" width="22" height="22"></rect><rect x="496" y="90" width="22" height="22"></rect><rect x="522" y="90" width="22" height="22"></rect><rect x="548" y="90" width="22" height="22"></rect><rect x="574" y="90" width="22" height="22"></rect><rect x="600" y="90" width="22" height="22"></rect><rect x="626" y="90" width="22" height="22"></rect><rect x="652" y="90" width="22" height="22"></rect><rect x="678" y="90" width="22" height="22"></rect><rect x="704" y="90" width="22" height="22"></rect>
-            <rect x="470" y="116" width="22" height="22"></rect><rect x="496" y="116" width="22" height="22"></rect><rect x="522" y="116" width="22" height="22"></rect><rect x="548" y="116" width="22" height="22"></rect><rect x="574" y="116" width="22" height="22"></rect><rect x="600" y="116" width="22" height="22"></rect><rect x="626" y="116" width="22" height="22"></rect><rect x="652" y="116" width="22" height="22"></rect><rect x="678" y="116" width="22" height="22"></rect><rect x="704" y="116" width="22" height="22"></rect>
-            <rect x="470" y="142" width="22" height="22"></rect><rect x="496" y="142" width="22" height="22"></rect><rect x="522" y="142" width="22" height="22"></rect><rect x="548" y="142" width="22" height="22"></rect><rect x="574" y="142" width="22" height="22"></rect><rect x="600" y="142" width="22" height="22"></rect><rect x="626" y="142" width="22" height="22"></rect><rect x="652" y="142" width="22" height="22"></rect><rect x="678" y="142" width="22" height="22"></rect><rect x="704" y="142" width="22" height="22"></rect>
-          </g>
-          <text x="470" y="196" font-family="Space Mono, monospace" font-size="13" font-weight="700" fill="#171717">50 OF 50</text>
-          <text x="470" y="222" font-family="Inter, sans-serif" font-size="14" fill="#353535">The whole dataset.</text>
-          <text x="470" y="244" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#27843f">Searching this gives the real answer.</text>
-        </svg>
-      </div>
-      <p class="dag-cap">A GOOD HIT RATE STILL LEAVES FRAUD SCORING BLIND</p>
+    <div class="ba-head">
+      <span class="ba-label">PATH TWO</span>
+      <span class="ba-sub">TOO MANY READS</span>
+      <span class="ba-cost">THE LUNCH RUSH</span>
     </div>
+
+    <p class="point">Everything above is about being wrong. This is about being overwhelmed, and it is the same cause wearing a different coat.</p>
+
+    <p>A hundred people walk in at noon and every one of them wants blueberry. You have blueberry for the first dozen. After that you are driving to the orchard, and while you are gone nobody gets served. You come back, sell out again, and drive again.</p>
+
+    <p>That is a cache miss under load. Redis only ever holds what somebody already asked for, so anything nobody has requested yet is not in there. When the traffic arrives all at once, every one of those reads lands on the source database in the same moment. That database was sized for a trickle of misses, not for the whole lunch rush, and when it slows down it slows down for everything else using it too.</p>
+
+    <p style="margin-bottom:44px"><b>RDI stocks the fridge before anybody walks in, and keeps it stocked.</b> You choose which data it syncs. That data is loaded once up front and then kept current by every change that follows, so it is in Redis before the first request and it never expires out. The reads for it stop reaching the source database at all.</p>
+
   </section>
 
   <!-- 04 -->
@@ -1251,7 +1381,7 @@ a.chip:hover {
             <text x="6" y="272">PHASE 2&#160;&#160;CHANGE STREAMING</text>
           </g>
           <g font-family="Inter, sans-serif" font-size="14" fill="#353535">
-            <text x="290" y="238">Copy the whole dataset in. Minutes or hours, once.</text>
+            <text x="290" y="238">Copy the tables you configured in. Minutes or hours, once.</text>
             <text x="290" y="272">Then every insert, update and delete, as it happens.</text>
           </g>
         </svg>
@@ -1354,7 +1484,7 @@ a.chip:hover {
           <tr>
             <td>Your own application code</td>
             <td>Cache-aside, or writing to the database and Redis in the same request.</td>
-            <td>You own the round trip and the expiry guess. Dual writes drift apart the first time one succeeds and the other fails, and Redis never holds the whole set.</td>
+            <td>You own the round trip and the expiry guess. Dual writes drift apart the first time one succeeds and the other fails, and Redis only ever holds what somebody happened to ask for.</td>
           </tr>
           <tr>
             <td>A batch reload</td>
