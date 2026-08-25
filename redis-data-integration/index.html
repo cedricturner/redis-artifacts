@@ -905,7 +905,7 @@ a.chip:hover {
 
   <div class="topbar">
     <span><a href="../">&larr; all explainers</a></span>
-    <span>updated august 2026</span>
+    <span>unofficial &middot; updated august 2026</span>
   </div>
 
   <p class="kicker">RDI 101</p>
@@ -959,12 +959,17 @@ a.chip:hover {
       <div class="card">
         <span class="card-num">02</span>
         <span class="card-name">the reads are too many</span>
-        <p>Postgres, Oracle, MongoDB: none of them were built to answer thousands of reads a second. Push that much at one and it does not fall over, it just answers slowly, which is the same as broken when somebody is waiting.</p>
+        <p>Postgres, Oracle and MongoDB will take writes all day. Reads at volume are the other direction. Push thousands a second at one and it does not fall over, it just answers slowly, which is the same as broken when somebody is waiting.</p>
         <p class="card-note">In the pie shop: a hundred orders at once, and every one of them means an hour's drive to the orchard.</p>
       </div>
     </div>
 
     <p class="tldr-why">RDI answers both, and it is the same mechanism either way. Every change arrives as it happens, so the copy is never behind and it never expires out from under you.</p>
+
+    <div class="draft">
+      <span class="draft-label">INTERNAL, UNOFFICIAL</span>
+      <p style="margin:0">I made this to explain RDI to myself. It is not a Redis page, nobody at Redis has reviewed it, and it is not the company's positioning. The pie shop is deliberately silly and no customer should ever see it. For anything customer-facing, use the approved material.</p>
+    </div>
   </div>
 
   <div class="mobile-section-picker">
@@ -1316,7 +1321,7 @@ a.chip:hover {
 
     <p>A hundred people walk in at noon and every one of them wants blueberry. The orchard is an hour away. It does not matter how well you plan the drive. You cannot make that trip a hundred times over one lunch rush, and the orchard is not going to hand fruit over any faster because you keep showing up.</p>
 
-    <p>That is your source database. Postgres, Oracle, MySQL, MongoDB and the rest were built to be correct and durable, which is a different job from answering thousands of reads a second. Push that volume at one and it usually does not fall over. It answers slowly, and it answers slowly for everything else pointed at it too.</p>
+    <p>That is your source database. Postgres, Oracle, MySQL, MongoDB and the rest were built to take writes and keep them safe, and they will absorb changes all day without complaining. Reads at volume are the other direction, and it is not the job they were sized for. Push thousands a second at one and it usually does not fall over. It answers slowly, and it answers slowly for everything else pointed at it too.</p>
 
     <p>For an overnight report, slow is survivable. For anything real time it is not. If somebody is watching a map to see where their driver is, an answer that arrives late is the same as no answer.</p>
 
@@ -1336,7 +1341,7 @@ a.chip:hover {
 
     <div class="dag">
       <div class="dag-wrap">
-        <svg viewBox="0 0 1000 300" style="min-width:850px" role="img" aria-label="Inside RDI, flowing left to right. Source database, then RDI containing a CDC collector running Debezium, the RDI database holding Redis streams, and a stream processor that reads those streams and applies your transformations, then the target Redis database, then the application.">
+        <svg viewBox="0 0 1000 300" style="min-width:850px" role="img" aria-label="Inside RDI, flowing left to right. Source database, then RDI containing a CDC collector running Debezium, a transformation stage you configure in YAML, and the stage that writes to Redis in near real time, then the target Redis database, then the application.">
           <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
             <text x="71" y="20">SOURCE DATABASE</text>
             <text x="757" y="20">REDIS</text>
@@ -1355,12 +1360,12 @@ a.chip:hover {
           <text x="248" y="132" font-family="Space Mono, monospace" font-size="9" fill="#2f6fcc" text-anchor="middle">DEBEZIUM</text>
 
           <rect x="338" y="88" width="140" height="64" fill="#fff" stroke="#2f6fcc" stroke-width="1.5"></rect>
-          <text x="408" y="114" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#171717" text-anchor="middle">RDI database</text>
-          <text x="408" y="132" font-family="Space Mono, monospace" font-size="9" fill="#2f6fcc" text-anchor="middle">REDIS STREAMS</text>
+          <text x="408" y="114" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#171717" text-anchor="middle">Transformations</text>
+          <text x="408" y="132" font-family="Space Mono, monospace" font-size="9" fill="#2f6fcc" text-anchor="middle">YAML YOU WRITE</text>
 
           <rect x="498" y="88" width="140" height="64" fill="#fff" stroke="#2f6fcc" stroke-width="1.5"></rect>
-          <text x="568" y="114" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#171717" text-anchor="middle">Stream processor</text>
-          <text x="568" y="132" font-family="Space Mono, monospace" font-size="9" fill="#2f6fcc" text-anchor="middle">READS, TRANSFORMS, WRITES</text>
+          <text x="568" y="114" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#171717" text-anchor="middle">Writes to Redis</text>
+          <text x="568" y="132" font-family="Space Mono, monospace" font-size="9" fill="#2f6fcc" text-anchor="middle">NEAR REAL TIME</text>
 
           <rect x="692" y="88" width="130" height="64" fill="#effaf1" stroke="#27843f" stroke-width="1.5"></rect>
           <text x="757" y="114" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#171717" text-anchor="middle">Target Redis</text>
@@ -1388,7 +1393,7 @@ a.chip:hover {
           </g>
         </svg>
       </div>
-      <p class="dag-cap">THE RDI DATABASE IS NOT THE ONE YOUR APP TALKS TO</p>
+      <p class="dag-cap">THREE STAGES INSIDE RDI. THE ONLY DATABASES IN THIS PICTURE ARE THE SOURCE AND REDIS.</p>
     </div>
 
     <ul class="beats" style="margin-top:44px">
@@ -1548,7 +1553,7 @@ a.chip:hover {
   </div>
 
   <div class="footer">
-    <span>Redis Data Integration</span>
+    <span>Redis Data Integration &middot; unofficial, made by Cedric Turner, not reviewed by Redis</span>
     <span><a href="https://github.com/cedricturner/redis-artifacts">source on github</a></span>
   </div>
 
