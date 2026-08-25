@@ -959,8 +959,8 @@ a.chip:hover {
       <div class="card">
         <span class="card-num">02</span>
         <span class="card-name">the reads are too many</span>
-        <p>Redis only holds what somebody already asked for. Everything else falls through to the source database, and at scale it all falls through at once.</p>
-        <p class="card-note">In the pie shop: a hundred people want blueberry, you are out, and you are driving to the orchard while the queue builds.</p>
+        <p>Postgres, Oracle, MongoDB: none of them were built to answer thousands of reads a second. Push that much at one and it does not fall over, it just answers slowly, which is the same as broken when somebody is waiting.</p>
+        <p class="card-note">In the pie shop: a hundred orders at once, and every one of them means an hour's drive to the orchard.</p>
       </div>
     </div>
 
@@ -1312,13 +1312,15 @@ a.chip:hover {
       <span class="ba-cost">THE LUNCH RUSH</span>
     </div>
 
-    <p class="point">Everything above is about being wrong. This is about being overwhelmed, and it is the same cause wearing a different coat.</p>
+    <p class="point">Everything above is about being wrong. This one is about being slow, and the slow thing is the source database itself.</p>
 
-    <p>A hundred people walk in at noon and every one of them wants blueberry. You have blueberry for the first dozen. After that you are driving to the orchard, and while you are gone nobody gets served. You come back, sell out again, and drive again.</p>
+    <p>A hundred people walk in at noon and every one of them wants blueberry. The orchard is an hour away. It does not matter how well you plan the drive. You cannot make that trip a hundred times over one lunch rush, and the orchard is not going to hand fruit over any faster because you keep showing up.</p>
 
-    <p>That is a cache miss under load. Redis only ever holds what somebody already asked for, so anything nobody has requested yet is not in there. When the traffic arrives all at once, every one of those reads lands on the source database in the same moment. That database was sized for a trickle of misses, not for the whole lunch rush, and when it slows down it slows down for everything else using it too.</p>
+    <p>That is your source database. Postgres, Oracle, MySQL, MongoDB and the rest were built to be correct and durable, which is a different job from answering thousands of reads a second. Push that volume at one and it usually does not fall over. It answers slowly, and it answers slowly for everything else pointed at it too.</p>
 
-    <p style="margin-bottom:44px"><b>RDI stocks the fridge before anybody walks in, and keeps it stocked.</b> You choose which data it syncs. That data is loaded once up front and then kept current by every change that follows, so it is in Redis before the first request and it never expires out. The reads for it stop reaching the source database at all.</p>
+    <p>For an overnight report, slow is survivable. For anything real time it is not. If somebody is watching a map to see where their driver is, an answer that arrives late is the same as no answer.</p>
+
+    <p style="margin-bottom:44px"><b>So you stop asking it.</b> Work out which part of the workload actually needs high-volume reads in real time, and put that data in Redis. RDI is what gets it there and keeps it there, loaded once up front and then updated by every change that follows. Those reads stop touching the source database, and the source database goes back to the job it is good at.</p>
 
   </section>
 
