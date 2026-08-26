@@ -68,6 +68,64 @@ a { color: inherit; }
 .topbar a { text-decoration: none; }
 .topbar a:hover { color: var(--blue); }
 
+.handoff {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin: 96px 0 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.handoff-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.handoff-note {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.handoff + .panel { margin-top: 34px; padding-top: 0; border-top: 0; }
+
+.withnote {
+  display: grid;
+  grid-template-columns: minmax(0, 620px) minmax(0, 250px);
+  gap: 44px;
+  align-items: start;
+  margin-bottom: 30px;
+}
+
+.marginal {
+  padding-top: 12px;
+  border-top: 1px solid var(--ink);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.marginal .m-label {
+  display: block;
+  margin-bottom: 7px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .08em;
+  color: var(--ink);
+}
+
+.marginal p { margin: 0; }
+.withnote > p { margin: 0; }
+
+@media (max-width: 1100px) {
+  .withnote { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .marginal { max-width: 520px; }
+}
+
 .masthead {
   display: grid;
   grid-template-columns: 116px minmax(0, 1fr);
@@ -968,6 +1026,17 @@ a.chip:hover {
     </g>
   </symbol>
 
+  <symbol id="ico-runner" viewBox="0 0 44 44">
+    <g fill="none" stroke="#171717" stroke-width="2.1" stroke-linejoin="round" stroke-linecap="round">
+      <circle cx="27" cy="9" r="5"></circle>
+      <path d="M25 15 L19 26"></path>
+      <path d="M19 26 L25 32 L22 41"></path>
+      <path d="M19 26 L10 33"></path>
+      <path d="M23 18 L32 23"></path>
+      <path d="M23 18 L14 14"></path>
+    </g>
+  </symbol>
+
   <symbol id="ico-van" viewBox="0 0 44 44">
     <g fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
       <path d="M3 12 h23 v20 H3 Z"></path>
@@ -1026,7 +1095,7 @@ a.chip:hover {
           <text x="760" y="73" font-family="Space Mono, monospace" font-size="10" letter-spacing="1" fill="#73736e" text-anchor="middle">WHERE SOMEBODY WAITS</text>
         </svg>
       </div>
-      <p class="dag-cap">THE APPLICATION NEVER GOES BACK TO THE SOURCE DATABASE.</p>
+      <p class="dag-cap">READS FOR THIS DATA STOP GOING TO THE SOURCE DATABASE.</p>
     </div>
 
     <span class="tldr-sub">TWO REASONS PEOPLE NEED IT</span>
@@ -1053,12 +1122,12 @@ a.chip:hover {
     <label for="mobile-section-nav">section</label>
     <select id="mobile-section-nav" aria-label="Current section">
       <option value="section-fridge">simran's pie shop</option>
-      <option value="section-before-after">what if it molded?</option>
-      <option value="section-breaks">how wrong can it get?</option>
-      <option value="section-how">what if it stayed current?</option>
-      <option value="section-examples">what if you need more?</option>
-      <option value="section-alternatives">what else could you do?</option>
-      <option value="section-limits">would it read yours?</option>
+      <option value="section-before-after">helping simran</option>
+      <option value="section-breaks">the two main issues</option>
+      <option value="section-how">how RDI works</option>
+      <option value="section-examples">how much reshaping</option>
+      <option value="section-alternatives">other ways to do this</option>
+      <option value="section-limits">which databases</option>
     </select>
   </div>
 
@@ -1066,12 +1135,12 @@ a.chip:hover {
 
   <nav class="nav section-rail" aria-label="Article sections">
     <button class="nav-step active" type="button" data-shape="circle" data-section-target="section-fridge"><span class="step-num">1</span><span class="step-lbl">simran's pie shop</span></button>
-    <button class="nav-step" type="button" data-shape="square" data-section-target="section-before-after"><span class="step-num">2</span><span class="step-lbl">what if it molded?</span></button>
-    <button class="nav-step" type="button" data-shape="diamond" data-section-target="section-breaks"><span class="step-num">3</span><span class="step-lbl">how wrong can it get?</span></button>
-    <button class="nav-step" type="button" data-shape="triangle" data-section-target="section-how"><span class="step-num">4</span><span class="step-lbl">what if it stayed current?</span></button>
-    <button class="nav-step" type="button" data-shape="hexagon" data-section-target="section-examples"><span class="step-num">5</span><span class="step-lbl">what if you need more?</span></button>
-    <button class="nav-step" type="button" data-shape="squircle" data-section-target="section-alternatives"><span class="step-num">6</span><span class="step-lbl">what else could you do?</span></button>
-    <button class="nav-step" type="button" data-shape="burst" data-section-target="section-limits"><span class="step-num">7</span><span class="step-lbl">would it read yours?</span></button>
+    <button class="nav-step" type="button" data-shape="square" data-section-target="section-before-after"><span class="step-num">2</span><span class="step-lbl">helping simran</span></button>
+    <button class="nav-step" type="button" data-shape="diamond" data-section-target="section-breaks"><span class="step-num">3</span><span class="step-lbl">the two main issues</span></button>
+    <button class="nav-step" type="button" data-shape="triangle" data-section-target="section-how"><span class="step-num">4</span><span class="step-lbl">how RDI works</span></button>
+    <button class="nav-step" type="button" data-shape="hexagon" data-section-target="section-examples"><span class="step-num">5</span><span class="step-lbl">how much reshaping</span></button>
+    <button class="nav-step" type="button" data-shape="squircle" data-section-target="section-alternatives"><span class="step-num">6</span><span class="step-lbl">other ways to do this</span></button>
+    <button class="nav-step" type="button" data-shape="burst" data-section-target="section-limits"><span class="step-num">7</span><span class="step-lbl">which databases</span></button>
   </nav>
 
   <main class="scroll-article">
@@ -1200,7 +1269,7 @@ a.chip:hover {
       <dt>THE WEEKLY DELIVERY</dt><dd>A batch job on a schedule</dd>
       <dt>RUNNING OUT OF FRUIT</dt><dd>A cache miss</dd>
       <dt>DRIVING OUT, THEN RESTOCKING</dt><dd>Cache-aside, filled on demand</dd>
-      <dt>A DRIVER AT THE ORCHARD</dt><dd>Redis Data Integration</dd>
+      <dt>A RUNNER AT THE ORCHARD</dt><dd>Redis Data Integration</dd>
     </dl>
 
   </section>
@@ -1209,8 +1278,8 @@ a.chip:hover {
   <section class="panel" id="section-before-after" data-section-id="section-before-after">
     <div class="sec-head">
       <span class="sec-num">02</span>
-      <h2>What happens as the fruit sits there?</h2>
-      <span class="sec-note">path one, wrong answers</span>
+      <h2>How do we help Simran?</h2>
+      <span class="sec-note">before and after</span>
     </div>
 
     <p class="point">Organic fruit molds fast. A crate that was fine at open is no good by lunch, you keep baking with it, and then one day there is none left.</p>
@@ -1259,9 +1328,9 @@ a.chip:hover {
           </g>
 
           <path d="M 770 144 L 770 214 L 110 214 L 110 146" fill="none" stroke="#d92d20" stroke-width="2.5" marker-end="url(#ar)"></path>
-          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">WHEN THE LAST GOOD CRATE IS GONE YOU DRIVE OUT, OR YOU SHUT.</text>
+          <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">WHEN THE LAST GOOD CRATE IS GONE YOU DRIVE OUT, OR YOU CLOSE EARLY.</text>
 
-          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Nobody printed a date on those crates. You wrote your own, in Sharpie.</text>
+          <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Nobody printed a date on those crates. You wrote your own.</text>
           <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">The fruit does not check your date before it molds. You keep baking either way.</text>
         </svg>
       </div>
@@ -1319,10 +1388,10 @@ a.chip:hover {
 
     <div class="dag">
       <div class="dag-wrap">
-        <svg viewBox="0 0 880 310" style="min-width:760px" role="img" aria-label="Pie shop version, after. A driver you hired stands at the orchard and watches what gets picked, so a fresh crate reaches your fridge as soon as it exists. Your fridge now matches the orchard, nothing sits in it long enough to mold, and the shop keeps baking pies without running out.">
+        <svg viewBox="0 0 880 310" style="min-width:760px" role="img" aria-label="Pie shop version, after. A runner you hired stands at the orchard and watches what gets picked, so a fresh crate reaches your fridge as soon as it exists. Your fridge now matches the orchard, nothing sits in it long enough to mold, and the shop keeps baking pies without running out.">
           <g font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#73736e">
             <text x="105" y="18">THE ORCHARD</text>
-            <text x="330" y="18">YOUR DRIVER</text>
+            <text x="330" y="18">YOUR RUNNER</text>
             <text x="555" y="18">YOUR FRIDGE</text>
             <text x="780" y="18">PIE SHOP</text>
           </g>
@@ -1336,8 +1405,8 @@ a.chip:hover {
           <text x="105" y="130" font-family="Space Mono, monospace" font-size="10" fill="#9a9a94" text-anchor="middle">PICKING ALL DAY</text>
 
           <rect x="245" y="36" width="170" height="104" fill="#eef6ff" stroke="#2f6fcc" stroke-width="2"></rect>
-          <use href="#ico-van" x="308" y="48" width="44" height="44"></use>
-          <text x="330" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Your driver</text>
+          <use href="#ico-runner" x="308" y="48" width="44" height="44"></use>
+          <text x="330" y="112" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717" text-anchor="middle">Your runner</text>
           <text x="330" y="130" font-family="Space Mono, monospace" font-size="10" fill="#2f6fcc" text-anchor="middle">YOU HIRED THEM</text>
 
           <rect x="470" y="36" width="170" height="104" fill="#effaf1" stroke="#27843f" stroke-width="1.5"></rect>
@@ -1359,8 +1428,8 @@ a.chip:hover {
           <g font-family="Space Mono, monospace" font-size="11" text-anchor="middle" fill="#171717">
             <text x="217" y="164">THEY WATCH WHAT</text>
             <text x="217" y="179">GETS PICKED</text>
-            <text x="442" y="164">OUT WITH THE OLD,</text>
-            <text x="442" y="179">IN WITH THE FRESH</text>
+            <text x="442" y="164">REPLACED BEFORE</text>
+            <text x="442" y="179">IT CAN MOLD</text>
             <text x="667" y="164">OPEN THE DOOR</text>
           </g>
 
@@ -1368,7 +1437,7 @@ a.chip:hover {
           <text x="440" y="234" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f" text-anchor="middle">NOTHING SITS LONG ENOUGH TO MOLD, AND YOU NEVER RUN OUT.</text>
 
           <text x="20" y="274" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#171717">Still your fridge, still your shop. You just stopped being the one who finds out late.</text>
-          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">Your driver is not digging through the fridge looking for mold. They are standing at the orchard.</text>
+          <text x="20" y="296" font-family="Inter, sans-serif" font-size="14" fill="#353535">Your runner is not digging through the fridge looking for mold. They are standing at the orchard.</text>
         </svg>
       </div>
       <p class="dag-cap">THE PIE SHOP VERSION, ONE STAGE ADDED</p>
@@ -1427,59 +1496,51 @@ a.chip:hover {
   <section class="panel" id="section-breaks" data-section-id="section-breaks">
     <div class="sec-head">
       <span class="sec-num">03</span>
-      <h2>How wrong can your data get?</h2>
+      <h2>The two main issues</h2>
+    </div>
+
+    <div class="ba-head">
+      <span class="ba-label">ISSUE ONE</span>
+      <span class="ba-sub">STALE ANSWERS</span>
+      <span class="ba-cost">MOLD YOU CANNOT SEE</span>
     </div>
 
     <p class="point">How long are you willing to hand out the wrong answer?</p>
 
-    <p style="margin-bottom:30px">So why did nobody tell the fridge? Because in a cache-aside setup, nothing can.</p>
+    <div class="withnote">
+      <p>Nothing told the fridge. Cache-aside has no channel for being told, because the only thing that triggers it is a request. You can build one, and plenty of teams do, but then the propagation is yours to write and yours to debug when it drifts.</p>
+      <aside class="marginal">
+        <span class="m-label">CACHE-ASIDE</span>
+        <p>Check Redis first. On a hit, return it. On a miss, read the source, write the value into Redis, and return that. The application manages both sides. Also called lazy loading.</p>
+      </aside>
+    </div>
 
     <pre>1   look in Redis
 2   not there, so ask the database and wait
 3   put a copy in Redis
 4   throw that copy away in <span class="bad">five minutes</span></pre>
-    <p class="dag-cap">STEP 4 IS A GUESS AND NOBODY CAN MAKE IT CORRECTLY</p>
+    <p class="dag-cap">STEP 4 IS A GUESS, AND THE DATA GIVES YOU NOTHING TO BASE IT ON</p>
 
-    <p style="margin-top:30px"><b>So why throw the copy away at all?</b> Because nothing tells Redis when the database changed. With no signal to go on, a clock is all you have. So you pick a number. Long, and you hand out wrong answers for longer. Short, and you are back to asking the database constantly, which is the thing the copy was meant to avoid. There is no good number.</p>
+    <p style="margin-top:30px"><b>So why throw the copy away at all?</b> Because nothing tells Redis when the database changed. With no signal to go on, the only move left is to re-read the source on a schedule. So you pick an interval, and the interval costs you either way.</p>
 
-    <p style="margin-bottom:44px"><b>This is where the fruit analogy stops being kind to you.</b> Fruit tells on itself. It softens, it smells, it grows fuzz you can see across the room. A customer's address does none of that. It is right until somebody changes it, then it is wrong that second, and it looks exactly the same. Your five minutes is not the data's expiry date. It is yours, in Sharpie.</p>
-
-    <div class="dag">
-      <div class="dag-wrap">
-        <svg viewBox="0 0 860 300" style="min-width:640px" role="img" aria-label="Timeline comparison. With cache-aside, Redis serves the old value from the moment the row changes until the timer expires at 300 seconds. With RDI, Redis matches the source within a few seconds.">
-          <text x="20" y="20" font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" fill="#73736e">CACHE-ASIDE, FIVE MINUTE TIMER</text>
-
-          <rect x="200" y="40" width="440" height="38" fill="#fff0ee" stroke="#d92d20" stroke-width="1.5"></rect>
-          <text x="420" y="65" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#d92d20" text-anchor="middle">REDIS IS HANDING OUT THE OLD VALUE</text>
-
-          <line x1="60" y1="100" x2="800" y2="100" stroke="#171717" stroke-width="1.5"></line>
-          <line x1="200" y1="34" x2="200" y2="108" stroke="#171717" stroke-width="1.5"></line>
-          <line x1="640" y1="34" x2="640" y2="108" stroke="#171717" stroke-width="1.5"></line>
-
-          <g font-family="Space Mono, monospace" font-size="11" fill="#171717" text-anchor="middle">
-            <text x="200" y="126">SOMEBODY CHANGES THE ROW</text>
-            <text x="640" y="126">TIMER RUNS OUT</text>
-          </g>
-          <g font-family="Space Mono, monospace" font-size="11" fill="#9a9a94" text-anchor="middle">
-            <text x="200" y="144">t = 0</text>
-            <text x="640" y="144">t = 5 min</text>
-          </g>
-
-          <text x="20" y="196" font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1" fill="#73736e">WITH RDI</text>
-
-          <rect x="200" y="216" width="20" height="38" fill="#effaf1" stroke="#27843f" stroke-width="1.5"></rect>
-          <text x="236" y="240" font-family="Space Mono, monospace" font-size="12" font-weight="700" fill="#27843f">REDIS MATCHES THE SOURCE AGAIN</text>
-
-          <line x1="60" y1="276" x2="800" y2="276" stroke="#171717" stroke-width="1.5"></line>
-          <line x1="200" y1="210" x2="200" y2="284" stroke="#171717" stroke-width="1.5"></line>
-          <text x="200" y="298" font-family="Space Mono, monospace" font-size="11" fill="#9a9a94" text-anchor="middle">t = 0</text>
-        </svg>
+    <div class="cards">
+      <div class="card">
+        <span class="card-num">READ IT MORE OFTEN</span>
+        <span class="card-name">your costs increase</span>
+        <p>Every refresh is another round of queries against the source. Turn the frequency up far enough and you are back to the load the copy existed to avoid.</p>
       </div>
-      <p class="dag-cap">SHORTEN THE TIMER AND THE BAR SHRINKS, BUT NOW YOU HAMMER THE SOURCE AND THE CACHE STOPS HELPING</p>
+      <div class="card">
+        <span class="card-num">READ IT LESS OFTEN</span>
+        <span class="card-name">you serve stale data</span>
+        <p>The copy drifts further from the truth between refreshes, and every read that lands in the gap is a wrong answer you handed out on purpose.</p>
+      </div>
     </div>
 
+    <p style="margin-bottom:44px">No interval gives you both. And unlike fruit, data does not tell on itself: a stale address looks exactly like a fresh one.</p>
+
+
     <div class="ba-head">
-      <span class="ba-label">PATH TWO</span>
+      <span class="ba-label">ISSUE TWO</span>
       <span class="ba-sub">TOO MANY READS</span>
       <span class="ba-cost">THE LUNCH RUSH</span>
     </div>
@@ -1494,15 +1555,20 @@ a.chip:hover {
 
   </section>
 
+  <div class="handoff">
+    <span class="handoff-label">END OF THE ANALOGY</span>
+    <span class="handoff-note">No more fruit. Everything below is how RDI actually works.</span>
+  </div>
+
   <!-- 04 -->
   <section class="panel" id="section-how" data-section-id="section-how">
     <div class="sec-head">
       <span class="sec-num">04</span>
-      <h2>What if you were told the moment it changed?</h2>
+      <h2>How RDI works</h2>
       <span class="sec-note">names are from the Redis docs</span>
     </div>
 
-    <p class="point">What if you filled it once and it stayed right?</p>
+    <p class="point">One pipeline, two phases, no timers anywhere.</p>
 
     <div class="dag">
       <div class="dag-wrap">
@@ -1572,7 +1638,7 @@ a.chip:hover {
   <section class="panel" id="section-examples" data-section-id="section-examples">
     <div class="sec-head">
       <span class="sec-num">05</span>
-      <h2>What if you need more than a copy?</h2>
+      <h2>How much reshaping you need</h2>
       <span class="sec-note">same pipeline, more work in the middle</span>
     </div>
 
@@ -1589,7 +1655,7 @@ a.chip:hover {
       </li>
       <li>
         <span class="lvl-tag b3">HARD</span>
-        <span><b>Everything, indexed and searched.</b> Fraud scoring, personalization, anything that asks "across all of it, which ones matter." This is the case cache-aside cannot reach, because it never holds all of it.</span>
+        <span><b>Everything, indexed and searched.</b> Fraud scoring, personalization, anything that asks "across all of it, which ones matter." Cache-aside struggles here, because it only holds what somebody already asked for, so a search across the set answers from a partial picture.</span>
       </li>
     </ul>
   </section>
@@ -1598,7 +1664,7 @@ a.chip:hover {
   <section class="panel" id="section-alternatives" data-section-id="section-alternatives">
     <div class="sec-head">
       <span class="sec-num">06</span>
-      <h2>What else could do this job?</h2>
+      <h2>Other ways to do this</h2>
       <span class="sec-note">checked against each vendor's own docs</span>
     </div>
 
@@ -1678,7 +1744,7 @@ a.chip:hover {
   <section class="panel" id="section-limits" data-section-id="section-limits">
     <div class="sec-head">
       <span class="sec-num">07</span>
-      <h2>Would it read your database?</h2>
+      <h2>Which databases it reads</h2>
       <span class="sec-note">source list from the docs, Aug 2026</span>
     </div>
 
