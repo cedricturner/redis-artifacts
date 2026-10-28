@@ -1,186 +1,21 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Redis artifacts</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cline x1='11.5' y1='20.5' x2='20.5' y2='11.5' stroke='%23171717' stroke-width='2.4'/%3E%3Ccircle cx='7.5' cy='24.5' r='5' fill='%23171717'/%3E%3Ccircle cx='24.5' cy='7.5' r='5' fill='%23ffffff' stroke='%23171717' stroke-width='2.4'/%3E%3C/svg%3E">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Visual explainers for Redis products. Start with a story, then see how the system works.">
+<title>Redis explainers</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
 <style>
-:root {
-  --paper: #fff;
-  --ink: #171717;
-  --text: #353535;
-  --muted: #73736e;
-  --rule: #d8d8d4;
-
-  --blue: #1f5b8f;
-  --teal: #16807a;
-  --green: #3f7c49;
-  --ochre: #a66b1f;
-  --orange: #b8512e;
-  --rose: #aa4b73;
-  --violet: #6e4b8b;
-
-  --body: Inter, "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --mono: "Space Mono", "SFMono-Regular", Consolas, monospace;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--text);
-  font-family: var(--body);
-  font-size: 15px;
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-}
-
-::selection { color: #fff; background: var(--ink); }
-a { color: inherit; }
-
-.page {
-  width: min(1040px, calc(100% - 56px));
-  margin: 0 auto;
-  padding: 68px 0 80px;
-}
-
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 24px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--ink);
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: .06em;
-}
-
-.hero { margin: 76px 0 104px; }
-
-h1 {
-  font-size: clamp(48px, 8vw, 88px);
-  font-weight: 500;
-  letter-spacing: -.065em;
-  line-height: .92;
-  max-width: 840px;
-  margin: 0 0 28px;
-  color: var(--ink);
-}
-
-.intro {
-  font-size: 16px;
-  line-height: 1.75;
-  color: #4a4a4a;
-  max-width: 540px;
-  margin: 0;
-}
-
-.entries { border-top: 1px solid var(--rule); }
-
-.entry { --entry-ink: var(--blue); }
-.entry:nth-child(2) { --entry-ink: var(--teal); }
-.entry:nth-child(3) { --entry-ink: var(--green); }
-.entry:nth-child(4) { --entry-ink: var(--ochre); }
-.entry:nth-child(5) { --entry-ink: var(--orange); }
-.entry:nth-child(6) { --entry-ink: var(--rose); }
-.entry:nth-child(7) { --entry-ink: var(--violet); }
-
-.entry-link {
-  display: grid;
-  grid-template-columns: minmax(220px, .95fr) minmax(300px, 1.4fr) auto;
-  gap: 24px;
-  align-items: baseline;
-  padding: 25px 8px 27px 0;
-  border-bottom: 1px solid var(--rule);
-  text-decoration: none;
-}
-
-.entry-name {
-  font-size: 17px;
-  font-weight: 600;
-  line-height: 1.35;
-  color: var(--ink);
-  transition: color 120ms ease;
-}
-
-.entry-desc { font-size: 14px; }
-
-.entry-meta {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: .04em;
-  white-space: nowrap;
-}
-
-.entry-link:hover .entry-name { color: var(--entry-ink); }
-.entry-link:focus-visible { outline: 1.5px solid var(--entry-ink); outline-offset: 5px; }
-
-.footer {
-  margin-top: 88px;
-  padding-top: 12px;
-  border-top: 1px solid var(--ink);
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted);
-}
-
-.footer a { text-underline-offset: 4px; }
-.footer a:hover { color: var(--blue); }
-
-@media (max-width: 860px) {
-  .entry-link { grid-template-columns: 1fr; gap: 6px; }
-  .entry-meta { white-space: normal; }
-}
-
-@media (max-width: 720px) {
-  .page { width: min(100% - 36px, 1040px); padding: 42px 0 64px; }
-  h1 { font-size: clamp(46px, 15vw, 70px); }
-  .hero { margin: 48px 0 68px; }
-  .topbar, .footer { flex-direction: column; gap: 6px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
-}
+:root{--paper:#fffdf8;--ink:#091a23;--muted:#58666c;--rule:#deded7;--red:#b52b23;--sans:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}.page{width:min(1040px,calc(100% - 64px));margin:auto;padding:32px 0 40px}.brandbar{display:flex;align-items:center;gap:20px;border-bottom:1px solid var(--rule);padding-bottom:20px}.brandbar img{width:96px;height:32px;object-fit:contain}.brandbar span{font-size:13px;color:var(--muted);border-left:1px solid var(--rule);padding-left:20px}.hero{margin:80px 0 56px}h1{font-size:clamp(48px,8vw,88px);font-weight:500;letter-spacing:-.065em;line-height:1.05;margin:0 0 24px}.hero p{max-width:580px;font:24px/1.6 Palatino,Georgia,serif;color:var(--muted);margin:0}.entries{list-style:none;padding:0;margin:0;border-top:1px solid var(--ink)}.entry{display:grid;grid-template-columns:48px 1fr 36px;gap:20px;padding:32px 8px 32px 0;border-bottom:1px solid var(--rule);color:inherit;text-decoration:none;align-items:center}.num{display:grid;place-items:center;width:36px;height:36px;font:11px 'Space Mono',monospace;border:1px solid #efb3aa;border-radius:48% 52% 45% 55%;color:var(--red)}h2{font-size:25px;letter-spacing:-.035em;font-weight:500;margin:0 0 8px}.entry p{margin:0;max-width:680px;color:var(--muted);font-size:15px}.arrow{font-size:26px;color:var(--red);transition:transform .15s}.entry:hover h2{color:var(--red)}.entry:hover .arrow{transform:translateX(4px)}a:focus-visible{outline:2px solid var(--red);outline-offset:5px}.footer{display:flex;justify-content:space-between;gap:20px;margin-top:64px;font-size:12px;color:var(--muted)}.footer a{color:inherit;text-underline-offset:4px}::selection{background:#ffd6d1}@media(max-width:600px){.page{width:calc(100% - 36px);padding-top:24px}.hero{margin:48px 0 36px}.hero p{font-size:21px}.entry{grid-template-columns:32px 1fr 20px;gap:14px;padding:26px 0}.num{width:29px;height:29px}h2{font-size:22px}.entry p{font-size:14px}.footer{flex-wrap:wrap;margin-top:40px}}@media(prefers-reduced-motion:reduce){.arrow{transition:none}}
 </style>
 </head>
-<body>
-<div class="page">
-
-  <div class="topbar">
-    <span>Cedric Turner</span>
-    <span>Redis artifacts</span>
-  </div>
-
-  <div class="hero">
-    <h1>Redis artifacts</h1>
-    <p class="intro">Explainers for people who already know Redis as a cache and have not been given a reason to think of it as anything else. One page per idea, no slides required.</p>
-  </div>
-
-  <div class="entries">
-    <div class="entry">
-      <a class="entry-link" href="redis-data-integration/">
-        <span class="entry-name">Redis Data Integration</span>
-        <span class="entry-desc">Why the copy of your data in Redis goes stale, and what keeps it current</span>
-        <span class="entry-meta">updated aug 2026</span>
-      </a>
-    </div>
-  </div>
-
-  <div class="footer">
-    <span>Redis Data Integration and adjacent things</span>
-    <span><a href="https://github.com/cedricturner/redis-artifacts">source on github</a></span>
-  </div>
-
-</div>
-</body>
-</html>
+<body><main class="page">
+<header class="brandbar"><img src="feature-form/redis-logo-red.svg" alt="Redis" width="96" height="32"><span>Explainers by Cedric Turner</span></header>
+<div class="hero"><h1>Redis, explained.</h1><p>Start with a story. See the problem. Understand the system behind it.</p></div>
+<ul class="entries">
+<li><a class="entry" href="redis-data-integration/"><span class="num" aria-hidden="true">01</span><div><h2>Redis Data Integration</h2><p>Why the copy of your data in Redis goes stale, and what keeps it current.</p></div><span class="arrow" aria-hidden="true">↗</span></a></li>
+<li><a class="entry" href="feature-form/"><span class="num" aria-hidden="true">02</span><div><h2>Feature Form</h2><p>A pie shop’s introduction to machine learning, model inputs, and keeping features consistent.</p></div><span class="arrow" aria-hidden="true">↗</span></a></li>
+</ul>
+<footer class="footer"><span>Redis product explainers</span><a href="https://github.com/cedricturner/redis-artifacts">Source on GitHub ↗</a></footer>
+</main></body></html>
